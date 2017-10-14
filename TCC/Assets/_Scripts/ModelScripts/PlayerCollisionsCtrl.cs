@@ -66,7 +66,7 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 
 	IEnumerator FallingCamera(){
 		yield return new WaitForSeconds (2.0f);
-		cvCamera_TopViewFalling.Priority = 12;
+		cvCamera_TopViewFalling.Priority = 21;
 	}
 
 
@@ -97,8 +97,8 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 		}
 
 		if(col.CompareTag("Falling_Trigger")){
-			playerCtrl.glideStrength = 0.01f;
-			cvCamera_Falling.Priority = 11;
+			playerCtrl.glideStrength = 0f;
+			cvCamera_Falling.Priority = 20;
 			//transform.LookAt (GameObject.Find ("Father").transform);
 			StartCoroutine ("FallingCamera");
 			col.gameObject.SetActive (false);

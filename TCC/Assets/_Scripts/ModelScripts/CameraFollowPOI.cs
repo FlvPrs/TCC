@@ -11,6 +11,8 @@ public class CameraFollowPOI : MonoBehaviour {
 
 	public int currentTarget;
 
+	//private int defaultTarget = 0;
+
 	private Transform myT;
 
 	void Start () {

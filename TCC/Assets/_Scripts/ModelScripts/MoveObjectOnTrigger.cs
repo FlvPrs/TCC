@@ -13,17 +13,17 @@ public class MoveObjectOnTrigger : MonoBehaviour {
 		if (target == null)
 			target = this.transform;
 
-		endPos = target.position + distanceLocal;
+		endPos = target.localPosition + distanceLocal;
 	}
 
 	void Update () {
 		if (!canMove)
 			return;
 
-		Vector3 pos = Vector3.Lerp (target.position, endPos, 2f * Time.deltaTime);
-		target.position = pos;
+		Vector3 pos = Vector3.Lerp (target.localPosition, endPos, 2f * Time.deltaTime);
+		target.localPosition = pos;
 
-		if (Vector3.Distance (target.position, endPos) < 0.2f)
+		if (Vector3.Distance (target.localPosition, endPos) < 0.2f)
 			canMove = false;
 	}
 

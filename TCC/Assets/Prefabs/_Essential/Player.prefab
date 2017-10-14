@@ -101,6 +101,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1590412267328312
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4562261703974020}
+  m_Layer: 0
+  m_Name: LookAtMe
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1664167620742878
 GameObject:
   m_ObjectHideFlags: 1
@@ -195,6 +210,19 @@ Transform:
   m_Father: {fileID: 4067772557795920}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 11.113001, y: 3.8820002, z: 7.9170003}
+--- !u!4 &4562261703974020
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1590412267328312}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4821688967755570}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4765953084670540
 Transform:
   m_ObjectHideFlags: 1
@@ -217,7 +245,8 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 4562261703974020}
   m_Father: {fileID: 4067772557795920}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -624,12 +653,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target:
+  - {fileID: 4562261703974020}
   - {fileID: 0}
   - {fileID: 0}
   maxDistancetoPOI:
   - 20
   - 40
-  currentTarget: 0
+  - 5
+  currentTarget: 1
 --- !u!114 &114458936190242516
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -643,7 +674,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   presentWhenInactive: 0
   externalForceAdded: 0
-  walkSpeed: 5
+  walkSpeed: 6
   jumpSpeed: 8
   interactDuration: 0.1
   attackDamage: 5
