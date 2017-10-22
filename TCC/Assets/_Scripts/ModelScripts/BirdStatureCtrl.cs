@@ -24,9 +24,9 @@ public class BirdStatureCtrl : MonoBehaviour {
 	private Material playerMat;
 
 	[Range(0.1f, 0.9f)]
-	public float minStature = 0.55f;
+	public float minStature = 0.5f;
 	[Range(1.1f, 2f)]
-	public float maxStature = 2f;
+	public float maxStature = 1.5f;
 
 	[HideInInspector]
 	public HeightState currentState;
@@ -88,8 +88,10 @@ public class BirdStatureCtrl : MonoBehaviour {
 
 		currentHeight = defaultHeight;
 		currentHeight += (((Mathf.Abs (strength) + tempStrength) / -2) * minDifference) + (((Mathf.Abs (strength) - tempStrength) /2) * maxDifference);
-		currentSize = defaultHeight;
-		currentSize -= (((Mathf.Abs (strength) + tempStrength) / -2) * minDifference) + (((Mathf.Abs (strength) - tempStrength) /2) * maxDifference * 0.65f) * 0.75f;
+
+		currentSize = (2*defaultHeight) - currentHeight;
+//		currentSize = defaultHeight;
+//		currentSize -= (((Mathf.Abs (strength) + tempStrength) / -2) * minDifference) + (((Mathf.Abs (strength) - tempStrength) /2) * maxDifference * 0.65f) * 0.75f;
 	}
 
 	public void StartClarinet(bool start, float volume){

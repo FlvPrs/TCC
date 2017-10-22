@@ -30,9 +30,12 @@ public class WalkingController : Controller {
 	float singPressTime;
 	bool stopGravity;
 
+	float maxJumpCooldown = 0.2f;
+	float jumpCooldown = 0f;
+
 	//Settings
 	public float walkSpeed = 5f;
-	public float jumpSpeed = 8f;
+	public float jumpSpeed = 8.3f;
 	public float interactDuration = 0.1f;
 	public float attackDamage = 5f;
 	public float gravity = 10.0f;
@@ -118,8 +121,9 @@ public class WalkingController : Controller {
 		if(data.axes[4] != 0f){
 			jumpTriggerStrength = data.axes [4];
 			if (jumpPressTime == 0f) {
-				if (Grounded()) {
+				if (Grounded() && jumpCooldown <= 0f) {
 					adjVertVelocity = jumpSpeed;
+					jumpCooldown = maxJumpCooldown;
 					jumpInertia = walkVelocity;
 				} else if (!stopGravity && flyStamina > 0) {
 					isFlying = true;
@@ -163,7 +167,6 @@ public class WalkingController : Controller {
 		if(axis0 || axis1)
 			ChangeFacing(axis0, axis1, data);
 
-
 		newInput = true;
 
 	}
@@ -172,16 +175,27 @@ public class WalkingController : Controller {
 	bool Grounded(){
 		bool ray1 = Physics.Raycast(myT.position + myT.up * 0.1f, Vector3.down, 0.15f, raycastMask);
 		Debug.DrawRay (myT.position + myT.up * 0.1f, Vector3.down * (0.15f));
-		bool ray2 = Physics.Raycast(myT.position + myT.up * 0.1f + myT.forward/2, Vector3.down, 0.15f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f + myT.forward/2, Vector3.down * (0.15f));
-		bool ray3 = Physics.Raycast(myT.position + myT.up * 0.1f - myT.forward/2, Vector3.down, 0.15f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f - myT.forward/2, Vector3.down * (0.15f));
-		bool ray4 = Physics.Raycast(myT.position + myT.up * 0.1f + myT.right/2, Vector3.down, 0.15f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f + myT.right/2, Vector3.down * (0.15f));
-		bool ray5 = Physics.Raycast(myT.position + myT.up * 0.1f - myT.right/2, Vector3.down, 0.15f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f - myT.right/2, Vector3.down * (0.15f));
 
-		if (ray1 || ray2 || ray3 || ray4 || ray5) {
+		bool ray2 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down, 0.15f, raycastMask);
+		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down * (0.15f));
+		bool ray3 = Physics.Raycast(myT.position + myT.up * 0.1f - (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down, 0.15f, raycastMask);
+		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down * (0.15f));
+		bool ray4 = Physics.Raycast(myT.position + myT.up * 0.1f + (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down, 0.15f, raycastMask);
+		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down * (0.15f));
+		bool ray5 = Physics.Raycast(myT.position + myT.up * 0.1f - (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down, 0.15f, raycastMask);
+		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down * (0.15f));
+
+		bool ray6 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down, 0.15f, raycastMask);
+		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down * (0.15f));
+		bool ray7 = Physics.Raycast (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down, 0.15f, raycastMask);
+		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down * (0.15f));
+		bool ray8 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down, 0.15f, raycastMask);
+		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down * (0.15f));
+		bool ray9 = Physics.Raycast (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down, 0.15f, raycastMask);
+		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down * (0.15f));
+
+		if (ray1 || ray2 || ray3 || ray4 || ray5 || ray6 || ray7 || ray8 || ray9) {
+			//print ("is grounded");
 			flyStamina = maxFlyStamina;
 			hudScript.UpdateWingUI (false, flyStamina);
 			return true;
@@ -195,6 +209,10 @@ public class WalkingController : Controller {
 		float cameraY = cameraRotation * GameConstants.MOUSE_SENSITIVITY * Time.deltaTime;
 
 		myT.Rotate (0, cameraY, 0);
+
+		if(jumpCooldown > 0){
+			jumpCooldown -= Time.deltaTime;
+		}
 	}
 
 	//Always called after Updates are called

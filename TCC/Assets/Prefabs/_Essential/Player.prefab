@@ -37,7 +37,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4900986345814048}
   - component: {fileID: 54741366825281236}
-  - component: {fileID: 136932176479617364}
+  - component: {fileID: 65394298370825810}
   - component: {fileID: 114458936190242516}
   - component: {fileID: 114772266400814938}
   - component: {fileID: 114298566123673930}
@@ -500,6 +500,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!65 &65394298370825810
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1360113895784574}
+  m_Material: {fileID: 13400000, guid: aa4ae8196303e8f4a8174b5e234724de, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2, z: 1}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!82 &82460422315296428
 AudioSource:
   m_ObjectHideFlags: 1
@@ -638,8 +650,8 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  minStature: 0.66
-  maxStature: 1.8
+  minStature: 0.5
+  maxStature: 1.5
   currentState: 0
 --- !u!114 &114337912659124162
 MonoBehaviour:
@@ -675,7 +687,7 @@ MonoBehaviour:
   presentWhenInactive: 0
   externalForceAdded: 0
   walkSpeed: 6
-  jumpSpeed: 8
+  jumpSpeed: 8.3
   interactDuration: 0.1
   attackDamage: 5
   gravity: 10
@@ -722,16 +734,3 @@ Projector:
   m_IgnoreLayers:
     serializedVersion: 2
     m_Bits: 4096
---- !u!136 &136932176479617364
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1360113895784574}
-  m_Material: {fileID: 13400000, guid: aa4ae8196303e8f4a8174b5e234724de, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
