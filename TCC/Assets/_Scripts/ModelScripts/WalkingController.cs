@@ -204,14 +204,12 @@ public class WalkingController : Controller {
 		}
 
 		if (ray1 || ray2 || ray3 || ray4 || ray5 || ray6 || ray7 || ray8 || ray9) {
-
 			bool climbing = false;
 			for (int i = 0; i < hit.Length; i++) {
 				if (hit [i].normal == Vector3.zero)
 					continue;
 				
 				float slopeAngle = Vector3.Angle (hit [i].normal, Vector3.up);
-				print (slopeAngle);
 				if(slopeAngle >= maxClimbAngle && rb.velocity.y > 0f){
 					isClimbing = true;
 					climbing = true;
@@ -268,6 +266,8 @@ public class WalkingController : Controller {
 		bool isGrounded = true;
 		if (!Grounded())
 			isGrounded = false;
+
+		//print (isGrounded);
 			
 		if (!isGrounded) {
 			jumpInertia += (walkVelocity * aerialCtrl) + externalForce;
