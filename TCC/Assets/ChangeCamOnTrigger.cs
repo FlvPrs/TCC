@@ -4,25 +4,23 @@ using UnityEngine;
 
 public class ChangeCamOnTrigger : MonoBehaviour {
 
-	public Cinemachine.CinemachineVirtualCamera cvCamera;
-
-	private Cinemachine.CinemachineVirtualCamera oldCam = null;
-	private int activeCamPriority;
-
-
-	void Update () {
-		
-	}
+	public CamPriorityController camCtrl;
+	public int newCamIndex;
+	public bool exitAsDifferentCam;
+	public int exitCamIndex;
+	private int oldIndex;
 
 	void OnTriggerEnter(Collider col){
 		if(col.CompareTag("Player")){
-			if (oldCam == null) {
-				oldCam = Camera.main.GetComponent<Cinemachine.CinemachineBrain> ().ActiveVirtualCamera as Cinemachine.CinemachineVirtualCamera;
-				activeCamPriority = oldCam.Priority;
-			}
-
-			cvCamera.Priority = activeCamPriority + 1;
-
+			oldIndex = camCtrl.currentCam;
+			camCtrl.ChangeCameraTo (newCamIndex);
 		}
+	}
+
+	void OnTriggerExit(Collider col){
+		if(exitAsDifferentCam)
+			camCtrl.ChangeCameraTo (exitCamIndex);
+		else
+			camCtrl.ChangeCameraTo (oldIndex);
 	}
 }

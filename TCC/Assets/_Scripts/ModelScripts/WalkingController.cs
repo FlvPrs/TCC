@@ -33,6 +33,9 @@ public class WalkingController : Controller {
 	float maxJumpCooldown = 0.2f;
 	float jumpCooldown = 0f;
 
+	float maxClimbAngle = 40f;
+	bool isClimbing = false;
+
 	//Settings
 	public float walkSpeed = 5f;
 	public float jumpSpeed = 8.3f;
@@ -173,33 +176,61 @@ public class WalkingController : Controller {
 
 	//Method that will look below our character and see if there is a collider
 	bool Grounded(){
-		bool ray1 = Physics.Raycast(myT.position + myT.up * 0.1f, Vector3.down, 0.15f, raycastMask);
+		RaycastHit[] hit = new RaycastHit[9];
+
+		bool ray1 = Physics.Raycast(myT.position + myT.up * 0.1f, Vector3.down, out hit[0], 0.15f, raycastMask);
 		Debug.DrawRay (myT.position + myT.up * 0.1f, Vector3.down * (0.15f));
 
-		bool ray2 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down, 0.15f, raycastMask);
+		bool ray2 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down, out hit[1], 0.15f, raycastMask);
 		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down * (0.15f));
-		bool ray3 = Physics.Raycast(myT.position + myT.up * 0.1f - (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down, 0.15f, raycastMask);
+		bool ray3 = Physics.Raycast(myT.position + myT.up * 0.1f - (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down, out hit[2], 0.15f, raycastMask);
 		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down * (0.15f));
-		bool ray4 = Physics.Raycast(myT.position + myT.up * 0.1f + (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down, 0.15f, raycastMask);
+		bool ray4 = Physics.Raycast(myT.position + myT.up * 0.1f + (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down, out hit[3], 0.15f, raycastMask);
 		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down * (0.15f));
-		bool ray5 = Physics.Raycast(myT.position + myT.up * 0.1f - (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down, 0.15f, raycastMask);
+		bool ray5 = Physics.Raycast(myT.position + myT.up * 0.1f - (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down, out hit[4], 0.15f, raycastMask);
 		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down * (0.15f));
 
-		bool ray6 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down, 0.15f, raycastMask);
+		bool ray6 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down, out hit[5], 0.15f, raycastMask);
 		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down * (0.15f));
-		bool ray7 = Physics.Raycast (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down, 0.15f, raycastMask);
+		bool ray7 = Physics.Raycast (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down, out hit[6], 0.15f, raycastMask);
 		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down * (0.15f));
-		bool ray8 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down, 0.15f, raycastMask);
+		bool ray8 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down, out hit[7], 0.15f, raycastMask);
 		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down * (0.15f));
-		bool ray9 = Physics.Raycast (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down, 0.15f, raycastMask);
+		bool ray9 = Physics.Raycast (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down, out hit[8], 0.15f, raycastMask);
 		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down * (0.15f));
 
+		for (int i = 0; i < hit.Length; i++) {
+			Debug.DrawRay (hit [i].point, hit [i].normal, Color.blue);
+		}
+
 		if (ray1 || ray2 || ray3 || ray4 || ray5 || ray6 || ray7 || ray8 || ray9) {
-			//print ("is grounded");
+
+			bool climbing = false;
+			for (int i = 0; i < hit.Length; i++) {
+				if (hit [i].normal == Vector3.zero)
+					continue;
+				
+				float slopeAngle = Vector3.Angle (hit [i].normal, Vector3.up);
+				print (slopeAngle);
+				if(slopeAngle >= maxClimbAngle && rb.velocity.y > 0f){
+					isClimbing = true;
+					climbing = true;
+				} else if(slopeAngle < maxClimbAngle) {
+					isClimbing = false;
+					climbing = false;
+					break;
+				}
+			}
+
+			if (climbing)
+				return false;
+
 			flyStamina = maxFlyStamina;
 			hudScript.UpdateWingUI (false, flyStamina);
 			return true;
 		}
+
+		isClimbing = false;
 		hudScript.UpdateWingUI (true, flyStamina);
 		return false;
 	}
@@ -218,7 +249,7 @@ public class WalkingController : Controller {
 	//Always called after Updates are called
 	void LateUpdate() {
 
-		if(!newInput){
+		if(!newInput || isClimbing){
 			//prevWalkVelocity = walkVelocity;
 			ResetMovementToZero ();
 			jumpPressTime = 0f;
@@ -247,7 +278,7 @@ public class WalkingController : Controller {
 			else
 				isFlying = false;
 			
-			if (!isOnLedge)
+			if (!isClimbing)
 				rb.velocity = new Vector3 (jumpInertia.x, adjVertVelocity, jumpInertia.z);
 			
 		} else {
@@ -273,9 +304,10 @@ public class WalkingController : Controller {
 				} else {
 					rb.AddForce (new Vector3 (0, -gravity * rb.mass, 0));
 				}
-			} else if (isGrounded && !newInput && rb.velocity.y < 0) {
-				rb.velocity = new Vector3 (rb.velocity.x, 0, rb.velocity.z);
-			}
+			} 
+//			else if (isGrounded && !newInput && rb.velocity.y < 0) {
+//				rb.velocity = new Vector3 (rb.velocity.x, 0, rb.velocity.z);
+//			}
 		}
 
 		currentFallVelocity = rb.velocity.y;

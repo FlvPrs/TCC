@@ -18,26 +18,26 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 	private BirdStatureCtrl birdHeight;
 	private CameraFollowPOI camPOI;
 
-	private Cinemachine.CinemachineVirtualCamera cvCamera_Falling;
-	private Cinemachine.CinemachineVirtualCamera cvCamera_TopViewFalling;
+	//private Cinemachine.CinemachineVirtualCamera cvCamera_Falling;
+	//private Cinemachine.CinemachineVirtualCamera cvCamera_TopViewFalling;
 
 	private float originalGlideStrength;
-	private int original_FallCamPriority;
-	private int original_TopFallCamPriority;
+	//private int original_FallCamPriority;
+	//private int original_TopFallCamPriority;
 
 	public GameObject blackScrn;
 
 	void Awake(){
 		playerCtrl = GetComponent<WalkingController> ();
 		birdHeight = GetComponent<BirdStatureCtrl> ();
-		cvCamera_Falling = GameObject.Find ("CM vcam1 - Falling").GetComponent<Cinemachine.CinemachineVirtualCamera> ();
-		cvCamera_TopViewFalling = GameObject.Find ("CM vcam2 - TopFalling").GetComponent<Cinemachine.CinemachineVirtualCamera> ();
+		//cvCamera_Falling = GameObject.Find ("CM vcam1 - Falling").GetComponent<Cinemachine.CinemachineVirtualCamera> ();
+		//cvCamera_TopViewFalling = GameObject.Find ("CM vcam2 - TopFalling").GetComponent<Cinemachine.CinemachineVirtualCamera> ();
 
 		camPOI = GetComponentInChildren<CameraFollowPOI> ();
 
 		originalGlideStrength = playerCtrl.glideStrength;
-		original_FallCamPriority = cvCamera_Falling.Priority;
-		original_TopFallCamPriority = cvCamera_TopViewFalling.Priority;
+		//original_FallCamPriority = cvCamera_Falling.Priority;
+		//original_TopFallCamPriority = cvCamera_TopViewFalling.Priority;
 	}
 
 	void Update(){
@@ -64,10 +64,10 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 		col.enabled = true;
 	}
 
-	IEnumerator FallingCamera(){
-		yield return new WaitForSeconds (2.0f);
-		cvCamera_TopViewFalling.Priority = 21;
-	}
+//	IEnumerator FallingCamera(){
+//		yield return new WaitForSeconds (2.0f);
+//		cvCamera_TopViewFalling.Priority = 21;
+//	}
 
 
 	void OnTriggerEnter(Collider col){
@@ -96,20 +96,20 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			currentMomentum = col.transform.forward * (windcurrentForce / 100);
 		}
 
-		if(col.CompareTag("Falling_Trigger")){
-			playerCtrl.glideStrength = 0f;
-			cvCamera_Falling.Priority = 20;
-			//transform.LookAt (GameObject.Find ("Father").transform);
-			StartCoroutine ("FallingCamera");
-			col.gameObject.SetActive (false);
-		}
-
-		if(col.CompareTag("StopFalling")){
-			playerCtrl.glideStrength = originalGlideStrength;
-			cvCamera_Falling.Priority = original_FallCamPriority;
-			cvCamera_TopViewFalling.Priority = original_TopFallCamPriority;
-			blackScrn.SetActive (true);
-		}
+//		if(col.CompareTag("Falling_Trigger")){
+//			playerCtrl.glideStrength = 0f;
+//			cvCamera_Falling.Priority = 20;
+//			//transform.LookAt (GameObject.Find ("Father").transform);
+//			StartCoroutine ("FallingCamera");
+//			col.gameObject.SetActive (false);
+//		}
+//
+//		if(col.CompareTag("StopFalling")){
+//			playerCtrl.glideStrength = originalGlideStrength;
+//			cvCamera_Falling.Priority = original_FallCamPriority;
+//			cvCamera_TopViewFalling.Priority = original_TopFallCamPriority;
+//			blackScrn.SetActive (true);
+//		}
 
 		if(col.CompareTag("Respawn")){
 			respawnPoint = col.transform.position;
