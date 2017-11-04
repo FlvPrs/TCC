@@ -196,6 +196,12 @@ public class WalkingController : Controller {
 			for (int i = 0; i < hit.Length; i++) {
 				if (hit [i].normal == Vector3.zero)
 					continue;
+
+				if (!hit [i].collider.CompareTag("Untagged")){
+					isClimbing = false;
+					climbing = false;
+					break;
+				}
 				
 				float slopeAngle = Vector3.Angle (hit [i].normal, Vector3.up);
 				if(slopeAngle >= maxClimbAngle && rb.velocity.y > 0f){
