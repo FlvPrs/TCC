@@ -57,11 +57,15 @@ public class WalkingController : Controller {
 
 	public LayerMask raycastMask = -1;
 
+	public WalkingStates walkStates;
+
 	//Delegates and events
 	public delegate void FacingChangeHandler (FacingDirection fd);
 	public static event FacingChangeHandler OnFacingChange;
 //	public delegate void HitboxEventHandler (float dur, float sec, ActionType act);
 //	public static event HitboxEventHandler OnInteract;
+
+	public GameObject asas;
 
 	protected override void Start() {
 		base.Start ();
@@ -102,13 +106,15 @@ public class WalkingController : Controller {
 			cameraRotation = data.axes [3];
 		}
 
-		//Set vertical jump on Keyboard
-//		if(data.buttons[0] == true){
+		//Check vertical Jump on Controller
+//		if(data.axes[4] != 0f){
+//			jumpTriggerStrength = data.axes [4];
 //			if (jumpPressTime == 0f) {
-//				if (Grounded()) {
+//				if (Grounded() && jumpCooldown <= 0f) {
 //					adjVertVelocity = jumpSpeed;
+//					jumpCooldown = maxJumpCooldown;
 //					jumpInertia = walkVelocity;
-//				} else if (flyStamina > 0) {
+//				} else if (!stopGravity && flyStamina > 0) {
 //					isFlying = true;
 //					adjVertVelocity = jumpSpeed;
 //					jumpInertia = walkVelocity;
@@ -119,10 +125,8 @@ public class WalkingController : Controller {
 //		} else {
 //			jumpPressTime = 0f;
 //		}
-
-		//Check vertical Jump on Controller
-		if(data.axes[4] != 0f){
-			jumpTriggerStrength = data.axes [4];
+		if(data.buttons[0]){
+			jumpTriggerStrength = 1f;
 			if (jumpPressTime == 0f) {
 				if (Grounded() && jumpCooldown <= 0f) {
 					adjVertVelocity = jumpSpeed;
@@ -143,13 +147,13 @@ public class WalkingController : Controller {
 		//Check Sing on Controller
 		if(data.axes[5] != 0){
 			if(singPressTime == 0f){
-				birdHeightCtrl.StartClarinet (true, data.axes [5]);
+				birdSingCtrl.StartClarinet (true, data.axes [5]);
 			}
-			birdHeightCtrl.UpdateSoundVolume (data.axes [5]);
+			birdSingCtrl.UpdateSoundVolume (data.axes [5]);
 			singPressTime += Time.deltaTime;
 		} else {
 			singPressTime = 0f;
-			birdHeightCtrl.StartClarinet (false, 0);
+			birdSingCtrl.StartClarinet (false, 0);
 		}
 
 //		//Check if Interact Button is pressed
@@ -167,8 +171,12 @@ public class WalkingController : Controller {
 //		}
 
 		//Change facing
-		if(axis0 || axis1)
-			ChangeFacing(axis0, axis1, data);
+		if (axis0 || axis1) {
+			walkStates.IS_WALKING = true;
+			ChangeFacing (axis0, axis1, data);
+		} else {
+			walkStates.IS_WALKING = false;
+		}
 
 		newInput = true;
 
@@ -208,6 +216,12 @@ public class WalkingController : Controller {
 			for (int i = 0; i < hit.Length; i++) {
 				if (hit [i].normal == Vector3.zero)
 					continue;
+
+				if (!hit [i].collider.CompareTag("Untagged")){
+					isClimbing = false;
+					climbing = false;
+					break;
+				}
 				
 				float slopeAngle = Vector3.Angle (hit [i].normal, Vector3.up);
 				if(slopeAngle >= maxClimbAngle && rb.velocity.y > 0f){
@@ -252,20 +266,33 @@ public class WalkingController : Controller {
 			ResetMovementToZero ();
 			jumpPressTime = 0f;
 			singPressTime = 0f;
-			birdHeightCtrl.StartClarinet (false, 0);
+			birdSingCtrl.StartClarinet (false, 0);
+			walkStates.IS_WALKING = false;
 		}
 
+		if(jumpPressTime > 0)
+			asas.SetActive (true);
+		else
+			asas.SetActive (false);
+
+		animCtrl.SetBool ("isWalking", walkStates.IS_WALKING);
+
 		birdHeightCtrl.UpdateHeight (sanfonaStrength);
+		walkStates.CURR_HEIGHT_STATE = birdHeightCtrl.currentHeightState;
 
 		if(externalForceAdded){
 			externalForceAdded = false;
-			newInput = false;
-			return;
+			externalForce = Vector3.zero;
+			//newInput = false;
+			//return;
 		}
 
 		bool isGrounded = true;
 		if (!Grounded())
 			isGrounded = false;
+		
+		walkStates.IS_GROUNDED = isGrounded;
+		animCtrl.SetBool ("isGrounded", walkStates.IS_GROUNDED);
 
 		//print (isGrounded);
 			
@@ -286,13 +313,20 @@ public class WalkingController : Controller {
 			rb.velocity = new Vector3 (walkVelocity.x, rb.velocity.y + adjVertVelocity, walkVelocity.z);
 		}
 
+		bool isGliding = false;
+
 		if(rb.velocity.y < 0 && jumpPressTime == 0){ //Queda normal
 			rb.velocity += Vector3.up * -gravity * (fallMultiplier - 1) * Time.deltaTime;
 		} else if (rb.velocity.y < 0 && jumpPressTime > 0) {	//Queda com Glide
+			isGliding = true;
 			rb.velocity += Vector3.up * Mathf.Abs (rb.velocity.y) * glideStrength * jumpTriggerStrength * Time.deltaTime;
 		} else if (rb.velocity.y > 0 && jumpPressTime == 0) {	//Pulo baixo (o pulo alto é o default)
 			rb.velocity += Vector3.up * -gravity * ((lowJumpMultiplier) - 1) * Time.deltaTime;
 		}
+
+		walkStates.IS_GLIDING = isGliding;
+
+		bool isFallingHard = false;
 
 		//Aplicando a Gravidade
 		if (!stopGravity) {
@@ -301,6 +335,7 @@ public class WalkingController : Controller {
 					Vector3 clampedVelocity = rb.velocity;
 					clampedVelocity.y = maxFallVelocity;
 					rb.velocity = clampedVelocity;
+					isFallingHard = true;
 				} else {
 					rb.AddForce (new Vector3 (0, -gravity * rb.mass, 0));
 				}
@@ -309,6 +344,8 @@ public class WalkingController : Controller {
 //				rb.velocity = new Vector3 (rb.velocity.x, 0, rb.velocity.z);
 //			}
 		}
+			
+		walkStates.IS_FALLING_MAX = isFallingHard;
 
 		currentFallVelocity = rb.velocity.y;
 
@@ -386,14 +423,14 @@ public class WalkingController : Controller {
 		rb.velocity = Vector3.zero;
 		rb.AddForce (force, ForceMode.Impulse);
 		externalForce = rb.velocity + force; 
-		StartCoroutine ("RegainControl", duration);
+		//StartCoroutine ("RegainControl", duration);
 	}
 
-	IEnumerator RegainControl(float duration){
-		yield return new WaitForSeconds (duration);
-		externalForce = Vector3.zero;
-		//externalForceAdded = false;
-	}
+//	IEnumerator RegainControl(float duration){
+//		yield return new WaitForSeconds (duration);
+//		externalForce = Vector3.zero;
+//		//externalForceAdded = false;
+//	}
 
 
 	void ResetMovementToZero(){
@@ -408,4 +445,15 @@ public class WalkingController : Controller {
 				jumpInertia = Vector3.zero;
 		}
 	}
+
+	public struct WalkingStates
+	{
+		public bool IS_WALKING;
+		public bool IS_GROUNDED;
+		public bool IS_GLIDING;
+		public bool IS_FALLING_MAX;
+		public HeightState CURR_HEIGHT_STATE;
+		public bool TOCANDO_NOTA;
+	}
+
 }
