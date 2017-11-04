@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FacingSphere : MonoBehaviour {
+public class AnimationForward : MonoBehaviour {
 
-	public float offset = 0.5f;
+	private Animator anim;
 
 	void Awake(){
 		WalkingController.OnFacingChange += RefreshFacing;
+		anim = GetComponent<Animator> ();
+	}
+
+	void Start(){
+		
 	}
 
 	void RefreshFacing(FacingDirection fd){
@@ -29,5 +34,10 @@ public class FacingSphere : MonoBehaviour {
 			transform.localEulerAngles = new Vector3(0, 180, 0);
 			break;
 		}
+	}
+
+	void OnAnimatorMove(){
+		//transform.parent.rotation = anim.rootRotation;
+		transform.parent.position += anim.deltaPosition;
 	}
 }

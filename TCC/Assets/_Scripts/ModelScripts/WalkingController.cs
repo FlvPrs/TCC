@@ -65,6 +65,8 @@ public class WalkingController : Controller {
 //	public delegate void HitboxEventHandler (float dur, float sec, ActionType act);
 //	public static event HitboxEventHandler OnInteract;
 
+	public GameObject asas;
+
 	protected override void Start() {
 		base.Start ();
 		if(OnFacingChange != null){
@@ -105,8 +107,26 @@ public class WalkingController : Controller {
 		}
 
 		//Check vertical Jump on Controller
-		if(data.axes[4] != 0f){
-			jumpTriggerStrength = data.axes [4];
+//		if(data.axes[4] != 0f){
+//			jumpTriggerStrength = data.axes [4];
+//			if (jumpPressTime == 0f) {
+//				if (Grounded() && jumpCooldown <= 0f) {
+//					adjVertVelocity = jumpSpeed;
+//					jumpCooldown = maxJumpCooldown;
+//					jumpInertia = walkVelocity;
+//				} else if (!stopGravity && flyStamina > 0) {
+//					isFlying = true;
+//					adjVertVelocity = jumpSpeed;
+//					jumpInertia = walkVelocity;
+//					flyStamina--;
+//				}
+//			}
+//			jumpPressTime += Time.deltaTime;
+//		} else {
+//			jumpPressTime = 0f;
+//		}
+		if(data.buttons[0]){
+			jumpTriggerStrength = 1f;
 			if (jumpPressTime == 0f) {
 				if (Grounded() && jumpCooldown <= 0f) {
 					adjVertVelocity = jumpSpeed;
@@ -247,15 +267,24 @@ public class WalkingController : Controller {
 			jumpPressTime = 0f;
 			singPressTime = 0f;
 			birdSingCtrl.StartClarinet (false, 0);
+			walkStates.IS_WALKING = false;
 		}
+
+		if(jumpPressTime > 0)
+			asas.SetActive (true);
+		else
+			asas.SetActive (false);
+
+		animCtrl.SetBool ("isWalking", walkStates.IS_WALKING);
 
 		birdHeightCtrl.UpdateHeight (sanfonaStrength);
 		walkStates.CURR_HEIGHT_STATE = birdHeightCtrl.currentHeightState;
 
 		if(externalForceAdded){
 			externalForceAdded = false;
-			newInput = false;
-			return;
+			externalForce = Vector3.zero;
+			//newInput = false;
+			//return;
 		}
 
 		bool isGrounded = true;
@@ -263,6 +292,7 @@ public class WalkingController : Controller {
 			isGrounded = false;
 		
 		walkStates.IS_GROUNDED = isGrounded;
+		animCtrl.SetBool ("isGrounded", walkStates.IS_GROUNDED);
 
 		//print (isGrounded);
 			
@@ -393,14 +423,14 @@ public class WalkingController : Controller {
 		rb.velocity = Vector3.zero;
 		rb.AddForce (force, ForceMode.Impulse);
 		externalForce = rb.velocity + force; 
-		StartCoroutine ("RegainControl", duration);
+		//StartCoroutine ("RegainControl", duration);
 	}
 
-	IEnumerator RegainControl(float duration){
-		yield return new WaitForSeconds (duration);
-		externalForce = Vector3.zero;
-		//externalForceAdded = false;
-	}
+//	IEnumerator RegainControl(float duration){
+//		yield return new WaitForSeconds (duration);
+//		externalForce = Vector3.zero;
+//		//externalForceAdded = false;
+//	}
 
 
 	void ResetMovementToZero(){

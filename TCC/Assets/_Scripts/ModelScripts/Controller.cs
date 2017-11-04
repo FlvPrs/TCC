@@ -20,6 +20,7 @@ public abstract class Controller : MonoBehaviour {
 	protected Transform playerT;
 	protected BirdStatureCtrl birdHeightCtrl;
 	protected BirdSingCtrl birdSingCtrl;
+	public Animator animCtrl;
 
 	void Awake(){
 		rb = GetComponent<Rigidbody> ();
@@ -29,6 +30,8 @@ public abstract class Controller : MonoBehaviour {
 
 		birdHeightCtrl = GetComponent<BirdStatureCtrl> ();
 		birdSingCtrl = GetComponent<BirdSingCtrl> ();
+
+		//animCtrl = GetComponentInChildren<Animator> ();
 
 		cam = GetComponentInChildren<Camera> ();
 		hudScript = GameObject.FindObjectOfType<HUDScript> ();

@@ -23,13 +23,13 @@ public class BirdSingCtrl : MonoBehaviour {
 	private float cooldown = 0f;
 
 	private AudioSource clarinet;
-	private Material playerMat;
+	//public Material playerMat;
 	private float currentAir = 5f;
 	private float maxAir = 10f;
 
 	void Awake () {
 		clarinet = GetComponent<AudioSource> ();
-		playerMat = GetComponentInChildren<MeshRenderer> ().material;
+		//playerMat = GetComponentInChildren<MeshRenderer> ().material;
 		playerCtrl = GetComponent<WalkingController> ();
 
 		partiturasPossiveis = new int[]{ 121, 123, 131, 132, 212, 213, 231, 232, 312, 313, 321, 323 };
@@ -83,7 +83,7 @@ public class BirdSingCtrl : MonoBehaviour {
 	}
 
 	public void UpdateColor(){
-		playerMat.color = hpColor.Evaluate (currentAir / maxAir);
+		//playerMat.color = hpColor.Evaluate (currentAir / maxAir);
 	}
 
 	void UpdatePartituraAtual(HeightState state){
