@@ -13,20 +13,16 @@ public class FacingSphere : MonoBehaviour {
 	void RefreshFacing(FacingDirection fd){
 		switch (fd) {
 		case FacingDirection.North:
-			//transform.localPosition = Vector3.forward * offset;
-			transform.localEulerAngles = new Vector3(0, 0, 0);
+			transform.localPosition = Vector3.forward * offset;
 			break;
 		case FacingDirection.East:
-			//transform.localPosition = Vector3.right * offset;
-			transform.localEulerAngles = new Vector3(0, 90, 0);
+			transform.localPosition = Vector3.right * offset;
 			break;
 		case FacingDirection.West:
-			//transform.localPosition = Vector3.left * offset;
-			transform.localEulerAngles = new Vector3(0, -90, 0);
+			transform.localPosition = Vector3.left * offset;
 			break;
 		default:
-			//transform.localPosition = Vector3.back * offset;
-			transform.localEulerAngles = new Vector3(0, 180, 0);
+			transform.localPosition = Vector3.back * offset;
 			break;
 		}
 	}

@@ -15,18 +15,29 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 	private Vector3 respawnPoint;
 
 	private WalkingController playerCtrl;
+	private BirdStatureCtrl birdHeight;
 	private CameraFollowPOI camPOI;
 
+	//private Cinemachine.CinemachineVirtualCamera cvCamera_Falling;
+	//private Cinemachine.CinemachineVirtualCamera cvCamera_TopViewFalling;
+
 	private float originalGlideStrength;
+	//private int original_FallCamPriority;
+	//private int original_TopFallCamPriority;
 
 	public GameObject blackScrn;
 
 	void Awake(){
 		playerCtrl = GetComponent<WalkingController> ();
+		birdHeight = GetComponent<BirdStatureCtrl> ();
+		//cvCamera_Falling = GameObject.Find ("CM vcam1 - Falling").GetComponent<Cinemachine.CinemachineVirtualCamera> ();
+		//cvCamera_TopViewFalling = GameObject.Find ("CM vcam2 - TopFalling").GetComponent<Cinemachine.CinemachineVirtualCamera> ();
 
 		camPOI = GetComponentInChildren<CameraFollowPOI> ();
 
 		originalGlideStrength = playerCtrl.glideStrength;
+		//original_FallCamPriority = cvCamera_Falling.Priority;
+		//original_TopFallCamPriority = cvCamera_TopViewFalling.Priority;
 	}
 
 	void Update(){
@@ -36,11 +47,11 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 
 		if(Physics.Raycast(transform.position + transform.up * 0.1f, Vector3.down, out hit, 0.2f)){
 			if(hit.transform.CompareTag("PlatAlto")){
-				if(playerCtrl.walkStates.CURR_HEIGHT_STATE != HeightState.High){
+				if(birdHeight.currentState != HeightState.High){
 					StartCoroutine ("FallThroughCollider", hit.collider);
 				}
 			} else if(hit.transform.CompareTag("PlatBaixo")){
-				if(playerCtrl.walkStates.CURR_HEIGHT_STATE != HeightState.Low){
+				if(birdHeight.currentState != HeightState.Low){
 					StartCoroutine ("FallThroughCollider", hit.collider);
 				}
 			}
@@ -65,12 +76,12 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			playerCtrl.StartCoroutine("GrabLedge", dir);
 		}
 
-		if(col.CompareTag("Cogumelo")){
-			playerCtrl.externalForceAdded = true;
-			//col.GetComponentInParent<AudioSource> ().Play ();
-			Vector3 dir = col.transform.up * drumForce;
-			playerCtrl.AddExternalForce (dir, 0.5f);
-		}
+//		if(col.CompareTag("Drum")){
+//			playerCtrl.externalForceAdded = true;
+//			col.GetComponentInParent<AudioSource> ().Play ();
+//			Vector3 dir = col.transform.up * drumForce;
+//			playerCtrl.AddExternalForce (dir, 0.5f);
+//		}
 
 		if(col.CompareTag("PowerUp")){
 			col.gameObject.SetActive (false);
