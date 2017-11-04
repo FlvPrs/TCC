@@ -36,8 +36,6 @@ public class WalkingController : Controller {
 	float maxClimbAngle = 40f;
 	bool isClimbing = false;
 
-	public bool pressedSpace = false;
-
 	//Settings
 	public float walkSpeed = 5f;
 	public float jumpSpeed = 8.3f;
@@ -122,34 +120,25 @@ public class WalkingController : Controller {
 //			jumpPressTime = 0f;
 //		}
 
-		//Check vertical Jump
+		//Check vertical Jump on Controller
 		if(data.axes[4] != 0f){
 			jumpTriggerStrength = data.axes [4];
 			if (jumpPressTime == 0f) {
 				if (Grounded() && jumpCooldown <= 0f) {
-					//ze eu acabei de apertar o botao E etou no chao E eu pozzo pular...
-					pressedSpace = true;
-					print (pressedSpace);
 					adjVertVelocity = jumpSpeed;
 					jumpCooldown = maxJumpCooldown;
 					jumpInertia = walkVelocity;
 				} else if (!stopGravity && flyStamina > 0) {
-					//ze eu acabei de apertar o botao E ze eu eztou no ar E pozzo voar...
 					isFlying = true;
 					adjVertVelocity = jumpSpeed;
 					jumpInertia = walkVelocity;
 					flyStamina--;
 				}
 			}
-			//ze eu eztou apertando o botao de pulo...
-			pressedSpace = false;
 			jumpPressTime += Time.deltaTime;
 		} else {
-			pressedSpace = false;
 			jumpPressTime = 0f;
 		}
-
-		print (pressedSpace);
 
 		//Check Sing on Controller
 		if(data.axes[5] != 0){
