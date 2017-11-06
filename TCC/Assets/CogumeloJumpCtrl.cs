@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class CogumeloJumpCtrl : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+	public float jumpForce = 10f;
+
+	void OnTriggerEnter(Collider col){
+		if(col.CompareTag("Player")){
+			col.GetComponent<WalkingController>().externalForceAdded = true;
+			//col.GetComponentInParent<AudioSource> ().Play ();
+			Vector3 dir = col.transform.up * jumpForce;
+			col.GetComponent<WalkingController>().AddExternalForce (dir, 0.5f);
+		}
 	}
 }

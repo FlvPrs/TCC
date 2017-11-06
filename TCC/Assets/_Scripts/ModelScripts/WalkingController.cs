@@ -33,7 +33,7 @@ public class WalkingController : Controller {
 	float maxJumpCooldown = 0.2f;
 	float jumpCooldown = 0f;
 
-	float maxClimbAngle = 40f;
+	float maxClimbAngle = 50f;
 	bool isClimbing = false;
 
 	//Settings
@@ -213,6 +213,8 @@ public class WalkingController : Controller {
 
 		if (ray1 || ray2 || ray3 || ray4 || ray5 || ray6 || ray7 || ray8 || ray9) {
 			bool climbing = false;
+			//float angle = 0f;
+			//Vector3 dir = Vector3.zero;
 			for (int i = 0; i < hit.Length; i++) {
 				if (hit [i].normal == Vector3.zero)
 					continue;
@@ -227,6 +229,10 @@ public class WalkingController : Controller {
 				if(slopeAngle >= maxClimbAngle && rb.velocity.y > 0f){
 					isClimbing = true;
 					climbing = true;
+//					if (slopeAngle > angle) {
+//						angle = slopeAngle;
+//						//dir = hit [i].normal;
+//					}
 				} else if(slopeAngle < maxClimbAngle) {
 					isClimbing = false;
 					climbing = false;
@@ -234,8 +240,11 @@ public class WalkingController : Controller {
 				}
 			}
 
-			if (climbing)
+			if (climbing) {
+				//rb.AddForce (dir * rb.mass * 2f);
+				//rb.AddForce (new Vector3 (0, -gravity * rb.mass * 100f/angle, 0));
 				return false;
+			}
 
 			flyStamina = maxFlyStamina;
 			hudScript.UpdateWingUI (false, flyStamina);
@@ -261,7 +270,8 @@ public class WalkingController : Controller {
 	//Always called after Updates are called
 	void LateUpdate() {
 
-		if(!newInput || isClimbing){
+		// if(!newInput || isClimbing){
+		if(!newInput){
 			//prevWalkVelocity = walkVelocity;
 			ResetMovementToZero ();
 			jumpPressTime = 0f;
@@ -270,10 +280,12 @@ public class WalkingController : Controller {
 			walkStates.IS_WALKING = false;
 		}
 
-		if(jumpPressTime > 0)
-			asas.SetActive (true);
-		else
-			asas.SetActive (false);
+
+		if(isClimbing){
+			jumpPressTime = 0f;
+			adjVertVelocity = 0f;
+		}
+
 
 		animCtrl.SetBool ("isWalking", walkStates.IS_WALKING);
 
@@ -294,6 +306,11 @@ public class WalkingController : Controller {
 		walkStates.IS_GROUNDED = isGrounded;
 		animCtrl.SetBool ("isGrounded", walkStates.IS_GROUNDED);
 
+		if(jumpPressTime > 0.2f && !isGrounded)
+			asas.SetActive (true);
+		else
+			asas.SetActive (false);
+
 		//print (isGrounded);
 			
 		if (!isGrounded) {
@@ -307,6 +324,9 @@ public class WalkingController : Controller {
 			
 			if (!isClimbing)
 				rb.velocity = new Vector3 (jumpInertia.x, adjVertVelocity, jumpInertia.z);
+			else
+				rb.AddForce (new Vector3 (jumpInertia.x * 0.05f, adjVertVelocity, jumpInertia.z * 0.05f), ForceMode.Acceleration);
+				//rb.velocity = new Vector3 (jumpInertia.x * 0.05f, adjVertVelocity, jumpInertia.z * 0.05f);
 			
 		} else {
 			walkVelocity = Vector3.ClampMagnitude (walkVelocity, walkSpeed);
@@ -315,9 +335,9 @@ public class WalkingController : Controller {
 
 		bool isGliding = false;
 
-		if(rb.velocity.y < 0 && jumpPressTime == 0){ //Queda normal
+		if (rb.velocity.y < 0 && jumpPressTime == 0) { //Queda normal
 			rb.velocity += Vector3.up * -gravity * (fallMultiplier - 1) * Time.deltaTime;
-		} else if (rb.velocity.y < 0 && jumpPressTime > 0) {	//Queda com Glide
+		} else if (rb.velocity.y < 0 && jumpPressTime > 0 && !isClimbing) {	//Queda com Glide
 			isGliding = true;
 			rb.velocity += Vector3.up * Mathf.Abs (rb.velocity.y) * glideStrength * jumpTriggerStrength * Time.deltaTime;
 		} else if (rb.velocity.y > 0 && jumpPressTime == 0) {	//Pulo baixo (o pulo alto é o default)
@@ -337,7 +357,10 @@ public class WalkingController : Controller {
 					rb.velocity = clampedVelocity;
 					isFallingHard = true;
 				} else {
-					rb.AddForce (new Vector3 (0, -gravity * rb.mass, 0));
+//					if(!isClimbing)
+						rb.AddForce (new Vector3 (0, -gravity * rb.mass, 0));
+//					else
+//						rb.AddForce (new Vector3 (0, -gravity * rb.mass, 0), ForceMode.VelocityChange);
 				}
 			} 
 //			else if (isGrounded && !newInput && rb.velocity.y < 0) {

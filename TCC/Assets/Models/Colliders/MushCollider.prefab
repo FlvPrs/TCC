@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4229826339688520}
   - component: {fileID: 64753964957971652}
+  - component: {fileID: 114281196896584666}
   m_Layer: 0
   m_Name: MushCollider
   m_TagString: Cogumelo
@@ -54,3 +55,15 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: e71be8ae06ab64942989715e73c8f11e, type: 3}
+--- !u!114 &114281196896584666
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1833986173730628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f1e097b969bc8d4fbf0e5edae47b398, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpForce: 15
