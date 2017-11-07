@@ -1802,7 +1802,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 360298473}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
   m_Name: 
@@ -1851,7 +1851,7 @@ MonoBehaviour:
   Params: []
   OverrideAttenuation: 0
   OverrideMinDistance: 1
-  OverrideMaxDistance: 20
+  OverrideMaxDistance: 15
 --- !u!114 &360298483
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2535,6 +2535,11 @@ Prefab:
         type: 2}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114498908120874366, guid: 96fedb1ed671e754db0a8f8de5d38cc3,
+        type: 2}
+      propertyPath: axisKeys.Array.data[5].positive
+      value: 303
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 96fedb1ed671e754db0a8f8de5d38cc3, type: 2}
