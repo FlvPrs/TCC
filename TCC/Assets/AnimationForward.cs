@@ -16,24 +16,30 @@ public class AnimationForward : MonoBehaviour {
 	}
 
 	void RefreshFacing(FacingDirection fd){
-		switch (fd) {
-		case FacingDirection.North:
-			//transform.localPosition = Vector3.forward * offset;
-			transform.localEulerAngles = new Vector3(0, 0, 0);
-			break;
-		case FacingDirection.East:
-			//transform.localPosition = Vector3.right * offset;
-			transform.localEulerAngles = new Vector3(0, 90, 0);
-			break;
-		case FacingDirection.West:
-			//transform.localPosition = Vector3.left * offset;
-			transform.localEulerAngles = new Vector3(0, -90, 0);
-			break;
-		default:
-			//transform.localPosition = Vector3.back * offset;
-			transform.localEulerAngles = new Vector3(0, 180, 0);
-			break;
-		}
+//		switch (fd) {
+//		case FacingDirection.North:
+//			//transform.localPosition = Vector3.forward * offset;
+//			transform.localEulerAngles = new Vector3(0, 0, 0);
+//			break;
+//		case FacingDirection.East:
+//			//transform.localPosition = Vector3.right * offset;
+//			transform.localEulerAngles = new Vector3(0, 90, 0);
+//			break;
+//		case FacingDirection.West:
+//			//transform.localPosition = Vector3.left * offset;
+//			transform.localEulerAngles = new Vector3(0, -90, 0);
+//			break;
+//		default:
+//			//transform.localPosition = Vector3.back * offset;
+//			transform.localEulerAngles = new Vector3(0, 180, 0);
+//			break;
+//		}
+	}
+
+	public void ChangeForward(Vector3 dir){
+		Vector3 newDir = dir;
+		newDir.y = 0f;
+		transform.forward = newDir;
 	}
 
 	void OnAnimatorMove(){

@@ -18,6 +18,9 @@ public class ChangeCamOnTrigger : MonoBehaviour {
 	}
 
 	void OnTriggerExit(Collider col){
+		if (camCtrl.currentCam != newCamIndex)
+			return;
+
 		if(exitAsDifferentCam)
 			camCtrl.ChangeCameraTo (exitCamIndex);
 		else

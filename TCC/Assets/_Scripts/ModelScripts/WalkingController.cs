@@ -29,6 +29,8 @@ public class WalkingController : Controller {
 	float jumpTriggerStrength;
 	float singPressTime;
 	bool stopGravity;
+	Transform holdOrientation;
+	Transform orientation;
 
 	float maxJumpCooldown = 0.2f;
 	float jumpCooldown = 0f;
@@ -43,7 +45,7 @@ public class WalkingController : Controller {
 	public float attackDamage = 5f;
 	public float gravity = 10.0f;
 	public float fallMultiplier = 2.5f;
-	public float lowJumpMultiplier = 2f;
+	//public float lowJumpMultiplier = 2f;
 	[Range (0.4f, 7f)]
 	public float glideStrength = 5f;
 	[Range (0, 1)]
@@ -65,6 +67,8 @@ public class WalkingController : Controller {
 //	public delegate void HitboxEventHandler (float dur, float sec, ActionType act);
 //	public static event HitboxEventHandler OnInteract;
 
+	private AnimationForward anim;
+
 	public GameObject asas;
 
 	protected override void Start() {
@@ -74,6 +78,13 @@ public class WalkingController : Controller {
 		}
 		flyStamina = maxFlyStamina;
 		maxFallVelocity = -maxFallVelocity;
+
+		if (orientation == null)
+			orientation = transform;
+
+		holdOrientation = orientation;
+
+		anim = GetComponentInChildren<AnimationForward> ();
 	}
 
 	public override void ReadInput (InputData data) {
@@ -86,13 +97,13 @@ public class WalkingController : Controller {
 
 		//Set vertical movement
 		if(data.axes[0] != 0f){
-			walkVelocity += myT.forward * data.axes [0] * walkSpeed;
+			walkVelocity += orientation.forward * data.axes [0] * walkSpeed;
 			axis0 = true;
 		}
 
 		//Set horizontal movement
 		if(data.axes[1] != 0f){
-			walkVelocity += myT.right * data.axes [1] * walkSpeed;
+			walkVelocity += orientation.right * data.axes [1] * walkSpeed;
 			axis1 = true;
 		}
 
@@ -102,9 +113,9 @@ public class WalkingController : Controller {
 		}
 
 		//Set camera rotation
-		if(data.axes[3] != 0f){
-			cameraRotation = data.axes [3];
-		}
+//		if(data.axes[3] != 0f){
+//			cameraRotation = data.axes [3];
+//		}
 
 		//Check vertical Jump on Controller
 //		if(data.axes[4] != 0f){
@@ -132,7 +143,7 @@ public class WalkingController : Controller {
 					adjVertVelocity = jumpSpeed;
 					jumpCooldown = maxJumpCooldown;
 					jumpInertia = walkVelocity;
-				} else if (!stopGravity && flyStamina > 0) {
+				} else if (!stopGravity && !isClimbing && flyStamina > 0) {
 					isFlying = true;
 					adjVertVelocity = jumpSpeed;
 					jumpInertia = walkVelocity;
@@ -173,7 +184,8 @@ public class WalkingController : Controller {
 		//Change facing
 		if (axis0 || axis1) {
 			walkStates.IS_WALKING = true;
-			ChangeFacing (axis0, axis1, data);
+			//ChangeFacing (axis0, axis1, data);
+			anim.ChangeForward(walkVelocity.normalized);
 		} else {
 			walkStates.IS_WALKING = false;
 		}
@@ -186,30 +198,30 @@ public class WalkingController : Controller {
 	bool Grounded(){
 		RaycastHit[] hit = new RaycastHit[9];
 
-		bool ray1 = Physics.Raycast(myT.position + myT.up * 0.1f, Vector3.down, out hit[0], 0.15f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f, Vector3.down * (0.15f));
+		bool ray1 = Physics.Raycast(myT.position + myT.up * 0.1f, Vector3.down, out hit[0], 0.25f, raycastMask);
+		Debug.DrawRay (myT.position + myT.up * 0.1f, Vector3.down * (0.25f));
 
-		bool ray2 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down, out hit[1], 0.15f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down * (0.15f));
-		bool ray3 = Physics.Raycast(myT.position + myT.up * 0.1f - (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down, out hit[2], 0.15f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down * (0.15f));
-		bool ray4 = Physics.Raycast(myT.position + myT.up * 0.1f + (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down, out hit[3], 0.15f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down * (0.15f));
-		bool ray5 = Physics.Raycast(myT.position + myT.up * 0.1f - (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down, out hit[4], 0.15f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down * (0.15f));
+		bool ray2 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down, out hit[1], 0.25f, raycastMask);
+		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down * (0.25f));
+		bool ray3 = Physics.Raycast(myT.position + myT.up * 0.1f - (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down, out hit[2], 0.25f, raycastMask);
+		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down * (0.25f));
+		bool ray4 = Physics.Raycast(myT.position + myT.up * 0.1f + (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down, out hit[3], 0.25f, raycastMask);
+		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down * (0.25f));
+		bool ray5 = Physics.Raycast(myT.position + myT.up * 0.1f - (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down, out hit[4], 0.25f, raycastMask);
+		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down * (0.25f));
 
-		bool ray6 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down, out hit[5], 0.15f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down * (0.15f));
-		bool ray7 = Physics.Raycast (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down, out hit[6], 0.15f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down * (0.15f));
-		bool ray8 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down, out hit[7], 0.15f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down * (0.15f));
-		bool ray9 = Physics.Raycast (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down, out hit[8], 0.15f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down * (0.15f));
+		bool ray6 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down, out hit[5], 0.25f, raycastMask);
+		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down * (0.25f));
+		bool ray7 = Physics.Raycast (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down, out hit[6], 0.25f, raycastMask);
+		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down * (0.25f));
+		bool ray8 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down, out hit[7], 0.25f, raycastMask);
+		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down * (0.25f));
+		bool ray9 = Physics.Raycast (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down, out hit[8], 0.25f, raycastMask);
+		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down * (0.25f));
 
-		for (int i = 0; i < hit.Length; i++) {
-			Debug.DrawRay (hit [i].point, hit [i].normal, Color.blue);
-		}
+//		for (int i = 0; i < hit.Length; i++) {
+//			Debug.DrawRay (hit [i].point, hit [i].normal, Color.blue);
+//		}
 
 		if (ray1 || ray2 || ray3 || ray4 || ray5 || ray6 || ray7 || ray8 || ray9) {
 			bool climbing = false;
@@ -220,25 +232,24 @@ public class WalkingController : Controller {
 					continue;
 
 				if (!hit [i].collider.CompareTag("Untagged")){
-					isClimbing = false;
 					climbing = false;
 					break;
 				}
 				
 				float slopeAngle = Vector3.Angle (hit [i].normal, Vector3.up);
-				if(slopeAngle >= maxClimbAngle && rb.velocity.y > 0f){
-					isClimbing = true;
+				if(slopeAngle >= maxClimbAngle){
 					climbing = true;
 //					if (slopeAngle > angle) {
 //						angle = slopeAngle;
 //						//dir = hit [i].normal;
 //					}
 				} else if(slopeAngle < maxClimbAngle) {
-					isClimbing = false;
 					climbing = false;
 					break;
 				}
 			}
+
+			isClimbing = climbing;
 
 			if (climbing) {
 				//rb.AddForce (dir * rb.mass * 2f);
@@ -258,9 +269,9 @@ public class WalkingController : Controller {
 
 	void FixedUpdate(){
 		//float cameraY = Input.GetAxis ("Mouse X") * GameConstants.MOUSE_SENSITIVITY * Time.deltaTime; 
-		float cameraY = cameraRotation * GameConstants.MOUSE_SENSITIVITY * Time.deltaTime;
+		//float cameraY = cameraRotation * GameConstants.MOUSE_SENSITIVITY * Time.deltaTime;
 
-		myT.Rotate (0, cameraY, 0);
+		//myT.Rotate (0, cameraY, 0);
 
 		if(jumpCooldown > 0){
 			jumpCooldown -= Time.deltaTime;
@@ -278,6 +289,9 @@ public class WalkingController : Controller {
 			singPressTime = 0f;
 			birdSingCtrl.StartClarinet (false, 0);
 			walkStates.IS_WALKING = false;
+
+			if(holdOrientation != orientation)
+				orientation = holdOrientation;
 		}
 
 
@@ -315,7 +329,11 @@ public class WalkingController : Controller {
 			
 		if (!isGrounded) {
 			jumpInertia += (walkVelocity * aerialCtrl) + externalForce;
-			jumpInertia = Vector3.ClampMagnitude (jumpInertia, walkSpeed);
+
+			if(!walkStates.IS_GLIDING)
+				jumpInertia = Vector3.ClampMagnitude (jumpInertia, walkSpeed);
+			else
+				jumpInertia = Vector3.ClampMagnitude (jumpInertia, walkSpeed * 1.5f);
 
 			if (!isFlying)
 				adjVertVelocity += rb.velocity.y;
@@ -324,9 +342,11 @@ public class WalkingController : Controller {
 			
 			if (!isClimbing)
 				rb.velocity = new Vector3 (jumpInertia.x, adjVertVelocity, jumpInertia.z);
-			else
-				rb.AddForce (new Vector3 (jumpInertia.x * 0.05f, adjVertVelocity, jumpInertia.z * 0.05f), ForceMode.Acceleration);
-				//rb.velocity = new Vector3 (jumpInertia.x * 0.05f, adjVertVelocity, jumpInertia.z * 0.05f);
+			else {
+				//rb.AddForce (new Vector3 (jumpInertia.x * 0.25f, adjVertVelocity, jumpInertia.z * 0.25f), ForceMode.Acceleration);
+				rb.velocity = new Vector3 (jumpInertia.x * 0.35f, adjVertVelocity, jumpInertia.z * 0.35f);
+				rb.AddForce (Vector3.up * -gravity);
+			}
 			
 		} else {
 			walkVelocity = Vector3.ClampMagnitude (walkVelocity, walkSpeed);
@@ -340,9 +360,10 @@ public class WalkingController : Controller {
 		} else if (rb.velocity.y < 0 && jumpPressTime > 0 && !isClimbing) {	//Queda com Glide
 			isGliding = true;
 			rb.velocity += Vector3.up * Mathf.Abs (rb.velocity.y) * glideStrength * jumpTriggerStrength * Time.deltaTime;
-		} else if (rb.velocity.y > 0 && jumpPressTime == 0) {	//Pulo baixo (o pulo alto é o default)
-			rb.velocity += Vector3.up * -gravity * ((lowJumpMultiplier) - 1) * Time.deltaTime;
-		}
+		} 
+//		else if (rb.velocity.y > 0 && jumpPressTime == 0) {	//Pulo baixo (o pulo alto é o default)
+//			rb.velocity += Vector3.up * -gravity * ((lowJumpMultiplier) - 1) * Time.deltaTime;
+//		}
 
 		walkStates.IS_GLIDING = isGliding;
 
@@ -376,11 +397,11 @@ public class WalkingController : Controller {
 	}
 
 	void ChangeFacing(bool axis0, bool axis1, InputData data){
-		if(axis0){
-			facing = (data.axes[0] > 0) ? FacingDirection.North : FacingDirection.South;
-		} else if(axis1){
-			facing = (data.axes[1] > 0) ? FacingDirection.East : FacingDirection.West;
-		}
+//		if(axis0){
+//			facing = (data.axes[0] > 0) ? FacingDirection.North : FacingDirection.South;
+//		} else if(axis1){
+//			facing = (data.axes[1] > 0) ? FacingDirection.East : FacingDirection.West;
+//		}
 
 		//Call change facing event
 		if (OnFacingChange != null) {
@@ -454,6 +475,14 @@ public class WalkingController : Controller {
 //		externalForce = Vector3.zero;
 //		//externalForceAdded = false;
 //	}
+
+
+	public void ChangeOrientationToCamera(Transform t, bool changedCam){
+		if (changedCam && walkVelocity != Vector3.zero)
+			holdOrientation = t;
+		else if(holdOrientation == orientation)
+			orientation = t;
+	}
 
 
 	void ResetMovementToZero(){
