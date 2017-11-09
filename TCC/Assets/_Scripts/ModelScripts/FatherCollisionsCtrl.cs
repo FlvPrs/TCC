@@ -30,6 +30,11 @@ public class FatherCollisionsCtrl : MonoBehaviour {
 			fatherPath.ChangeWaypoint ();
 		}
 
+		if (col.CompareTag("Pai_Sing"))
+		{
+			GetComponent<AudioSource> ().Play ();
+		}
+
 		if(col.CompareTag("Pai_Esticar")){
 			linkMover.m_Method = OffMeshLinkMoveMethod.NormalSpeed;
 			StartCoroutine ("WaitForChangeHeight", 0.9f);

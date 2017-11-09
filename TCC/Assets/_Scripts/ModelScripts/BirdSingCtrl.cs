@@ -11,6 +11,8 @@ using UnityEngine;
 public class BirdSingCtrl : MonoBehaviour {
 
 	public Gradient hpColor;
+	public GameObject staccatoCollider;
+	public GameObject partituraCollider;
 
 	private HeightState oldState;
 
@@ -28,6 +30,9 @@ public class BirdSingCtrl : MonoBehaviour {
 	private float maxAir = 10f;
 
 	void Awake () {
+		staccatoCollider.SetActive (false);
+		partituraCollider.SetActive (false);
+
 		clarinet = GetComponent<AudioSource> ();
 		//playerMat = GetComponentInChildren<MeshRenderer> ().material;
 		playerCtrl = GetComponent<WalkingController> ();
@@ -35,12 +40,12 @@ public class BirdSingCtrl : MonoBehaviour {
 		partiturasPossiveis = new int[]{ 121, 123, 131, 132, 212, 213, 231, 232, 312, 313, 321, 323 };
 		partiturasConhecidas = new bool[partiturasPossiveis.Length]; //se não definir, bool permanece false por default.
 
-		partiturasConhecidas [1] = true;
+		//partiturasConhecidas [1] = true;
 	}
 
 
 	void Update () {
-		if(playerCtrl.walkStates.TOCANDO_NOTA){
+		if(playerCtrl.walkStates.TOCANDO_SUSTAIN){
 			if(oldState != playerCtrl.walkStates.CURR_HEIGHT_STATE){
 				oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
 				UpdatePartituraAtual (oldState);
@@ -57,6 +62,7 @@ public class BirdSingCtrl : MonoBehaviour {
 			cooldown -= Time.deltaTime;
 		} else {
 			partituraAtual = "";
+			partituraCollider.SetActive (false);
 		}
 
 		UpdateColor ();
@@ -64,14 +70,30 @@ public class BirdSingCtrl : MonoBehaviour {
 		//print (partituraAtual);
 	}
 
-	public void StartClarinet(bool start, float volume){
+	public void StartClarinet_Staccato(){
+
+		if(!clarinet.isPlaying)
+			clarinet.Play ();
+
+		staccatoCollider.SetActive (true);
+		StartCoroutine("StopStaccato");
+	}
+
+	IEnumerator StopStaccato(){
+		yield return new WaitForSeconds (0.2f);
+		clarinet.Stop ();
+		playerCtrl.walkStates.TOCANDO_STACCATO = false;
+		staccatoCollider.SetActive (false);
+	}
+
+	public void StartClarinet_Sustain(bool start, float volume){
 		if (start && currentAir >= maxAir/4f) { //ou seja, se ainda tiver 25% de ar disponível
-			playerCtrl.walkStates.TOCANDO_NOTA = true;
+			playerCtrl.walkStates.TOCANDO_SUSTAIN = true;
 			clarinet.Play ();
 			oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
 			UpdatePartituraAtual (oldState);
 		} else {
-			playerCtrl.walkStates.TOCANDO_NOTA = false;
+			playerCtrl.walkStates.TOCANDO_SUSTAIN = false;
 			clarinet.Stop ();
 		}
 
@@ -120,6 +142,7 @@ public class BirdSingCtrl : MonoBehaviour {
 
 	void TocarPartitura(int partitura){
 		print ("YAYYY " + partitura);
+		partituraCollider.SetActive (true);
 	}
 }
 

@@ -38,6 +38,8 @@ public class WalkingController : Controller {
 	float maxClimbAngle = 50f;
 	bool isClimbing = false;
 
+	bool canPlayStaccato = true;
+
 	//Settings
 	public float walkSpeed = 5f;
 	public float jumpSpeed = 8.3f;
@@ -155,16 +157,26 @@ public class WalkingController : Controller {
 			jumpPressTime = 0f;
 		}
 
-		//Check Sing on Controller
-		if(data.axes[5] != 0){
+		//============= Check Sing on Controller ==================
+		//Check Sustain
+		if(data.axes[5] != 0 && !walkStates.TOCANDO_STACCATO){
 			if(singPressTime == 0f){
-				birdSingCtrl.StartClarinet (true, data.axes [5]);
+				birdSingCtrl.StartClarinet_Sustain (true, data.axes [5]);
 			}
 			birdSingCtrl.UpdateSoundVolume (data.axes [5]);
 			singPressTime += Time.deltaTime;
-		} else {
+		} else if(!walkStates.TOCANDO_STACCATO) {
 			singPressTime = 0f;
-			birdSingCtrl.StartClarinet (false, 0);
+			birdSingCtrl.StartClarinet_Sustain (false, 1f);
+		}
+
+		//Chech Staccato
+		if(data.buttons[1] && !walkStates.TOCANDO_SUSTAIN && canPlayStaccato){
+			walkStates.TOCANDO_STACCATO = true;
+			canPlayStaccato = false;
+			birdSingCtrl.StartClarinet_Staccato ();
+		} else if(!data.buttons[1] && !walkStates.TOCANDO_STACCATO) {
+			canPlayStaccato = true;
 		}
 
 //		//Check if Interact Button is pressed
@@ -280,14 +292,16 @@ public class WalkingController : Controller {
 
 	//Always called after Updates are called
 	void LateUpdate() {
-
 		// if(!newInput || isClimbing){
 		if(!newInput){
 			//prevWalkVelocity = walkVelocity;
 			ResetMovementToZero ();
 			jumpPressTime = 0f;
 			singPressTime = 0f;
-			birdSingCtrl.StartClarinet (false, 0);
+			if (!walkStates.TOCANDO_STACCATO) {
+				birdSingCtrl.StartClarinet_Sustain (false, 1f);
+				canPlayStaccato = true;
+			}
 			walkStates.IS_WALKING = false;
 
 			if(holdOrientation != orientation)
@@ -505,7 +519,8 @@ public class WalkingController : Controller {
 		public bool IS_GLIDING;
 		public bool IS_FALLING_MAX;
 		public HeightState CURR_HEIGHT_STATE;
-		public bool TOCANDO_NOTA;
+		public bool TOCANDO_SUSTAIN;
+		public bool TOCANDO_STACCATO;
 	}
 
 }
