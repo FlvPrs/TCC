@@ -73,6 +73,9 @@ public class WalkingController : Controller {
 
 	public GameObject asas;
 
+	[HideInInspector]
+	public bool hasBonusJump;
+
 	protected override void Start() {
 		base.Start ();
 		if(OnFacingChange != null){
@@ -150,6 +153,11 @@ public class WalkingController : Controller {
 					adjVertVelocity = jumpSpeed;
 					jumpInertia = walkVelocity;
 					flyStamina--;
+				} else if (!stopGravity && !isClimbing && hasBonusJump) {
+					isFlying = true;
+					adjVertVelocity = jumpSpeed;
+					jumpInertia = walkVelocity;
+					hasBonusJump = false;
 				}
 			}
 			jumpPressTime += Time.deltaTime;
@@ -270,12 +278,12 @@ public class WalkingController : Controller {
 			}
 
 			flyStamina = maxFlyStamina;
-			hudScript.UpdateWingUI (false, flyStamina);
+			hudScript.UpdateWingUI (false, flyStamina, hasBonusJump);
 			return true;
 		}
 
 		isClimbing = false;
-		hudScript.UpdateWingUI (true, flyStamina);
+		hudScript.UpdateWingUI (true, flyStamina, hasBonusJump);
 		return false;
 	}
 

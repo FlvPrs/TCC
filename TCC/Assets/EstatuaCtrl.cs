@@ -22,7 +22,7 @@ public class EstatuaCtrl : MonoBehaviour {
 //	}
 
 	void OnTriggerEnter(Collider col){
-		if(col.CompareTag("StaccatoColl")){
+		if(col.CompareTag("SustainColl")){
 			activated = true;
 			estatuonaOrb.SetActive (activated);
 			thisOrb.SetActive (activated);
