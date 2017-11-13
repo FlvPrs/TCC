@@ -10,6 +10,7 @@ public class FatherRemoteWPAdvance : MonoBehaviour {
 		if(col.CompareTag("Player")){
 			if (father.state == FatherPath.FSMStates.Idle) {
 				father.state = FatherPath.FSMStates.Path;
+				gameObject.SetActive (false);
 			} else {
 				StartCoroutine ("WaitForAgentStop");
 			}
@@ -20,9 +21,11 @@ public class FatherRemoteWPAdvance : MonoBehaviour {
 		if(col.gameObject == father.gameObject){
 			if (father.state == FatherPath.FSMStates.Idle) {
 				father.state = FatherPath.FSMStates.Path;
-			} else {
-				StartCoroutine ("WaitForAgentStop");
+				gameObject.SetActive (false);
 			}
+//			else {
+//				StartCoroutine ("WaitForAgentStop");
+//			}
 		}
 	}
 

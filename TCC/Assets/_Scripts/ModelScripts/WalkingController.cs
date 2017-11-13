@@ -41,6 +41,8 @@ public class WalkingController : Controller {
 	bool canPlayStaccato = true;
 
 	//Settings
+	public bool automaticOrientation;
+
 	public float walkSpeed = 5f;
 	public float jumpSpeed = 8.3f;
 	public float interactDuration = 0.1f;
@@ -500,9 +502,9 @@ public class WalkingController : Controller {
 
 
 	public void ChangeOrientationToCamera(Transform t, bool changedCam){
-		if (changedCam && walkVelocity != Vector3.zero)
+		if (changedCam && walkVelocity != Vector3.zero && !automaticOrientation)
 			holdOrientation = t;
-		else if(holdOrientation == orientation)
+		else if(holdOrientation == orientation || automaticOrientation)
 			orientation = t;
 	}
 
