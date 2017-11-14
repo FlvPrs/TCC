@@ -17,6 +17,8 @@ public class FatherPath : MonoBehaviour {
 
 	[HideInInspector]
 	public bool esperaFilho = true;
+	[HideInInspector]
+	public bool wait = false;
 
 	private Vector3	dir;
 	private Transform t;
@@ -75,8 +77,9 @@ public class FatherPath : MonoBehaviour {
 			return;
 		}
 
-		if(esperaFilho)
+		if (esperaFilho || wait) {
 			state = FSMStates.Idle;
+		}
 		
         target[currentWayPoint + 1].SetActive(true);
         target[currentWayPoint].SetActive(false);

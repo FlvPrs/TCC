@@ -40,6 +40,8 @@ public class WalkingController : Controller {
 
 	bool canPlayStaccato = true;
 
+	float timeOnAir = 0f;
+
 	//Settings
 	public bool automaticOrientation;
 
@@ -208,6 +210,7 @@ public class WalkingController : Controller {
 			walkStates.IS_WALKING = true;
 			//ChangeFacing (axis0, axis1, data);
 			anim.ChangeForward(walkVelocity.normalized);
+			animCtrl.SetFloat ("WalkVelocity", walkVelocity.magnitude / 6f);
 		} else {
 			walkStates.IS_WALKING = false;
 		}
@@ -285,7 +288,7 @@ public class WalkingController : Controller {
 		}
 
 		isClimbing = false;
-		hudScript.UpdateWingUI (true, flyStamina, hasBonusJump);
+		//hudScript.UpdateWingUI (true, flyStamina, hasBonusJump);
 		return false;
 	}
 
@@ -338,8 +341,20 @@ public class WalkingController : Controller {
 		}
 
 		bool isGrounded = true;
-		if (!Grounded())
+		if (!Grounded ()) {
 			isGrounded = false;
+
+			if (timeOnAir >= 0.2f) {
+				hudScript.UpdateWingUI (true, flyStamina, hasBonusJump);
+				timeOnAir = 0.2f;
+			} else {
+				timeOnAir += Time.deltaTime;
+			}
+			
+		} else {
+			walkVelocity = Vector3.zero;
+			timeOnAir = 0f;
+		}
 		
 		walkStates.IS_GROUNDED = isGrounded;
 		animCtrl.SetBool ("isGrounded", walkStates.IS_GROUNDED);
@@ -354,9 +369,9 @@ public class WalkingController : Controller {
 		if (!isGrounded) {
 			jumpInertia += (walkVelocity * aerialCtrl) + externalForce;
 
-			if(!walkStates.IS_GLIDING)
-				jumpInertia = Vector3.ClampMagnitude (jumpInertia, walkSpeed);
-			else
+//			if(!walkStates.IS_GLIDING)
+//				jumpInertia = Vector3.ClampMagnitude (jumpInertia, walkSpeed);
+//			else
 				jumpInertia = Vector3.ClampMagnitude (jumpInertia, walkSpeed * 1.5f);
 
 			if (!isFlying)

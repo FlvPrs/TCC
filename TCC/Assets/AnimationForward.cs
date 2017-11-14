@@ -12,7 +12,6 @@ public class AnimationForward : MonoBehaviour {
 	}
 
 	void Start(){
-		
 	}
 
 	void RefreshFacing(FacingDirection fd){
