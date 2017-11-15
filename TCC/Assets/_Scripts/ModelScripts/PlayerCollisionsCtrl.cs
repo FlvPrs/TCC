@@ -29,23 +29,23 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 		originalGlideStrength = playerCtrl.glideStrength;
 	}
 
-	void Update(){
-		RaycastHit hit;
-
-		Debug.DrawRay (transform.position + transform.up * 0.1f, Vector3.down * (0.2f), Color.green);
-
-		if(Physics.Raycast(transform.position + transform.up * 0.1f, Vector3.down, out hit, 0.2f)){
-			if(hit.transform.CompareTag("PlatAlto")){
-				if(playerCtrl.walkStates.CURR_HEIGHT_STATE != HeightState.High){
-					StartCoroutine ("FallThroughCollider", hit.collider);
-				}
-			} else if(hit.transform.CompareTag("PlatBaixo")){
-				if(playerCtrl.walkStates.CURR_HEIGHT_STATE != HeightState.Low){
-					StartCoroutine ("FallThroughCollider", hit.collider);
-				}
-			}
-		}
-	}
+//	void Update(){
+//		RaycastHit hit;
+//
+//		Debug.DrawRay (transform.position + transform.up * 0.1f, Vector3.down * (0.2f), Color.green);
+//
+//		if(Physics.Raycast(transform.position + transform.up * 0.1f, Vector3.down, out hit, 0.2f)){
+//			if(hit.transform.CompareTag("PlatAlto")){
+//				if(playerCtrl.walkStates.CURR_HEIGHT_STATE != HeightState.High){
+//					StartCoroutine ("FallThroughCollider", hit.collider);
+//				}
+//			} else if(hit.transform.CompareTag("PlatBaixo")){
+//				if(playerCtrl.walkStates.CURR_HEIGHT_STATE != HeightState.Low){
+//					StartCoroutine ("FallThroughCollider", hit.collider);
+//				}
+//			}
+//		}
+//	}
 
 	IEnumerator FallThroughCollider(Collider col){
 		col.enabled = false;
@@ -65,16 +65,17 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			playerCtrl.StartCoroutine("GrabLedge", dir);
 		}
 
-		if(col.CompareTag("Cogumelo")){
-			playerCtrl.externalForceAdded = true;
-			//col.GetComponentInParent<AudioSource> ().Play ();
-			Vector3 dir = col.transform.up * drumForce;
-			playerCtrl.AddExternalForce (dir, 0.5f);
-		}
+//		if(col.CompareTag("Cogumelo")){
+//			playerCtrl.externalForceAdded = true;
+//			//col.GetComponentInParent<AudioSource> ().Play ();
+//			Vector3 dir = col.transform.up * drumForce;
+//			playerCtrl.AddExternalForce (dir, 0.5f);
+//		}
 
 		if(col.CompareTag("PowerUp")){
 			col.gameObject.SetActive (false);
-			playerCtrl.ResetFlyStamina ();
+			//playerCtrl.ResetFlyStamina ();
+			playerCtrl.hasBonusJump = true;
 		}
 
 		if(col.CompareTag("WindCurrent")){

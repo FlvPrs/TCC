@@ -11,99 +11,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d32cf7c32a3ed8347bac48ef5ed56d82, type: 3}
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
-  EditorBanks:
-  - {fileID: 114340046446161452}
-  - {fileID: 114090284477449470}
-  EditorEvents:
-  - {fileID: 114705390174513762}
-  - {fileID: 114094815336160052}
-  - {fileID: 114199679945727710}
-  - {fileID: 114060167575033580}
-  - {fileID: 114559130538582854}
-  - {fileID: 114927020790260128}
-  - {fileID: 114161794265417318}
-  - {fileID: 114873888286138684}
-  MasterBankRef: {fileID: 114090284477449470}
-  StringsBankRef: {fileID: 114340046446161452}
-  stringsBankWriteTime: 636456867699248722
+  EditorBanks: []
+  EditorEvents: []
+  MasterBankRef: {fileID: 0}
+  StringsBankRef: {fileID: 0}
+  stringsBankWriteTime: 0
   cacheVersion: 2
---- !u!114 &114049199946841544
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Path: event:/Tuba  mudar
-  guid: b9fa7b873dd87242aad09fc04c77716b
-  Banks:
-  - {fileID: 114090284477449470}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 0
-  Parameters:
-  - {fileID: 114062735642323776}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 10067
---- !u!114 &114058064560739402
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Batidao
-  Min: 0
-  Max: 10
-  Default: 0
---- !u!114 &114060167575033580
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Path: event:/TubaFilho
-  guid: 25afbb055802694d9d535c9aa5a7978a
-  Banks:
-  - {fileID: 114090284477449470}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 0
-  Parameters:
-  - {fileID: 114192086495025434}
-  MinDistance: 0
-  MaxDistance: 0
-  Length: 4348
---- !u!114 &114062735642323776
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: SustainNote
-  Min: 0
-  Max: 1
-  Default: 0
---- !u!114 &114086911095931022
+--- !u!114 &114068406563162048
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -118,84 +32,6 @@ MonoBehaviour:
   Min: 0
   Max: 100
   Default: 0
---- !u!114 &114090284477449470
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Path: C:\Users\Uiris\Documents\GitHub\TCC\TCC\Assets\Audio\FMOD\Project Test 1\Build\Desktop\Master
-    Bank.bank
-  lastModified: 636456867699173678
-  LoadResult: 0
-  FileSizes:
-  - Name: Desktop
-    Value: 3818592
-  Exists: 1
---- !u!114 &114094815336160052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Path: event:/HarpaPulo
-  guid: 7763381b8aba1f4fb801fda1bf8f2099
-  Banks:
-  - {fileID: 114090284477449470}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 0
-  MaxDistance: 0
-  Length: 968
---- !u!114 &114105702603801090
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Voando
-  Min: 0
-  Max: 100
-  Default: 0
---- !u!114 &114161794265417318
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Path: event:/Grilo
-  guid: 585b4231f129fb4da95f2d486dff72aa
-  Banks:
-  - {fileID: 114090284477449470}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 45888
 --- !u!114 &114164025953074658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,110 +45,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: C:\Users\Uiris\Documents\GitHub\TCC\TCC\Assets\Audio\FMOD\Project Test 1\Build\Desktop\Master
     Bank.bank
-  lastModified: 636454001067857621
+  lastModified: 636453984996951898
   LoadResult: 0
   FileSizes:
   - Name: Desktop
     Value: 3035328
-  Exists: 1
---- !u!114 &114176803303248722
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Voando
-  Min: 0
-  Max: 100
-  Default: 0
---- !u!114 &114192086495025434
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: SustainNote
-  Min: 0
-  Max: 1
-  Default: 0
---- !u!114 &114199073183726908
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: SustainNote
-  Min: 0
-  Max: 1
-  Default: 0
---- !u!114 &114199679945727710
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Path: event:/Vento Geral
-  guid: b4d9b8236bad13489c9dd581136409a4
-  Banks:
-  - {fileID: 114090284477449470}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 0
-  MaxDistance: 0
-  Length: 31002
---- !u!114 &114225421204880316
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Voando
-  Min: 0
-  Max: 100
-  Default: 0
---- !u!114 &114252461389588382
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: SustainNote
-  Min: 0
-  Max: 1
-  Default: 0
---- !u!114 &114340046446161452
+  Exists: 0
+--- !u!114 &114182506376741082
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -323,28 +62,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Path: Assets\Audio\FMOD\Project Test 1\Build\Desktop\Master Bank.strings.bank
-  lastModified: 636456867699248722
+  Path: C:\Users\Fabio\Documents\GitHub\TCC\TCC\Assets\Audio\FMOD\Project Test 1\Build\Desktop\Master
+    Bank.bank
+  lastModified: 636454268294037493
   LoadResult: 0
   FileSizes:
   - Name: Desktop
-    Value: 1030
+    Value: 3035328
   Exists: 1
---- !u!114 &114342093420429974
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Voando
-  Min: 0
-  Max: 100
-  Default: 0
 --- !u!114 &114399533762566236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -374,7 +99,7 @@ MonoBehaviour:
   Path: event:/Vento Geral
   guid: b4d9b8236bad13489c9dd581136409a4
   Banks:
-  - {fileID: 114164025953074658}
+  - {fileID: 114182506376741082}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -382,51 +107,6 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 31002
---- !u!114 &114451666673146532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: SustainNote
-  Min: 0
-  Max: 1
-  Default: 0
---- !u!114 &114460571024130208
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: SustainNote
-  Min: 0
-  Max: 1
-  Default: 0
---- !u!114 &114535698621604094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: SustainNote
-  Min: 0
-  Max: 1
-  Default: 0
 --- !u!114 &114554569429153832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,136 +121,15 @@ MonoBehaviour:
   Path: event:/Muzik
   guid: 37f2961679a6fa43b8b833c60a15327b
   Banks:
-  - {fileID: 114164025953074658}
+  - {fileID: 114182506376741082}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: 114961954838588370}
+  - {fileID: 114068406563162048}
   MinDistance: 0
   MaxDistance: 0
   Length: 204805
---- !u!114 &114559130538582854
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Path: event:/Tuba Staccato
-  guid: 348b46464eb644489dc81c83d883e445
-  Banks:
-  - {fileID: 114090284477449470}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 0
-  MaxDistance: 0
-  Length: 830
---- !u!114 &114560618924375716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Voando
-  Min: 0
-  Max: 100
-  Default: 0
---- !u!114 &114563380464427396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: SustainNote
-  Min: 0
-  Max: 1
-  Default: 0
---- !u!114 &114574904086726170
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Voando
-  Min: 0
-  Max: 100
-  Default: 0
---- !u!114 &114648369438976270
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: SustainNote
-  Min: 0
-  Max: 1
-  Default: 0
---- !u!114 &114705390174513762
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Path: event:/Muzik
-  guid: 37f2961679a6fa43b8b833c60a15327b
-  Banks:
-  - {fileID: 114090284477449470}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters:
-  - {fileID: 114828160695686444}
-  - {fileID: 114830644249800106}
-  MinDistance: 0
-  MaxDistance: 0
-  Length: 204805
---- !u!114 &114724402886219306
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Voando
-  Min: 0
-  Max: 100
-  Default: 0
 --- !u!114 &114730289945129470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -583,27 +142,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Path: Assets\Audio\FMOD\Project Test 1\Build\Desktop\Master Bank.strings.bank
-  lastModified: 636454001067867616
+  lastModified: 636454268294047494
   LoadResult: 0
   FileSizes:
   - Name: Desktop
     Value: 852
   Exists: 1
---- !u!114 &114770513563221744
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: SustainNote
-  Min: 0
-  Max: 1
-  Default: 0
 --- !u!114 &114784151035772942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -618,7 +162,7 @@ MonoBehaviour:
   Path: event:/Tuba  mudar
   guid: b9fa7b873dd87242aad09fc04c77716b
   Banks:
-  - {fileID: 114164025953074658}
+  - {fileID: 114182506376741082}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -626,36 +170,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 437
---- !u!114 &114828160695686444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Voando
-  Min: 0
-  Max: 10
-  Default: 0
---- !u!114 &114830644249800106
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Batidao
-  Min: 0
-  Max: 10
-  Default: 0
 --- !u!114 &114840021660414398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -670,7 +184,7 @@ MonoBehaviour:
   Path: event:/HarpaPulo
   guid: 7763381b8aba1f4fb801fda1bf8f2099
   Banks:
-  - {fileID: 114164025953074658}
+  - {fileID: 114182506376741082}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -678,78 +192,3 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 968
---- !u!114 &114873888286138684
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Path: event:/TubaFilho2
-  guid: b9fa7b873dd87242aad09fc04c77716b
-  Banks:
-  - {fileID: 114090284477449470}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 0
-  Parameters:
-  - {fileID: 114451666673146532}
-  MinDistance: 1
-  MaxDistance: 15
-  Length: 10067
---- !u!114 &114916696377835746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Voando
-  Min: 0
-  Max: 10
-  Default: 0
---- !u!114 &114927020790260128
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Path: event:/Tuba Sustain
-  guid: 4d49f134b9301d4e93142ae4ac9794d3
-  Banks:
-  - {fileID: 114090284477449470}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 0
-  MaxDistance: 0
-  Length: 8067
---- !u!114 &114961954838588370
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Voando
-  Min: 0
-  Max: 100
-  Default: 0
