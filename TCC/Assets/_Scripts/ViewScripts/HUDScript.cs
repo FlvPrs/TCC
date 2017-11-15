@@ -8,28 +8,17 @@ public class HUDScript : MonoBehaviour {
 	public Text wingsL;
 	public Text wingsR;
 
-	public GameObject bonusJump;
-
-
 	void Awake(){
 		wingsL.gameObject.SetActive (false);
 		wingsR.gameObject.SetActive (false);
-		bonusJump.SetActive (false);
 	}
 
-	public void UpdateWingUI(bool showUp, int stamina, bool bonus){
+	public void UpdateWingUI(bool showUp, int stamina){
 		if(!showUp){
 			wingsL.gameObject.SetActive (false);
 			wingsR.gameObject.SetActive (false);
-			bonusJump.SetActive (false);
 			return;
 		}
-
-		if(bonus)
-			bonusJump.SetActive (true);
-		else
-			bonusJump.SetActive (false);
-		
 		wingsL.gameObject.SetActive (true);
 		wingsR.gameObject.SetActive (true);
 
@@ -60,12 +49,4 @@ public class HUDScript : MonoBehaviour {
 		wingsL.text = txtL;
 		wingsR.text = txtR;
 	}
-
-//	public void UpdateBonusJumpUI(int number){
-//		if(number == 0){
-//			bonusJump.SetActive (false);
-//		} else {
-//			bonusJump.SetActive (true);
-//		}
-//	}
 }

@@ -65,17 +65,16 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			playerCtrl.StartCoroutine("GrabLedge", dir);
 		}
 
-//		if(col.CompareTag("Cogumelo")){
-//			playerCtrl.externalForceAdded = true;
-//			//col.GetComponentInParent<AudioSource> ().Play ();
-//			Vector3 dir = col.transform.up * drumForce;
-//			playerCtrl.AddExternalForce (dir, 0.5f);
-//		}
+		if(col.CompareTag("Cogumelo")){
+			playerCtrl.externalForceAdded = true;
+			//col.GetComponentInParent<AudioSource> ().Play ();
+			Vector3 dir = col.transform.up * drumForce;
+			playerCtrl.AddExternalForce (dir, 0.5f);
+		}
 
 		if(col.CompareTag("PowerUp")){
 			col.gameObject.SetActive (false);
-			//playerCtrl.ResetFlyStamina ();
-			playerCtrl.hasBonusJump = true;
+			playerCtrl.ResetFlyStamina ();
 		}
 
 		if(col.CompareTag("WindCurrent")){
