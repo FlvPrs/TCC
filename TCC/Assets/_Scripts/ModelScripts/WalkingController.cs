@@ -60,6 +60,14 @@ public class WalkingController : Controller {
 	public int maxFlyStamina = 4;
 
 	public float maxFallVelocity = 70f;
+
+	public float jumpHeight = 4f;
+	public float timeToJumpApex = .4f;
+	float accelerationTimeAirborne = .2f;
+	float accelerationTimeGrounded = .1f;
+	float jumpGravity;
+	float jumpVelocity;
+
 	[HideInInspector]
 	public float currentFallVelocity;
 
@@ -94,6 +102,10 @@ public class WalkingController : Controller {
 		holdOrientation = orientation;
 
 		anim = GetComponentInChildren<AnimationForward> ();
+
+
+		jumpGravity = -(2 * jumpHeight) / Mathf.Pow (timeToJumpApex, 2);
+		jumpVelocity = Mathf.Abs (jumpGravity) * timeToJumpApex;
 	}
 
 	public override void ReadInput (InputData data) {
@@ -149,17 +161,20 @@ public class WalkingController : Controller {
 			jumpTriggerStrength = 1f;
 			if (jumpPressTime == 0f) {
 				if (Grounded() && jumpCooldown <= 0f) {
-					adjVertVelocity = jumpSpeed;
+					//adjVertVelocity = jumpSpeed;
+					adjVertVelocity = jumpVelocity;
 					jumpCooldown = maxJumpCooldown;
 					jumpInertia = walkVelocity;
 				} else if (!stopGravity && !isClimbing && flyStamina > 0) {
 					isFlying = true;
-					adjVertVelocity = jumpSpeed;
+					adjVertVelocity = jumpVelocity;
+					//adjVertVelocity = jumpSpeed;
 					jumpInertia = walkVelocity;
 					flyStamina--;
 				} else if (!stopGravity && !isClimbing && hasBonusJump) {
 					isFlying = true;
-					adjVertVelocity = jumpSpeed;
+					adjVertVelocity = jumpVelocity;
+					//adjVertVelocity = jumpSpeed;
 					jumpInertia = walkVelocity;
 					hasBonusJump = false;
 				}
@@ -394,11 +409,12 @@ public class WalkingController : Controller {
 
 		bool isGliding = false;
 
-		if (rb.velocity.y < 0 && jumpPressTime == 0) { //Queda normal
-			rb.velocity += Vector3.up * -gravity * (fallMultiplier - 1) * Time.deltaTime;
-		} else if (rb.velocity.y < 0 && jumpPressTime > 0 && !isClimbing) {	//Queda com Glide
+//		if (rb.velocity.y < 0 && jumpPressTime == 0) { //Queda normal
+//			rb.velocity += Vector3.up * -gravity * (fallMultiplier - 1) * Time.deltaTime;
+//		} else 
+		if (rb.velocity.y < 0 && jumpPressTime > 0 && !isClimbing) {	//Queda com Glide
 			isGliding = true;
-			rb.velocity += Vector3.up * Mathf.Abs (rb.velocity.y) * glideStrength * jumpTriggerStrength * Time.deltaTime;
+			rb.velocity += Vector3.up * Mathf.Abs (rb.velocity.y) * 4f * glideStrength * jumpTriggerStrength * Time.deltaTime;
 		} 
 //		else if (rb.velocity.y > 0 && jumpPressTime == 0) {	//Pulo baixo (o pulo alto é o default)
 //			rb.velocity += Vector3.up * -gravity * ((lowJumpMultiplier) - 1) * Time.deltaTime;
@@ -418,7 +434,7 @@ public class WalkingController : Controller {
 					isFallingHard = true;
 				} else {
 //					if(!isClimbing)
-						rb.AddForce (new Vector3 (0, -gravity * rb.mass, 0));
+					rb.AddForce (new Vector3 (0, jumpGravity, 0));
 //					else
 //						rb.AddForce (new Vector3 (0, -gravity * rb.mass, 0), ForceMode.VelocityChange);
 				}
