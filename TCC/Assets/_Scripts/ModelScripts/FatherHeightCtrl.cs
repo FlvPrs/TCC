@@ -6,7 +6,7 @@ public class FatherHeightCtrl : MonoBehaviour {
 
 	#region Variaveis de Altura
 	[Range(0.1f, 0.9f)]
-	public float minStature = 0.55f;
+	public float minStature = 0.5f;
 	[Range(1.1f, 2f)]
 	public float maxStature = 2f;
 

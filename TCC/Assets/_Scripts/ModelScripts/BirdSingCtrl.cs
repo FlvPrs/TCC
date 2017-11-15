@@ -11,6 +11,8 @@ using UnityEngine;
 public class BirdSingCtrl : MonoBehaviour {
 
 	public Gradient hpColor;
+	public SustainInteractionsCtrl sustainCollider;
+	public StaccatoInteractionsCtrl partituraCollider;
 
 	private HeightState oldState;
 
@@ -26,8 +28,12 @@ public class BirdSingCtrl : MonoBehaviour {
 	//public Material playerMat;
 	private float currentAir = 5f;
 	private float maxAir = 10f;
+	private bool tocouPartitura;
 
 	void Awake () {
+		sustainCollider.gameObject.SetActive (false);
+		partituraCollider.gameObject.SetActive (false);
+
 		clarinet = GetComponent<AudioSource> ();
 		//playerMat = GetComponentInChildren<MeshRenderer> ().material;
 		playerCtrl = GetComponent<WalkingController> ();
@@ -40,23 +46,35 @@ public class BirdSingCtrl : MonoBehaviour {
 
 
 	void Update () {
-		if(playerCtrl.walkStates.TOCANDO_NOTA){
+		if(playerCtrl.walkStates.TOCANDO_STACCATO){
 			if(oldState != playerCtrl.walkStates.CURR_HEIGHT_STATE){
 				oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
 				UpdatePartituraAtual (oldState);
 			}
 		}
+		if(playerCtrl.walkStates.TOCANDO_SUSTAIN){
+			if(oldState != playerCtrl.walkStates.CURR_HEIGHT_STATE){
+				oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
+				sustainCollider.currentHeight = oldState;
+			}
+		}
 
 		if(clarinet.isPlaying && currentAir > 0){
 			currentAir -= Time.deltaTime;
-		} else if(currentAir < maxAir/2f) {
+		} else if(!clarinet.isPlaying && currentAir < maxAir/2f) {
 			currentAir += Time.deltaTime;
+		} else if(clarinet.isPlaying) {
+			playerCtrl.walkStates.TOCANDO_SUSTAIN = false;
+			clarinet.Stop ();
+			sustainCollider.gameObject.SetActive (false);
 		}
 
 		if (cooldown > 0f) {
 			cooldown -= Time.deltaTime;
 		} else {
 			partituraAtual = "";
+			tocouPartitura = false;
+			partituraCollider.gameObject.SetActive (false);
 		}
 
 		UpdateColor ();
@@ -64,15 +82,36 @@ public class BirdSingCtrl : MonoBehaviour {
 		//print (partituraAtual);
 	}
 
-	public void StartClarinet(bool start, float volume){
+	public void StartClarinet_Staccato(){
+
+		if(!clarinet.isPlaying)
+			clarinet.Play ();
+
+		oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
+
+		if(!tocouPartitura)
+			UpdatePartituraAtual (oldState);
+		
+		StartCoroutine("StopStaccato");
+	}
+
+	IEnumerator StopStaccato(){
+		yield return new WaitForSeconds (0.2f);
+		clarinet.Stop ();
+		playerCtrl.walkStates.TOCANDO_STACCATO = false;
+	}
+
+	public void StartClarinet_Sustain(bool start, float volume){
 		if (start && currentAir >= maxAir/4f) { //ou seja, se ainda tiver 25% de ar disponível
-			playerCtrl.walkStates.TOCANDO_NOTA = true;
+			playerCtrl.walkStates.TOCANDO_SUSTAIN = true;
 			clarinet.Play ();
 			oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
-			UpdatePartituraAtual (oldState);
+			sustainCollider.currentHeight = oldState;
+			sustainCollider.gameObject.SetActive (true);
 		} else {
-			playerCtrl.walkStates.TOCANDO_NOTA = false;
+			playerCtrl.walkStates.TOCANDO_SUSTAIN = false;
 			clarinet.Stop ();
+			sustainCollider.gameObject.SetActive (false);
 		}
 
 		UpdateSoundVolume (volume);
@@ -119,7 +158,10 @@ public class BirdSingCtrl : MonoBehaviour {
 	}
 
 	void TocarPartitura(int partitura){
+		tocouPartitura = true;
 		print ("YAYYY " + partitura);
+		partituraCollider.partitura = partitura;
+		partituraCollider.gameObject.SetActive (true);
 	}
 }
 
