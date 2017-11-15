@@ -161,6 +161,7 @@ public class WalkingController : Controller {
 			jumpTriggerStrength = 1f;
 			if (jumpPressTime == 0f) {
 				if (Grounded() && jumpCooldown <= 0f) {
+					//animCtrl.SetBool ("Jumped", true);
 					//adjVertVelocity = jumpSpeed;
 					adjVertVelocity = jumpVelocity;
 					jumpCooldown = maxJumpCooldown;
@@ -178,9 +179,14 @@ public class WalkingController : Controller {
 					jumpInertia = walkVelocity;
 					hasBonusJump = false;
 				}
-			}
+			} 
+//			else {
+//				animCtrl.SetBool ("Jumped", false);
+//			}
+			animCtrl.SetBool ("IsFlying", isFlying);
 			jumpPressTime += Time.deltaTime;
 		} else {
+			//animCtrl.SetBool ("Jumped", false);
 			jumpPressTime = 0f;
 		}
 
@@ -374,10 +380,16 @@ public class WalkingController : Controller {
 		walkStates.IS_GROUNDED = isGrounded;
 		animCtrl.SetBool ("isGrounded", walkStates.IS_GROUNDED);
 
-		if(jumpPressTime > 0.2f && !isGrounded)
+		if(!isGrounded)
 			asas.SetActive (true);
 		else
 			asas.SetActive (false);
+
+		if(!newInput && isGrounded){
+			animCtrl.SetTrigger ("CanJump");
+		} else if (!isGrounded && (flyStamina > 0 || hasBonusJump)) {
+			animCtrl.SetTrigger ("CanFly");
+		}
 
 		//print (isGrounded);
 			
@@ -412,7 +424,7 @@ public class WalkingController : Controller {
 //		if (rb.velocity.y < 0 && jumpPressTime == 0) { //Queda normal
 //			rb.velocity += Vector3.up * -gravity * (fallMultiplier - 1) * Time.deltaTime;
 //		} else 
-		if (rb.velocity.y < 0 && jumpPressTime > 0 && !isClimbing) {	//Queda com Glide
+		if (!isGrounded && rb.velocity.y < 0 && jumpPressTime > 0 && !isClimbing) {	//Queda com Glide
 			isGliding = true;
 			rb.velocity += Vector3.up * Mathf.Abs (rb.velocity.y) * 4f * glideStrength * jumpTriggerStrength * Time.deltaTime;
 		} 
@@ -421,6 +433,10 @@ public class WalkingController : Controller {
 //		}
 
 		walkStates.IS_GLIDING = isGliding;
+		animCtrl.SetBool ("IsGliding", isGliding);
+
+		if(!isGrounded && !isGliding)
+			animCtrl.SetTrigger ("CanStartGlide");
 
 		bool isFallingHard = false;
 
@@ -439,14 +455,20 @@ public class WalkingController : Controller {
 //						rb.AddForce (new Vector3 (0, -gravity * rb.mass, 0), ForceMode.VelocityChange);
 				}
 			} 
-//			else if (isGrounded && !newInput && rb.velocity.y < 0) {
-//				rb.velocity = new Vector3 (rb.velocity.x, 0, rb.velocity.z);
-//			}
+			else if (isGrounded && adjVertVelocity == 0f) {
+				//rb.velocity = new Vector3 (rb.velocity.x, jumpGravity, rb.velocity.z);
+				rb.AddForce (new Vector3 (0, jumpGravity, 0));
+			}
 		}
 			
 		walkStates.IS_FALLING_MAX = isFallingHard;
 
 		currentFallVelocity = rb.velocity.y;
+
+		if(rb.velocity.y >= 0f)
+			animCtrl.SetTrigger ("CanBeginFall");
+		
+		animCtrl.SetFloat ("VelocityY", rb.velocity.y);
 
 		newInput = false;
 	}
