@@ -17,7 +17,16 @@ public class ChangeCamOnTrigger : MonoBehaviour {
 		}
 	}
 
+	void OnTriggerStay(Collider col){
+		if(col.CompareTag("Player")){
+			camCtrl.ChangeCameraTo (newCamIndex);
+		}
+	}
+
 	void OnTriggerExit(Collider col){
+		if (camCtrl.currentCam != newCamIndex)
+			return;
+
 		if(exitAsDifferentCam)
 			camCtrl.ChangeCameraTo (exitCamIndex);
 		else
