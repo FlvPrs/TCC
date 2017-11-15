@@ -42,9 +42,9 @@ public struct InputData{
 	public float[] axes;
 	public bool[] buttons;
 
-	public InputData(int axisCount_data, int buttonCount_data){
-		axes = new float[axisCount_data];
-		buttons = new bool[buttonCount_data];
+	public InputData(int axisCount, int buttonCount){
+		axes = new float[axisCount];
+		buttons = new bool[buttonCount];
 	}
 
 	public void Reset(){

@@ -13,38 +13,21 @@ public class FatherPath : MonoBehaviour {
     private NavMeshAgent agent;
     public int currentWayPoint;
 
-	public Transform filho;
-
 	[HideInInspector]
 	public bool esperaFilho = true;
-	[HideInInspector]
-	public bool wait = false;
-
-	private Vector3	dir;
-	private Transform t;
-	private Animator animCtrl;
 
 	// Use this for initialization
 	void Start () {
         currentWayPoint = 0;
         agent = GetComponent<NavMeshAgent>();
-		t = GetComponent<Transform> ();
-		animCtrl = GetComponentInChildren<Animator> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
         switch (state)
         {
-            case FSMStates.Idle: 
-				animCtrl.SetBool ("isGrounded", true);
-				animCtrl.SetBool ("isWalking", false);
-				IdleSimulator(); 
-				break;
-            case FSMStates.Path:
-				animCtrl.SetBool ("isWalking", true);
-				PathFinder(); 
-				break;
+            case FSMStates.Idle: IdleSimulator(); break;
+            case FSMStates.Path: PathFinder(); break;
 
             default: print("BUG: state should never be on default clause"); break;
         }
@@ -52,20 +35,13 @@ public class FatherPath : MonoBehaviour {
 
     private void IdleSimulator()
     {
-		if (!agent.hasPath) {
-			dir = filho.position - t.position;
-			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir, Vector3.up), Time.deltaTime * 2f);
-		}
+        //dunno yet
     }
 
     private void PathFinder()
     {
         agent.SetDestination(target[currentWayPoint].transform.position);
         
-		if(agent.isOnOffMeshLink)
-			animCtrl.SetBool ("isGrounded", false);
-		else
-			animCtrl.SetBool ("isGrounded", true);
     }
 
     public void ChangeWaypoint()
@@ -77,9 +53,8 @@ public class FatherPath : MonoBehaviour {
 			return;
 		}
 
-		if (esperaFilho || wait) {
+		if(esperaFilho)
 			state = FSMStates.Idle;
-		}
 		
         target[currentWayPoint + 1].SetActive(true);
         target[currentWayPoint].SetActive(false);

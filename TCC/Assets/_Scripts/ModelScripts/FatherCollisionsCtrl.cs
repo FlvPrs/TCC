@@ -7,13 +7,11 @@ public class FatherCollisionsCtrl : MonoBehaviour {
 	private AgentLinkMover linkMover;
 	private FatherPath fatherPath;
 	private FatherHeightCtrl fatherHeight;
-	private FatherSingCtrl fatherSing;
 
 	void Awake(){
 		linkMover = GetComponent<AgentLinkMover> ();
 		fatherPath = GetComponent<FatherPath> ();
 		fatherHeight = GetComponent<FatherHeightCtrl> ();
-		fatherSing = GetComponent<FatherSingCtrl> ();
 	}
 
 	IEnumerator WaitForChangeHeight(float strength){
@@ -29,15 +27,7 @@ public class FatherCollisionsCtrl : MonoBehaviour {
 
 		if (col.CompareTag("NpcPath"))
 		{
-			if(col.GetComponent<FatherWPBehaviour> ().behaviour != FatherWPBehaviour.FatherBehaviour.None)
-				col.GetComponent<FatherWPBehaviour> ().StartBehaviour (fatherPath, fatherHeight, fatherSing);
-			else
-				fatherPath.ChangeWaypoint ();
-		}
-
-		if (col.CompareTag("Pai_Sing"))
-		{
-			GetComponent<AudioSource> ().Play ();
+			fatherPath.ChangeWaypoint ();
 		}
 
 		if(col.CompareTag("Pai_Esticar")){

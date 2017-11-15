@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class CamPriorityController : MonoBehaviour {
 
-	public WalkingController player;
 	public Cinemachine.CinemachineVirtualCamera[] CM_Vcams;
 	public int startingCam = 0;
 
@@ -28,20 +27,17 @@ public class CamPriorityController : MonoBehaviour {
 			else
 				CM_Vcams [i].Priority = 10;
 		}
-	}
 
-	void Update(){
-		player.ChangeOrientationToCamera (CM_Vcams [currentCam].transform, false);
+
 	}
 
 	public void ChangeCameraTo(int newCamIndex){
 		if (currentCam == newCamIndex)
 			return;
+
 		CM_Vcams [newCamIndex].Priority = 10;
 		CM_Vcams [currentCam].Priority = 0;
 
 		currentCam = newCamIndex;
-
-		player.ChangeOrientationToCamera (CM_Vcams [currentCam].transform, true);
 	}
 }
