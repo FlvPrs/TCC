@@ -19,11 +19,14 @@ public class FatherSing_Grow : MonoBehaviour {
 		if(startGrow){
 			targetToGrow.rotation = Quaternion.Slerp (targetToGrow.rotation, final, Time.deltaTime);
 
-			if (targetToGrow.localEulerAngles.z >= 357f)
+			if (targetToGrow.localEulerAngles.z >= 357f) {
+				sing.Stop ();
 				forceChangeWP.SetActive (true);
+			}
 
-			if (targetToGrow.localEulerAngles.z >= 359.95f)
+			if (targetToGrow.localEulerAngles.z >= 359.95f) {
 				gameObject.SetActive (false);
+			}
 		}
 	}
 

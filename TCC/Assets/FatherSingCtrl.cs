@@ -11,6 +11,11 @@ public class FatherSingCtrl : MonoBehaviour {
 
 	private AudioSource sing;
 
+	[HideInInspector]
+	public bool canAdvance;
+
+	private bool waitToSing;
+
 	//private bool tocouPartitura;
 
 	void Awake () {
@@ -19,6 +24,21 @@ public class FatherSingCtrl : MonoBehaviour {
 
 		sing = GetComponent<AudioSource> ();
 		heightCtrl = GetComponent<FatherHeightCtrl> ();
+	}
+
+	void Update(){
+		if (!sustainCollider.gameObject.activeInHierarchy)
+			return;
+
+		canAdvance = sustainCollider.canAdvance;
+
+		if (sustainCollider.stopSing && !waitToSing) {
+			waitToSing = true;
+			sing.Stop ();
+		} else if (!sustainCollider.stopSing && waitToSing) {
+			waitToSing = false;
+			sing.Play ();
+		}
 	}
 
 //	public void StartClarinet_Staccato(){

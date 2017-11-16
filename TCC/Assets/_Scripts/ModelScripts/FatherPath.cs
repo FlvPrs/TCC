@@ -19,6 +19,8 @@ public class FatherPath : MonoBehaviour {
 	public bool esperaFilho = true;
 	[HideInInspector]
 	public bool wait = false;
+	[HideInInspector]
+	public bool holdWPBehaviour;
 
 	private Vector3	dir;
 	private Transform t;

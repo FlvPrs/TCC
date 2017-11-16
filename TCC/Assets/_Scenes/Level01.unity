@@ -732,7 +732,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 69360409}
   m_LocalRotation: {x: -0, y: -0.9999041, z: -0, w: -0.013850698}
-  m_LocalPosition: {x: -5.09, y: -30.88, z: -139.23}
+  m_LocalPosition: {x: -5.09, y: -29.74, z: -139.23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 140134767}
@@ -1483,6 +1483,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   behaviour: 1
   behaviourTime: 4
+  holdBehaviour: 0
   ignorePlayer: 0
 --- !u!1 &178535886
 GameObject:
@@ -1904,6 +1905,46 @@ Prefab:
         type: 2}
       propertyPath: jumpHeight
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114544756661240710, guid: a41b82f67a02ad844ae8c1400adb3d5f,
+        type: 2}
+      propertyPath: hpColor.key1.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114544756661240710, guid: a41b82f67a02ad844ae8c1400adb3d5f,
+        type: 2}
+      propertyPath: hpColor.key1.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114544756661240710, guid: a41b82f67a02ad844ae8c1400adb3d5f,
+        type: 2}
+      propertyPath: hpColor.key1.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114544756661240710, guid: a41b82f67a02ad844ae8c1400adb3d5f,
+        type: 2}
+      propertyPath: playerMat
+      value: 
+      objectReference: {fileID: 2100000, guid: 144b7d076d3c5c648b0e72605d3f1b9d, type: 2}
+    - target: {fileID: 137397615553491788, guid: a41b82f67a02ad844ae8c1400adb3d5f,
+        type: 2}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 137135048359989520, guid: a41b82f67a02ad844ae8c1400adb3d5f,
+        type: 2}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 137799443271099108, guid: a41b82f67a02ad844ae8c1400adb3d5f,
+        type: 2}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 137769026251200640, guid: a41b82f67a02ad844ae8c1400adb3d5f,
+        type: 2}
+      propertyPath: m_CastShadows
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a41b82f67a02ad844ae8c1400adb3d5f, type: 2}
@@ -3357,6 +3398,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   behaviour: 0
   behaviourTime: 0
+  holdBehaviour: 0
   ignorePlayer: 0
 --- !u!1 &393993467
 GameObject:
@@ -4756,6 +4798,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   behaviour: 0
   behaviourTime: 0
+  holdBehaviour: 0
   ignorePlayer: 0
 --- !u!1 &545339564
 GameObject:
@@ -8731,6 +8774,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   behaviour: 2
   behaviourTime: 4
+  holdBehaviour: 0
   ignorePlayer: 0
 --- !u!135 &952953572
 SphereCollider:
@@ -9627,6 +9671,11 @@ Prefab:
       propertyPath: filho
       value: 
       objectReference: {fileID: 324111299}
+    - target: {fileID: 82722221863871500, guid: 5b01328b22fb16041a71bdd77fd593c5,
+        type: 2}
+      propertyPath: Loop
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5b01328b22fb16041a71bdd77fd593c5, type: 2}
   m_IsPrefabParent: 0
@@ -10304,6 +10353,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   behaviour: 0
   behaviourTime: 0
+  holdBehaviour: 0
   ignorePlayer: 0
 --- !u!1 &1105208866
 GameObject:
@@ -10621,7 +10671,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   behaviour: 4
-  behaviourTime: 4
+  behaviourTime: 0
+  holdBehaviour: 1
   ignorePlayer: 1
 --- !u!1 &1153361914 stripped
 GameObject:
@@ -11241,6 +11292,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   behaviour: 0
   behaviourTime: 0
+  holdBehaviour: 0
   ignorePlayer: 0
 --- !u!1 &1281069902
 GameObject:
@@ -12056,6 +12108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   behaviour: 0
   behaviourTime: 0
+  holdBehaviour: 0
   ignorePlayer: 0
 --- !u!1001 &1373294869
 Prefab:
@@ -13454,7 +13507,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1556559513}
   m_LocalRotation: {x: -0, y: -0.97071695, z: -0, w: -0.24022637}
-  m_LocalPosition: {x: 5.62, y: -26.42, z: -141.49}
+  m_LocalPosition: {x: 5.62, y: -25.49, z: -141.49}
   m_LocalScale: {x: 1.0000002, y: 1, z: 1.0000002}
   m_Children:
   - {fileID: 1132810472}
@@ -15790,6 +15843,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   behaviour: 0
   behaviourTime: 0
+  holdBehaviour: 0
   ignorePlayer: 0
 --- !u!1 &1798184303
 GameObject:
@@ -16245,7 +16299,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1846251342}
   m_LocalRotation: {x: -0, y: -0.9999041, z: -0, w: -0.013850698}
-  m_LocalPosition: {x: -11.4, y: -23.01, z: -142}
+  m_LocalPosition: {x: -11.4, y: -21.97, z: -142}
   m_LocalScale: {x: 1.0000002, y: 1, z: 1.0000002}
   m_Children:
   - {fileID: 670635209}
