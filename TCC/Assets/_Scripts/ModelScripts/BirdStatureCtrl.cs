@@ -27,10 +27,12 @@ public class BirdStatureCtrl : MonoBehaviour {
 	float maxDifference;
 
 	private Transform t;
+	private BoxCollider collider;
 
 	void Awake(){
 		currentHeightState = HeightState.Default;
 		t = GetComponent<Transform> ();
+		collider = GetComponent<BoxCollider> ();
 		currentHeight = defaultHeight;
 		currentSize = defaultHeight;
 		maxDifference = maxStature - defaultHeight;
@@ -41,15 +43,15 @@ public class BirdStatureCtrl : MonoBehaviour {
 		Vector3 newScale = t.localScale;
 		newScale.y = currentHeight * 2;
 		newScale.x = newScale.z = currentSize;
-		GetComponent<BoxCollider> ().size = newScale;
-		GetComponent<BoxCollider> ().center = new Vector3(GetComponent<BoxCollider> ().center.x, currentHeight, GetComponent<BoxCollider> ().center.z);
+		collider.size = newScale;
+		collider.center = new Vector3(collider.center.x, currentHeight, collider.center.z);
 
 		//t.localScale = newScale;
-		if (t.localScale.y >= defaultHeight + maxDifference / 2f) {
+		if (collider.size.y >= (defaultHeight * 2f) + maxDifference / 2f) {
 			currentHeightState = HeightState.High;
 			clarinetHigh.TransitionTo (0.01f);
 		}
-		else if (t.localScale.y <= defaultHeight - minDifference / 2f) {
+		else if (collider.size.y <= (defaultHeight * 2f) - minDifference / 2f) {
 			currentHeightState = HeightState.Low;
 			clarinetLow.TransitionTo (0.01f);
 		} 
