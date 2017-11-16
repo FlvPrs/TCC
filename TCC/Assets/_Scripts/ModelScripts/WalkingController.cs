@@ -380,14 +380,14 @@ public class WalkingController : Controller {
 		walkStates.IS_GROUNDED = isGrounded;
 		animCtrl.SetBool ("isGrounded", walkStates.IS_GROUNDED);
 
-		if(!isGrounded)
+		if (!isGrounded) {
 			asas.SetActive (true);
-		else
+		} else {
 			asas.SetActive (false);
-
-		if(!newInput && isGrounded){
 			animCtrl.SetTrigger ("CanJump");
-		} else if (!isGrounded && (flyStamina > 0 || hasBonusJump)) {
+		}
+
+		if (!isGrounded && (flyStamina > 0 || hasBonusJump)) {
 			animCtrl.SetTrigger ("CanFly");
 		}
 

@@ -30,13 +30,13 @@ public class FMODNotaFilho : MonoBehaviour {
 
 	public void atualizaNotaFilho (WalkingController atua){
 
-		if (atua.walkStates.TOCANDO_NOTA && !isTocando) {
+		if (atua.walkStates.TOCANDO_STACCATO && !isTocando) {
 			SustainNoteParameter.setValue (0.49f);
 			TubaFilhoEvent.start ();
 			isTocando = true;
 			StartCoroutine ("TestSegurando", atua);
 			print ("IzComeçanu");
-		} else if (!atua.walkStates.TOCANDO_NOTA && isTocando) {
+		} else if (!atua.walkStates.TOCANDO_STACCATO && isTocando) {
 			TubaFilhoEvent.stop (FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 			isTocando = false;
 			StopAllCoroutines ();
@@ -48,7 +48,7 @@ public class FMODNotaFilho : MonoBehaviour {
 		yield return new WaitForSeconds (0.3f);
 
 		while (true) {
-			if (atua.walkStates.TOCANDO_NOTA) {
+			if (atua.walkStates.TOCANDO_STACCATO) {
 				SustainNoteParameter.setValue (1f);
 				print ("Apertanu");
 				yield return new WaitForSeconds (0.2f);
