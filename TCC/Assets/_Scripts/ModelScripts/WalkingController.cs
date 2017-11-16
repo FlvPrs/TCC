@@ -244,26 +244,26 @@ public class WalkingController : Controller {
 	bool Grounded(){
 		RaycastHit[] hit = new RaycastHit[9];
 
-		bool ray1 = Physics.Raycast(myT.position + myT.up * 0.1f, Vector3.down, out hit[0], 0.25f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f, Vector3.down * (0.25f));
+		bool ray1 = Physics.Raycast(coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f), Vector3.down, out hit[0], 0.25f, raycastMask);
+		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f), Vector3.down * (0.25f));
 
-		bool ray2 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down, out hit[1], 0.25f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down * (0.25f));
-		bool ray3 = Physics.Raycast(myT.position + myT.up * 0.1f - (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down, out hit[2], 0.25f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down * (0.25f));
-		bool ray4 = Physics.Raycast(myT.position + myT.up * 0.1f + (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down, out hit[3], 0.25f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down * (0.25f));
-		bool ray5 = Physics.Raycast(myT.position + myT.up * 0.1f - (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down, out hit[4], 0.25f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down * (0.25f));
+		bool ray2 = Physics.Raycast (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) + (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down, out hit[1], 0.25f, raycastMask);
+		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) + (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down * (0.25f));
+		bool ray3 = Physics.Raycast(coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) - (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down, out hit[2], 0.25f, raycastMask);
+		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) - (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down * (0.25f));
+		bool ray4 = Physics.Raycast(coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) + (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down, out hit[3], 0.25f, raycastMask);
+		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) + (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down * (0.25f));
+		bool ray5 = Physics.Raycast(coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) - (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down, out hit[4], 0.25f, raycastMask);
+		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) - (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down * (0.25f));
 
-		bool ray6 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down, out hit[5], 0.25f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down * (0.25f));
-		bool ray7 = Physics.Raycast (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down, out hit[6], 0.25f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down * (0.25f));
-		bool ray8 = Physics.Raycast (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down, out hit[7], 0.25f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f + (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down * (0.25f));
-		bool ray9 = Physics.Raycast (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down, out hit[8], 0.25f, raycastMask);
-		Debug.DrawRay (myT.position + myT.up * 0.1f - (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down * (0.25f));
+		bool ray6 = Physics.Raycast (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) + (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down, out hit[5], 0.25f, raycastMask);
+		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) + (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down * (0.25f));
+		bool ray7 = Physics.Raycast (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) - (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down, out hit[6], 0.25f, raycastMask);
+		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) - (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down * (0.25f));
+		bool ray8 = Physics.Raycast (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) + (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down, out hit[7], 0.25f, raycastMask);
+		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) + (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down * (0.25f));
+		bool ray9 = Physics.Raycast (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) - (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down, out hit[8], 0.25f, raycastMask);
+		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) - (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down * (0.25f));
 
 //		for (int i = 0; i < hit.Length; i++) {
 //			Debug.DrawRay (hit [i].point, hit [i].normal, Color.blue);
@@ -351,7 +351,7 @@ public class WalkingController : Controller {
 
 		animCtrl.SetBool ("isWalking", walkStates.IS_WALKING);
 
-		birdHeightCtrl.UpdateHeight (sanfonaStrength);
+		birdHeightCtrl.UpdateHeight (sanfonaStrength, animCtrl);
 		walkStates.CURR_HEIGHT_STATE = birdHeightCtrl.currentHeightState;
 
 		if(externalForceAdded){

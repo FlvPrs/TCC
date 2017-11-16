@@ -39,9 +39,12 @@ public class BirdStatureCtrl : MonoBehaviour {
 
 	void Update(){
 		Vector3 newScale = t.localScale;
-		newScale.y = currentHeight;
+		newScale.y = currentHeight * 2;
 		newScale.x = newScale.z = currentSize;
-		t.localScale = newScale;
+		GetComponent<BoxCollider> ().size = newScale;
+		GetComponent<BoxCollider> ().center = new Vector3(GetComponent<BoxCollider> ().center.x, currentHeight, GetComponent<BoxCollider> ().center.z);
+
+		//t.localScale = newScale;
 		if (t.localScale.y >= defaultHeight + maxDifference / 2f) {
 			currentHeightState = HeightState.High;
 			clarinetHigh.TransitionTo (0.01f);
@@ -56,7 +59,11 @@ public class BirdStatureCtrl : MonoBehaviour {
 		}
 	}
 
-	public void UpdateHeight(float strength){
+	public void UpdateHeight(float strength, Animator anim){
+		anim.SetFloat ("Stature", strength);
+		anim.SetLayerWeight (1, Mathf.Clamp(Mathf.Abs(strength), 0f, 0.8f));
+		anim.SetLayerWeight (2, Mathf.Clamp(Mathf.Abs(strength), 0f, 0.8f));
+
 		if(strength == 0f){
 			currentHeight = defaultHeight;
 			currentSize = defaultHeight;
@@ -64,6 +71,8 @@ public class BirdStatureCtrl : MonoBehaviour {
 			clarinetDefault.TransitionTo (0.01f);
 			return;
 		}
+		//return;
+
 		float tempStrength = -strength;
 
 		currentHeight = defaultHeight;
