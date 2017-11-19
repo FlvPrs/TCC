@@ -86,7 +86,9 @@ public class WalkingController : Controller {
 	public GameObject asas;
 
 	[HideInInspector]
-	public bool hasBonusJump;
+	public bool hasBonusJump;
+	[HideInInspector]
+	public bool playerInputStartGame;
 
 	protected override void Start() {
 		base.Start ();
@@ -106,9 +108,12 @@ public class WalkingController : Controller {
 
 		jumpGravity = -(2 * jumpHeight) / Mathf.Pow (timeToJumpApex, 2);
 		jumpVelocity = Mathf.Abs (jumpGravity) * timeToJumpApex;
+
+		playerInputStartGame = false;
 	}
 
 	public override void ReadInput (InputData data) {
+		playerInputStartGame = true;
 
 		//prevWalkVelocity = walkVelocity;
 		ResetMovementToZero ();
@@ -327,7 +332,7 @@ public class WalkingController : Controller {
 	//Always called after Updates are called
 	void LateUpdate() {
 		// if(!newInput || isClimbing){
-		if(!newInput){
+		if (!newInput) {
 			//prevWalkVelocity = walkVelocity;
 			ResetMovementToZero ();
 			jumpPressTime = 0f;
@@ -338,7 +343,7 @@ public class WalkingController : Controller {
 			}
 			walkStates.IS_WALKING = false;
 
-			if(holdOrientation != orientation)
+			if (holdOrientation != orientation)
 				orientation = holdOrientation;
 		}
 
