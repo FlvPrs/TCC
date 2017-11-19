@@ -8,7 +8,7 @@ public class FatherRemoteWPAdvance : MonoBehaviour {
 
 	void OnTriggerEnter(Collider col){
 		if(col.CompareTag("Player")){
-			if (father.state == FatherPath.FSMStates.Idle) {
+			if (father.state != FatherPath.FSMStates.Path) {
 				father.state = FatherPath.FSMStates.Path;
 				gameObject.SetActive (false);
 			} else {
@@ -19,7 +19,7 @@ public class FatherRemoteWPAdvance : MonoBehaviour {
 
 	void OnTriggerStay(Collider col){
 		if(col.gameObject == father.gameObject){
-			if (father.state == FatherPath.FSMStates.Idle) {
+			if (father.state != FatherPath.FSMStates.Path) {
 				father.state = FatherPath.FSMStates.Path;
 				gameObject.SetActive (false);
 			}

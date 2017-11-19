@@ -13,6 +13,7 @@ public abstract class Controller : MonoBehaviour {
 
 	protected Transform myT;
 	protected Rigidbody rb;
+	[SerializeField]
 	protected Collider coll;
 	protected Camera cam;
 	protected HUDScript hudScript;
@@ -25,7 +26,7 @@ public abstract class Controller : MonoBehaviour {
 	void Awake(){
 		rb = GetComponent<Rigidbody> ();
 		myT = GetComponent<Transform> ();
-		coll = GetComponent<Collider> ();
+		//coll = GetComponent<Collider> ();
 		playerT = myT.Find ("PlayerCharacter").GetComponent <Transform> ();
 
 		birdHeightCtrl = GetComponent<BirdStatureCtrl> ();

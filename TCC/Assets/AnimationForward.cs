@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class AnimationForward : MonoBehaviour {
 
+	public Transform objToRotate;
 	private Animator anim;
+	private Transform t;
 
 	void Awake(){
 		WalkingController.OnFacingChange += RefreshFacing;
 		anim = GetComponent<Animator> ();
+		t = GetComponent<Transform> ();
 	}
 
 	void Start(){
@@ -38,7 +41,10 @@ public class AnimationForward : MonoBehaviour {
 	public void ChangeForward(Vector3 dir){
 		Vector3 newDir = dir;
 		newDir.y = 0f;
-		transform.forward = newDir;
+
+		t.forward = newDir;
+		//if (objToRotate)
+		objToRotate.forward = newDir;
 	}
 
 	void OnAnimatorMove(){

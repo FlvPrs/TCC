@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FatherWPBehaviour : MonoBehaviour {
+public enum FatherBehaviour
+{
+	None,
+	Stretch,
+	Squash,
+	Sing_Default,
+	Sing_Stretched,
+	Sing_Squashed
+}
 
-	public enum FatherBehaviour
-	{
-		None,
-		Stretch,
-		Squash,
-		Sing_Default,
-		Sing_Stretched,
-		Sing_Squashed
-	}
+public class FatherWPBehaviour : MonoBehaviour {
 
 	public FatherBehaviour behaviour;
 	public float behaviourTime = 0f;
@@ -60,7 +60,7 @@ public class FatherWPBehaviour : MonoBehaviour {
 
 		default:
 			path.holdWPBehaviour = holdBehaviour;
-			path.ChangeWaypoint ();
+			////path.ChangeWaypoint (false);
 			enabled = false;
 			break;
 		}
@@ -87,7 +87,8 @@ public class FatherWPBehaviour : MonoBehaviour {
 		yield return new WaitForSeconds (behaviourTime);
 		sing.StartClarinet_Sustain (false);
 		path.wait = false;
-		path.ChangeWaypoint ();
+		behaviour = FatherBehaviour.None;
+		path.ChangeWaypoint (false);
 	}
 	IEnumerator StopBehaviour(FatherPath path, FatherHeightCtrl height){
 		while (path.holdWPBehaviour) {
@@ -97,7 +98,8 @@ public class FatherWPBehaviour : MonoBehaviour {
 		yield return new WaitForSeconds (behaviourTime);
 		height.UpdateHeight (0f);
 		path.wait = false;
-		path.ChangeWaypoint ();
+		behaviour = FatherBehaviour.None;
+		path.ChangeWaypoint (false);
 	}
 	IEnumerator StopBehaviour(FatherPath path, FatherHeightCtrl height, FatherSingCtrl sing){
 		while (holdBehaviour && !sing.canAdvance) {
@@ -108,6 +110,7 @@ public class FatherWPBehaviour : MonoBehaviour {
 		height.UpdateHeight (0f);
 		sing.StartClarinet_Sustain (false);
 		path.wait = false;
-		path.ChangeWaypoint ();
+		behaviour = FatherBehaviour.None;
+		path.ChangeWaypoint (false);
 	}
 }
