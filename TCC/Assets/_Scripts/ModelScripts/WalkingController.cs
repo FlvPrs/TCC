@@ -86,7 +86,8 @@ public class WalkingController : Controller {
 	public GameObject asas;
 
 	[HideInInspector]
-	public bool hasBonusJump;
+	public bool hasBonusJump;
+
 	[HideInInspector]
 	public bool playerInputStartGame;
 
@@ -173,13 +174,13 @@ public class WalkingController : Controller {
 					jumpInertia = walkVelocity;
 				} else if (!stopGravity && !isClimbing && flyStamina > 0) {
 					isFlying = true;
-					adjVertVelocity = jumpVelocity;
+					adjVertVelocity = jumpVelocity * 0.8f;
 					//adjVertVelocity = jumpSpeed;
 					jumpInertia = walkVelocity;
 					flyStamina--;
 				} else if (!stopGravity && !isClimbing && hasBonusJump) {
 					isFlying = true;
-					adjVertVelocity = jumpVelocity;
+					adjVertVelocity = jumpVelocity * 0.8f;
 					//adjVertVelocity = jumpSpeed;
 					jumpInertia = walkVelocity;
 					hasBonusJump = false;

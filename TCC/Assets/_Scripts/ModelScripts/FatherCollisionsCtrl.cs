@@ -9,6 +9,8 @@ public class FatherCollisionsCtrl : MonoBehaviour {
 	private FatherHeightCtrl fatherHeight;
 	private FatherSingCtrl fatherSing;
 
+	private Animator anim;
+
 	private float waitToChangeWP = 0f;
 
 	void Awake(){
@@ -16,11 +18,13 @@ public class FatherCollisionsCtrl : MonoBehaviour {
 		fatherPath = GetComponent<FatherPath> ();
 		fatherHeight = GetComponent<FatherHeightCtrl> ();
 		fatherSing = GetComponent<FatherSingCtrl> ();
+
+		anim = GetComponentInChildren<Animator> ();
 	}
 
 	IEnumerator WaitForChangeHeight(float strength){
 		yield return new WaitForSeconds (0.25f);
-		fatherHeight.UpdateHeight (strength);
+		fatherHeight.UpdateHeight (strength, anim);
 	}
 
 	void OnTriggerEnter(Collider col){
@@ -68,7 +72,7 @@ public class FatherCollisionsCtrl : MonoBehaviour {
 				fatherPath.ReactToHeight ();
 				waitToChangeWP = 0f;
 			} else {
-				if (waitToChangeWP >= 1f) {
+				if (waitToChangeWP >= 3f) {
 					fatherPath.state = FatherPath.FSMStates.Path;
 					fatherPath.currentBehaviour = FatherBehaviour.None;
 					//fatherPath.esperaFilho = false;
@@ -81,10 +85,21 @@ public class FatherCollisionsCtrl : MonoBehaviour {
 
 	void OnTriggerExit(Collider col){
 		if(col.CompareTag("Player")){
-			waitToChangeWP = 0f;
-			fatherPath.endBehaviourWhenPlayerLeaves = true;
-			fatherPath.state = FatherPath.FSMStates.Path;
-			fatherPath.esperaFilho = false;
+			if(fatherPath.state != FatherPath.FSMStates.WaypointBehaviour){
+				waitToChangeWP = 0f;
+				fatherPath.endBehaviourWhenPlayerLeaves = true;
+				fatherPath.state = FatherPath.FSMStates.Path;
+				fatherPath.esperaFilho = false;
+			}
+		}
+
+		if (col.CompareTag("NpcPath"))
+		{
+			if (col.GetComponent<FatherWPBehaviour> ().behaviour != FatherBehaviour.None) {
+				if(!col.GetComponent<FatherWPBehaviour> ().canRepeat){
+					col.gameObject.SetActive (false);
+				}
+			}
 		}
 
 		if(col.CompareTag("Pai_Esticar")){

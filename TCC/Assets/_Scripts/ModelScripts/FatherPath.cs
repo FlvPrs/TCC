@@ -14,7 +14,7 @@ public class FatherPath : MonoBehaviour {
 
 	public FatherBehaviour currentBehaviour = FatherBehaviour.None;
 
-    public enum FSMStates { Idle, Path, FollowingPlayer, GuidingPlayer };
+    public enum FSMStates { Idle, Path, FollowingPlayer, GuidingPlayer, WaypointBehaviour };
     public FSMStates state = FSMStates.Idle;
 
     private NavMeshAgent agent;
@@ -46,9 +46,9 @@ public class FatherPath : MonoBehaviour {
 	private float timeWaiting = 0f;
 	private float maxTimeBeforeFollow = 5f;
 	private float timeBeforeFollow = 0f;
-	private float maxDistToPlayer = 45f;
+	private float maxDistToPlayer = 30f;
 	private float maxDistToGuide = 12f;
-	private float minDistToPlayer = 8f;
+	public float minDistToPlayer = 8f;
 	private float distToPlayer = 0f;
 
 	private HeightState playerHeight;
@@ -89,7 +89,7 @@ public class FatherPath : MonoBehaviour {
 
 		default:
 			maxTimeWaitingBeforeCall = 8f;
-			maxDistToPlayer = 45f;
+			maxDistToPlayer = 40f;
 			break;
 		}
 	}
@@ -135,6 +135,11 @@ public class FatherPath : MonoBehaviour {
 		case FSMStates.GuidingPlayer:
 			timeBeforeFollow = 0f;
 			GuidePlayer_State ();
+			break;
+		case FSMStates.WaypointBehaviour:
+			timeBeforeFollow = 0f;
+			animCtrl.SetBool ("isWalking", false);
+			WaypointBehaviour_State ();
 			break;
 
 
@@ -191,7 +196,8 @@ public class FatherPath : MonoBehaviour {
 //			break;
 //		}
 
-		//filho(currentBehaviour !=)
+		if (currentBehaviour != FatherBehaviour.None)
+			return;
 
 		if(currentAttitude != FatherAttitudes.Distante && !agent.hasPath){
 			LookAtPlayer ();
@@ -199,9 +205,12 @@ public class FatherPath : MonoBehaviour {
 		if(!agent.hasPath){
 			if(timeWaiting < maxTimeWaitingBeforeCall){
 				timeWaiting += Time.deltaTime;
-			} else {
+			} else if(currentBehaviour == FatherBehaviour.None) {
 				timeWaiting = -2f;
 				StartCoroutine(CallPlayer ());
+			} else {
+				timeWaiting = -2f;
+				StopCoroutine ("CallPlayer");
 			}
 		}
     }
@@ -307,12 +316,16 @@ public class FatherPath : MonoBehaviour {
 	}
 	#endregion
 
+	void WaypointBehaviour_State(){
+		
+	}
+
 	#region ReactToPlayerActions
 	public void ReactToHeight(){
 		StopCoroutine ("StartBehaviour");
 
 		if (playerHeight == oldPlayerHeight || state != FSMStates.Idle) {
-			currentBehaviour = FatherBehaviour.None;
+			//currentBehaviour = FatherBehaviour.None;
 			return;
 		}
 		
@@ -333,9 +346,15 @@ public class FatherPath : MonoBehaviour {
 
 	public IEnumerator StartBehaviour(bool fromWaypoint, FatherBehaviour behaviour, bool holdBehaviour, float behaviourTime, bool ignorePlayer){
 		if(!fromWaypoint){
-			while (currentBehaviour != FatherBehaviour.None) {
-				yield return new WaitForSeconds (0.5f);
+			while (holdWPBehaviour) {
+				//yield return new WaitForSeconds (0.5f);
+				yield return null;
 			}
+		} else {
+			state = FSMStates.WaypointBehaviour;
+			fatherHeight.UpdateHeight (0f, animCtrl);
+			wait = false;
+			currentBehaviour = FatherBehaviour.None;
 		}
 
 		currentBehaviour = behaviour;
@@ -381,11 +400,11 @@ public class FatherPath : MonoBehaviour {
 
 	IEnumerator WaitForChangeHeight(float strength){
 		yield return new WaitForSeconds (0.25f);
-		fatherHeight.UpdateHeight (strength);
+		fatherHeight.UpdateHeight (strength, animCtrl);
 	}
 	IEnumerator WaitForChangeHeight(float strength, bool sing){
 		yield return new WaitForSeconds (0.25f);
-		fatherHeight.UpdateHeight (strength);
+		fatherHeight.UpdateHeight (strength, animCtrl);
 		fatherSing.StartClarinet_Sustain (sing);
 	}
 
@@ -402,7 +421,7 @@ public class FatherPath : MonoBehaviour {
 		}
 
 		yield return new WaitForSeconds (behaviourTime);
-		fatherHeight.UpdateHeight (0f);
+		fatherHeight.UpdateHeight (0f, animCtrl);
 		wait = false;
 		currentBehaviour = FatherBehaviour.None;
 
@@ -432,7 +451,7 @@ public class FatherPath : MonoBehaviour {
 
 		yield return new WaitForSeconds (behaviourTime);
 		fatherSing.StartClarinet_Sustain (!stopSing);
-		fatherHeight.UpdateHeight (0f);
+		fatherHeight.UpdateHeight (0f, animCtrl);
 		wait = false;
 		currentBehaviour = FatherBehaviour.None;
 

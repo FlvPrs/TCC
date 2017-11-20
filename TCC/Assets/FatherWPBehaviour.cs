@@ -9,6 +9,8 @@ public class FatherWPBehaviour : MonoBehaviour {
 	public bool holdBehaviour = false;
 	public bool ignorePlayer = false;
 
+	public bool canRepeat = false;
+
 //	void Start () {
 //		if(behaviour == FatherBehaviour.None)
 //			enabled = false;
