@@ -9,6 +9,8 @@ public class FatherCollisionsCtrl : MonoBehaviour {
 	private FatherHeightCtrl fatherHeight;
 	private FatherSingCtrl fatherSing;
 
+	private float waitToChangeWP = 0f;
+
 	void Awake(){
 		linkMover = GetComponent<AgentLinkMover> ();
 		fatherPath = GetComponent<FatherPath> ();
@@ -22,16 +24,19 @@ public class FatherCollisionsCtrl : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider col){
-		if(col.CompareTag("Player")){
-			fatherPath.state = FatherPath.FSMStates.Path;
-			fatherPath.esperaFilho = false;
-			//fatherPath.ChangeWaypoint (false);
-		}
+//		if(col.CompareTag("Player")){
+//			fatherPath.state = FatherPath.FSMStates.Path;
+//			fatherPath.esperaFilho = false;
+//			//fatherPath.ChangeWaypoint (false);
+//		}
 
 		if (col.CompareTag("NpcPath"))
 		{
-			if(col.GetComponent<FatherWPBehaviour> ().behaviour != FatherBehaviour.None)
-				col.GetComponent<FatherWPBehaviour> ().StartBehaviour (fatherPath, fatherHeight, fatherSing);
+			if (col.GetComponent<FatherWPBehaviour> ().behaviour != FatherBehaviour.None) {
+				//col.GetComponent<FatherWPBehaviour> ().StartBehaviour (fatherPath, fatherHeight, fatherSing);
+				FatherWPBehaviour wpBehaviour = col.GetComponent<FatherWPBehaviour> ();
+				StartCoroutine(fatherPath.StartBehaviour(true, wpBehaviour.behaviour, wpBehaviour.holdBehaviour, wpBehaviour.behaviourTime, wpBehaviour.ignorePlayer));
+			}
 //			else {
 //				fatherPath.ChangeWaypoint (false);
 //				int num = int.Parse(col.name.TrimStart ("WP ".ToCharArray ()));
@@ -59,17 +64,28 @@ public class FatherCollisionsCtrl : MonoBehaviour {
 		
 	void OnTriggerStay(Collider col){
 		if(col.CompareTag("Player")){
-			fatherPath.state = FatherPath.FSMStates.Path;
-			fatherPath.esperaFilho = false;
-			//fatherPath.ChangeWaypoint (false);
+			if(fatherPath.filho.GetComponent<WalkingController> ().walkStates.CURR_HEIGHT_STATE != HeightState.Default){
+				fatherPath.ReactToHeight ();
+				waitToChangeWP = 0f;
+			} else {
+				if (waitToChangeWP >= 1f) {
+					fatherPath.state = FatherPath.FSMStates.Path;
+					fatherPath.currentBehaviour = FatherBehaviour.None;
+					//fatherPath.esperaFilho = false;
+				} else {
+					waitToChangeWP += Time.deltaTime;
+				}
+			}
 		}
 	}
 
 	void OnTriggerExit(Collider col){
-//		if(col.CompareTag("Player")){
-//			fatherPath.state = FatherPath.FSMStates.Path;
-//			fatherPath.esperaFilho = true;
-//		}
+		if(col.CompareTag("Player")){
+			waitToChangeWP = 0f;
+			fatherPath.endBehaviourWhenPlayerLeaves = true;
+			fatherPath.state = FatherPath.FSMStates.Path;
+			fatherPath.esperaFilho = false;
+		}
 
 		if(col.CompareTag("Pai_Esticar")){
 			linkMover.m_Method = OffMeshLinkMoveMethod.Parabola;

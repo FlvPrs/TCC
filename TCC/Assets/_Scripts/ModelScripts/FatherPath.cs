@@ -22,6 +22,7 @@ public class FatherPath : MonoBehaviour {
 	public int currentWayPoint;
 
 	public Transform filho;
+	private WalkingController filhoCtrl;
 
 	//[HideInInspector]
 	public bool esperaFilho = true;
@@ -50,6 +51,12 @@ public class FatherPath : MonoBehaviour {
 	private float minDistToPlayer = 8f;
 	private float distToPlayer = 0f;
 
+	private HeightState playerHeight;
+	private HeightState oldPlayerHeight = HeightState.Default;
+
+	[HideInInspector]
+	public bool endBehaviourWhenPlayerLeaves = false;
+
 	// Use this for initialization
 	void Start () {
         nextWaypoint = 0;
@@ -59,6 +66,8 @@ public class FatherPath : MonoBehaviour {
 		animCtrl = GetComponentInChildren<Animator> ();
 		fatherHeight = GetComponent<FatherHeightCtrl> ();
 		fatherSing = GetComponent<FatherSingCtrl> ();
+
+		filhoCtrl = filho.GetComponent<WalkingController> ();
 
 		switch (currentAttitude) {
 
@@ -88,6 +97,8 @@ public class FatherPath : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		distToPlayer = Vector3.Distance (filho.position, t.position);
+
+		playerHeight = filhoCtrl.walkStates.CURR_HEIGHT_STATE;
 
 		if (distToPlayer > maxDistToPlayer) { //Se o jogador estiver longe demais...
 			if (timeBeforeFollow >= maxTimeBeforeFollow) //Espera um pouco. Se o tempo de espera acabou...
@@ -180,6 +191,8 @@ public class FatherPath : MonoBehaviour {
 //			break;
 //		}
 
+		//filho(currentBehaviour !=)
+
 		if(currentAttitude != FatherAttitudes.Distante && !agent.hasPath){
 			LookAtPlayer ();
 		}
@@ -198,8 +211,10 @@ public class FatherPath : MonoBehaviour {
     private void PathFinder()
     {
 		distToWP = Vector3.Distance (target[nextWaypoint].transform.position, t.position);
+
 		if (distToWP <= minDistanceToWaypoint) {
 			esperaFilho = true;
+			state = FSMStates.Idle;
 			ChangeWaypoint (false);
 			return;
 		}
@@ -209,8 +224,9 @@ public class FatherPath : MonoBehaviour {
 
 	public void ChangeWaypoint(bool goToNearest)
     {
-		currentBehaviour = target [nextWaypoint].GetComponent<FatherWPBehaviour> ().behaviour;
-		if(currentBehaviour != FatherBehaviour.None){
+		//currentBehaviour = target [nextWaypoint].GetComponent<FatherWPBehaviour> ().behaviour;
+
+		if(holdWPBehaviour){
 			return;
 		}
 
@@ -225,8 +241,10 @@ public class FatherPath : MonoBehaviour {
 
 		if (esperaFilho || wait) {
 			state = FSMStates.Idle;
-		} else
+		} else {
+			state = FSMStates.Path;
 			esperaFilho = true;
+		}
 		
 		if(goToNearest){
 			float minDist =  99999;
@@ -288,4 +306,153 @@ public class FatherPath : MonoBehaviour {
 		}
 	}
 	#endregion
+
+	#region ReactToPlayerActions
+	public void ReactToHeight(){
+		StopCoroutine ("StartBehaviour");
+
+		if (playerHeight == oldPlayerHeight || state != FSMStates.Idle) {
+			currentBehaviour = FatherBehaviour.None;
+			return;
+		}
+		
+		oldPlayerHeight = playerHeight;
+
+		if (playerHeight == HeightState.Default)
+			return;
+
+		//StopAllCoroutines ();
+		//StartCoroutine(Reaction((Random.Range(0, 10) < 5) ? FatherBehaviour.Stretch : FatherBehaviour.Squash));
+		FatherBehaviour behaviour = ((Random.Range(0, 10) < 5) ? FatherBehaviour.Stretch : FatherBehaviour.Squash);
+		StartCoroutine (StartBehaviour (false, behaviour, true, 0.1f, true));
+	}
+
+
+
+
+
+	public IEnumerator StartBehaviour(bool fromWaypoint, FatherBehaviour behaviour, bool holdBehaviour, float behaviourTime, bool ignorePlayer){
+		if(!fromWaypoint){
+			while (currentBehaviour != FatherBehaviour.None) {
+				yield return new WaitForSeconds (0.5f);
+			}
+		}
+
+		currentBehaviour = behaviour;
+
+
+		switch (currentBehaviour) {
+
+		case FatherBehaviour.Squash:
+			wait = ignorePlayer;
+			StartCoroutine (WaitForChangeHeight(-0.9f));
+			StartCoroutine (StopBehaviour(fromWaypoint, holdBehaviour, behaviourTime));
+			break;
+		case FatherBehaviour.Stretch:
+			wait = ignorePlayer;
+			StartCoroutine (WaitForChangeHeight(0.9f));
+			StartCoroutine (StopBehaviour(fromWaypoint, holdBehaviour, behaviourTime));
+			break;
+
+		case FatherBehaviour.Sing_Default:
+			wait = ignorePlayer;
+			fatherSing.StartClarinet_Sustain (true);
+			StartCoroutine (StopBehaviour(fromWaypoint, holdBehaviour, behaviourTime, true));
+			break;
+
+		case FatherBehaviour.Sing_Squashed:
+			wait = ignorePlayer;
+			StartCoroutine (WaitForChangeHeight(-0.9f, true));
+			StartCoroutine (StopBehaviour(fromWaypoint, holdBehaviour, behaviourTime, true));
+			break;
+		case FatherBehaviour.Sing_Stretched:
+			wait = ignorePlayer;
+			StartCoroutine (WaitForChangeHeight(0.9f, true));
+			StartCoroutine (StopBehaviour(fromWaypoint, holdBehaviour, behaviourTime, true));
+			break;
+
+
+		default:
+			break;
+		}
+	}
+
+
+
+	IEnumerator WaitForChangeHeight(float strength){
+		yield return new WaitForSeconds (0.25f);
+		fatherHeight.UpdateHeight (strength);
+	}
+	IEnumerator WaitForChangeHeight(float strength, bool sing){
+		yield return new WaitForSeconds (0.25f);
+		fatherHeight.UpdateHeight (strength);
+		fatherSing.StartClarinet_Sustain (sing);
+	}
+
+
+	IEnumerator StopBehaviour(bool fromWaypoint, bool holdBehaviour, float behaviourTime){
+		while (holdBehaviour) {
+			if(fromWaypoint)
+				holdWPBehaviour = true;
+			yield return new WaitForSeconds (0.2f);
+			if (playerHeight == HeightState.Default || endBehaviourWhenPlayerLeaves){
+				holdBehaviour = false;
+				endBehaviourWhenPlayerLeaves = false;
+			}
+		}
+
+		yield return new WaitForSeconds (behaviourTime);
+		fatherHeight.UpdateHeight (0f);
+		wait = false;
+		currentBehaviour = FatherBehaviour.None;
+
+		if (fromWaypoint) {
+			holdWPBehaviour = false;
+			ChangeWaypoint (false);
+		}
+		else
+			ChangeWaypoint (true);
+		
+	}
+	IEnumerator StopBehaviour(bool fromWaypoint, bool holdBehaviour, float behaviourTime, bool stopSing){
+		if (fromWaypoint) {
+			while (holdBehaviour && !fatherSing.canAdvance) {
+				holdWPBehaviour = true;
+				yield return new WaitForSeconds (0.2f);
+			}
+		} else {
+			while (holdBehaviour) {
+				yield return new WaitForSeconds (0.2f);
+				if (playerHeight == HeightState.Default || endBehaviourWhenPlayerLeaves){
+					holdBehaviour = false;
+					endBehaviourWhenPlayerLeaves = false;
+				}
+			}
+		}
+
+		yield return new WaitForSeconds (behaviourTime);
+		fatherSing.StartClarinet_Sustain (!stopSing);
+		fatherHeight.UpdateHeight (0f);
+		wait = false;
+		currentBehaviour = FatherBehaviour.None;
+
+		if (fromWaypoint) {
+			//nextWaypoint = int.Parse(gameObject.name.TrimStart ("WP ".ToCharArray ())) + 1;
+			holdWPBehaviour = false;
+			ChangeWaypoint (false);
+		}
+		else
+			ChangeWaypoint (true);
+	}
+	#endregion
+}
+
+public enum FatherBehaviour
+{
+	None,
+	Stretch,
+	Squash,
+	Sing_Default,
+	Sing_Stretched,
+	Sing_Squashed
 }

@@ -356,7 +356,6 @@ public class WalkingController : Controller {
 
 		animCtrl.SetBool ("isWalking", walkStates.IS_WALKING);
 
-		birdHeightCtrl.UpdateHeight (sanfonaStrength, animCtrl);
 		walkStates.CURR_HEIGHT_STATE = birdHeightCtrl.currentHeightState;
 
 		if(externalForceAdded){
@@ -371,26 +370,27 @@ public class WalkingController : Controller {
 			isGrounded = false;
 
 			if (timeOnAir >= 0.2f) {
+				asas.SetActive (true);
 				hudScript.UpdateWingUI (true, flyStamina, hasBonusJump);
 				timeOnAir = 0.2f;
 			} else {
 				timeOnAir += Time.deltaTime;
 			}
+
+			birdHeightCtrl.UpdateHeight (0, animCtrl);
 			
 		} else {
+			asas.SetActive (false);
+			animCtrl.SetTrigger ("CanJump");
+			birdHeightCtrl.UpdateHeight (sanfonaStrength, animCtrl);
 			walkVelocity = Vector3.zero;
 			timeOnAir = 0f;
 		}
+			
 		
 		walkStates.IS_GROUNDED = isGrounded;
 		animCtrl.SetBool ("isGrounded", walkStates.IS_GROUNDED);
 
-		if (!isGrounded) {
-			asas.SetActive (true);
-		} else {
-			asas.SetActive (false);
-			animCtrl.SetTrigger ("CanJump");
-		}
 
 		if (!isGrounded && (flyStamina > 0 || hasBonusJump)) {
 			animCtrl.SetTrigger ("CanFly");

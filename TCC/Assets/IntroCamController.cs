@@ -28,6 +28,7 @@ public class IntroCamController : MonoBehaviour {
 
 		if (!activateStartCam) {
 			GetComponent<CinemachineVirtualCamera> ().m_Priority = 0;
+			enabled = false;
 		}
 		else {
 			GetComponent<CinemachineVirtualCamera> ().m_Priority = 99;
