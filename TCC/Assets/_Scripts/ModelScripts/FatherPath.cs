@@ -340,6 +340,10 @@ public class FatherPath : MonoBehaviour {
 		StartCoroutine (StartBehaviour (false, behaviour, true, 0.1f, true));
 	}
 
+	public void ReactToSing(HeightState playerState){
+		
+	}
+
 
 
 

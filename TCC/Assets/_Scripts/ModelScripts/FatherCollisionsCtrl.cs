@@ -68,16 +68,22 @@ public class FatherCollisionsCtrl : MonoBehaviour {
 		
 	void OnTriggerStay(Collider col){
 		if(col.CompareTag("Player")){
-			if(fatherPath.filho.GetComponent<WalkingController> ().walkStates.CURR_HEIGHT_STATE != HeightState.Default){
-				fatherPath.ReactToHeight ();
-				waitToChangeWP = 0f;
+			WalkingController filhoCtrl = fatherPath.filho.GetComponent<WalkingController> ();
+
+			if(filhoCtrl.walkStates.TOCANDO_FLOREIO){
+				fatherPath.ReactToSing (filhoCtrl.walkStates.CURR_HEIGHT_STATE);
 			} else {
-				if (waitToChangeWP >= 3f) {
-					fatherPath.state = FatherPath.FSMStates.Path;
-					fatherPath.currentBehaviour = FatherBehaviour.None;
-					//fatherPath.esperaFilho = false;
+				if(filhoCtrl.walkStates.CURR_HEIGHT_STATE != HeightState.Default){
+					fatherPath.ReactToHeight ();
+					waitToChangeWP = 0f;
 				} else {
-					waitToChangeWP += Time.deltaTime;
+					if (waitToChangeWP >= 3f) {
+						fatherPath.state = FatherPath.FSMStates.Path;
+						fatherPath.currentBehaviour = FatherBehaviour.None;
+						//fatherPath.esperaFilho = false;
+					} else {
+						waitToChangeWP += Time.deltaTime;
+					}
 				}
 			}
 		}

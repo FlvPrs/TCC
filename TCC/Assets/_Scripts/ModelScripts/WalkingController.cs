@@ -38,7 +38,10 @@ public class WalkingController : Controller {
 	float maxClimbAngle = 50f;
 	bool isClimbing = false;
 
-	bool canPlayStaccato = true;
+	[HideInInspector]
+	public bool canPlayStaccato = true;
+	[HideInInspector]
+	public bool canPlayFloreio = true;
 
 	float timeOnAir = 0f;
 
@@ -197,25 +200,33 @@ public class WalkingController : Controller {
 		}
 
 		//============= Check Sing on Controller ==================
-		//Check Sustain
-		if(data.axes[5] != 0 && !walkStates.TOCANDO_STACCATO){
-			if(singPressTime == 0f){
-				birdSingCtrl.StartClarinet_Sustain (true, data.axes [5]);
-			}
+		//Check Sustain. Que não é mais sustain, mas sim Floreio
+		if(data.axes[5] != 0 && !walkStates.TOCANDO_STACCATO && canPlayFloreio){
+			//if(singPressTime == 0f){
+				//birdSingCtrl.StartClarinet_Sustain (true, data.axes [5]);
+				walkStates.TOCANDO_FLOREIO = true;
+				canPlayFloreio = false;
+				birdSingCtrl.StartClarinet_Floreio();
+			//}
 			birdSingCtrl.UpdateSoundVolume (data.axes [5]);
 			singPressTime += Time.deltaTime;
-		} else if(!walkStates.TOCANDO_STACCATO) {
+		} else if(data.axes[5] == 0 && !walkStates.TOCANDO_STACCATO && !walkStates.TOCANDO_FLOREIO) {
 			singPressTime = 0f;
-			birdSingCtrl.StartClarinet_Sustain (false, 1f);
+			//birdSingCtrl.StartClarinet_Sustain (false, 1f);
+			canPlayFloreio = true;
+		} else {
+			walkStates.TOCANDO_FLOREIO = false;
 		}
-
+		print (walkStates.TOCANDO_FLOREIO);
 		//Chech Staccato
-		if(data.buttons[1] && !walkStates.TOCANDO_SUSTAIN && canPlayStaccato){
+		if(data.buttons[1] && !walkStates.TOCANDO_FLOREIO && canPlayStaccato){
 			walkStates.TOCANDO_STACCATO = true;
 			canPlayStaccato = false;
 			birdSingCtrl.StartClarinet_Staccato ();
-		} else if(!data.buttons[1] && !walkStates.TOCANDO_STACCATO) {
+		} else if(!data.buttons[1] && !walkStates.TOCANDO_STACCATO && !walkStates.TOCANDO_FLOREIO) {
 			canPlayStaccato = true;
+		} else {
+			walkStates.TOCANDO_STACCATO = false;
 		}
 
 //		//Check if Interact Button is pressed
@@ -339,9 +350,12 @@ public class WalkingController : Controller {
 			jumpPressTime = 0f;
 			singPressTime = 0f;
 			if (!walkStates.TOCANDO_STACCATO) {
-				birdSingCtrl.StartClarinet_Sustain (false, 1f);
+				//birdSingCtrl.StartClarinet_Sustain (false, 1f);
 				canPlayStaccato = true;
 			}
+//			if(!walkStates.TOCANDO_FLOREIO){
+//				canPlayFloreio = true;
+//			}
 			walkStates.IS_WALKING = false;
 
 			if (holdOrientation != orientation)
@@ -357,7 +371,13 @@ public class WalkingController : Controller {
 
 		animCtrl.SetBool ("isWalking", walkStates.IS_WALKING);
 
+		//TODO: Provavelmente tem um jeito facil bem mais otimizado de fazer isso...
+		HeightState oldState = walkStates.CURR_HEIGHT_STATE;
 		walkStates.CURR_HEIGHT_STATE = birdHeightCtrl.currentHeightState;
+		if (oldState != walkStates.CURR_HEIGHT_STATE) {
+			canPlayStaccato = true;
+			canPlayFloreio = true;
+		}
 
 		if(externalForceAdded){
 			externalForceAdded = false;
@@ -590,6 +610,7 @@ public class WalkingController : Controller {
 		public HeightState CURR_HEIGHT_STATE;
 		public bool TOCANDO_SUSTAIN;
 		public bool TOCANDO_STACCATO;
+		public bool TOCANDO_FLOREIO;
 	}
 
 }

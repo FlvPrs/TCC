@@ -40,7 +40,7 @@ public class BirdSingCtrl : MonoBehaviour {
 		partiturasPossiveis = new int[]{ 121, 123, 131, 132, 212, 213, 231, 232, 312, 313, 321, 323 };
 		partiturasConhecidas = new bool[partiturasPossiveis.Length]; //se não definir, bool permanece false por default.
 
-		partiturasConhecidas [1] = true;
+		//partiturasConhecidas [1] = true;
 	}
 
 
@@ -82,9 +82,10 @@ public class BirdSingCtrl : MonoBehaviour {
 	}
 
 	public void StartClarinet_Staccato(){
+		StopCoroutine ("StopStaccato");
 
-		if(!clarinet.isPlaying)
-			clarinet.Play ();
+//		if(!clarinet.isPlaying)
+//			clarinet.Play ();
 
 		oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
 
@@ -95,9 +96,24 @@ public class BirdSingCtrl : MonoBehaviour {
 	}
 
 	IEnumerator StopStaccato(){
-		yield return new WaitForSeconds (0.2f);
-		clarinet.Stop ();
+		yield return new WaitForSeconds (0.5f);
+		//clarinet.Stop ();
 		playerCtrl.walkStates.TOCANDO_STACCATO = false;
+		playerCtrl.canPlayStaccato = true;
+	}
+
+	public void StartClarinet_Floreio(){
+		StopCoroutine ("StopFloreio");
+
+		oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
+
+		StartCoroutine("StopFloreio");
+	}
+
+	IEnumerator StopFloreio(){
+		yield return new WaitForSeconds (0.6f);
+		playerCtrl.walkStates.TOCANDO_FLOREIO = false;
+		playerCtrl.canPlayFloreio = true;
 	}
 
 	public void StartClarinet_Sustain(bool start, float volume){
