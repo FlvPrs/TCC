@@ -49,6 +49,8 @@ public class AnimationForward : MonoBehaviour {
 
 	void OnAnimatorMove(){
 		//transform.parent.rotation = anim.rootRotation;
+
 		transform.parent.position += anim.deltaPosition;
+		//anim.stabilizeFeet = true;
 	}
 }

@@ -82,6 +82,7 @@ public class BirdSingCtrl : MonoBehaviour {
 	}
 
 	public void StartClarinet_Staccato(){
+		partituraCollider.gameObject.SetActive (false);
 		StopCoroutine ("StopStaccato");
 
 //		if(!clarinet.isPlaying)
@@ -96,13 +97,19 @@ public class BirdSingCtrl : MonoBehaviour {
 	}
 
 	IEnumerator StopStaccato(){
+		yield return new WaitForSeconds (0.05f);
+		partituraCollider.currentHeight = oldState;
+		partituraCollider.gameObject.SetActive (true);
+
 		yield return new WaitForSeconds (0.5f);
 		//clarinet.Stop ();
 		playerCtrl.walkStates.TOCANDO_STACCATO = false;
 		playerCtrl.canPlayStaccato = true;
+		partituraCollider.gameObject.SetActive (false);
 	}
 
 	public void StartClarinet_Floreio(){
+		sustainCollider.gameObject.SetActive (false);
 		StopCoroutine ("StopFloreio");
 
 		oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
@@ -111,9 +118,14 @@ public class BirdSingCtrl : MonoBehaviour {
 	}
 
 	IEnumerator StopFloreio(){
+		yield return new WaitForSeconds (0.05f);
+		sustainCollider.currentHeight = oldState;
+		sustainCollider.gameObject.SetActive (true);
+
 		yield return new WaitForSeconds (0.6f);
 		playerCtrl.walkStates.TOCANDO_FLOREIO = false;
 		playerCtrl.canPlayFloreio = true;
+		sustainCollider.gameObject.SetActive (false);
 	}
 
 	public void StartClarinet_Sustain(bool start, float volume){

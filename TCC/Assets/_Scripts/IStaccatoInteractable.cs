@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface IStaccatoInteractable {
 
-	void Interact (int Partitura);
+	void Interact (HeightState State, int Partitura);
 
 }
