@@ -202,12 +202,12 @@ public class WalkingController : Controller {
 		//============= Check Sing on Controller ==================
 		//Check Sustain. Que não é mais sustain, mas sim Floreio
 		if(data.axes[5] != 0 && !walkStates.TOCANDO_STACCATO && canPlayFloreio){
-			//if(singPressTime == 0f){
+			if(singPressTime == 0f){
 				//birdSingCtrl.StartClarinet_Sustain (true, data.axes [5]);
 				walkStates.TOCANDO_FLOREIO = true;
 				canPlayFloreio = false;
 				birdSingCtrl.StartClarinet_Floreio();
-			//}
+			}
 			birdSingCtrl.UpdateSoundVolume (data.axes [5]);
 			singPressTime += Time.deltaTime;
 		} else if(data.axes[5] == 0 && !walkStates.TOCANDO_STACCATO && !walkStates.TOCANDO_FLOREIO) {
@@ -217,7 +217,19 @@ public class WalkingController : Controller {
 		} else {
 			walkStates.TOCANDO_FLOREIO = false;
 		}
-		print (walkStates.TOCANDO_FLOREIO);
+
+		/*
+		if(data.axes[5] != 0 && !walkStates.TOCANDO_STACCATO && canPlayFloreio){
+			walkStates.TOCANDO_FLOREIO = true;
+			canPlayFloreio = false;
+			birdSingCtrl.StartClarinet_Floreio ();
+		} else if(data.axes[5] == 0 && !walkStates.TOCANDO_FLOREIO && !walkStates.TOCANDO_STACCATO) {
+			canPlayFloreio = true;
+		} else {
+			walkStates.TOCANDO_FLOREIO = false;
+		}
+		 */
+
 		//Chech Staccato
 		if(data.buttons[1] && !walkStates.TOCANDO_FLOREIO && canPlayStaccato){
 			walkStates.TOCANDO_STACCATO = true;
@@ -353,9 +365,9 @@ public class WalkingController : Controller {
 				//birdSingCtrl.StartClarinet_Sustain (false, 1f);
 				canPlayStaccato = true;
 			}
-//			if(!walkStates.TOCANDO_FLOREIO){
-//				canPlayFloreio = true;
-//			}
+			if(!walkStates.TOCANDO_FLOREIO){
+				canPlayFloreio = true;
+			}
 			walkStates.IS_WALKING = false;
 
 			if (holdOrientation != orientation)

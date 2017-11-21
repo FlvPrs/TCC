@@ -48,7 +48,7 @@ public class FMODNotaFilho : MonoBehaviour {
 		yield return new WaitForSeconds (0.3f);
 
 		while (true) {
-			if (atua.walkStates.TOCANDO_STACCATO) {
+			if (atua.walkStates.TOCANDO_SUSTAIN) {
 				SustainNoteParameter.setValue (1f);
 				print ("Apertanu");
 				yield return new WaitForSeconds (0.2f);
