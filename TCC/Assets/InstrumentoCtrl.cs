@@ -9,6 +9,8 @@ public class InstrumentoCtrl : MonoBehaviour, IStaccatoInteractable {
 
 	private bool tocouPrimeira, tocouSegunda, tocouTerceira, fimDaInteracao;
 
+	public GameObject objToAppear;
+
 	public void Interact(HeightState currentHeight, int partitura){
 		
 		if(currentHeight == primeiraNota){
@@ -30,7 +32,7 @@ public class InstrumentoCtrl : MonoBehaviour, IStaccatoInteractable {
 				tocouTerceira = true;
 				fimDaInteracao = true;
 
-				gameObject.SetActive (false);
+				objToAppear.SetActive (false);
 			} else {
 				ResetNotasTocadas ();
 			}

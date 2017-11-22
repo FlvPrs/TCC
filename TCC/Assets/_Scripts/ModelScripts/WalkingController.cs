@@ -508,6 +508,11 @@ public class WalkingController : Controller {
 		
 		animCtrl.SetFloat ("VelocityY", rb.velocity.y);
 
+		if(walkStates.TOCANDO_FLOREIO || walkStates.TOCANDO_STACCATO || walkStates.TOCANDO_SUSTAIN)
+			animCtrl.SetBool ("IsSinging", true);
+		else
+			animCtrl.SetBool ("IsSinging", false);
+
 		newInput = false;
 	}
 

@@ -57,6 +57,8 @@ public class FatherPath : MonoBehaviour {
 	[HideInInspector]
 	public bool endBehaviourWhenPlayerLeaves = false;
 
+	public GameObject l_asa, r_asa;
+
 	// Use this for initialization
 	void Start () {
         nextWaypoint = 0;
@@ -101,19 +103,29 @@ public class FatherPath : MonoBehaviour {
 		playerHeight = filhoCtrl.walkStates.CURR_HEIGHT_STATE;
 
 		if (distToPlayer > maxDistToPlayer) { //Se o jogador estiver longe demais...
-			if (timeBeforeFollow >= maxTimeBeforeFollow) //Espera um pouco. Se o tempo de espera acabou...
-				state = FSMStates.FollowingPlayer; //Começa a seguir o player.
-			else
+			if (timeBeforeFollow >= maxTimeBeforeFollow){ //Espera um pouco. Se o tempo de espera acabou...
+				if(state == FSMStates.WaypointBehaviour || wait){
+					timeBeforeFollow = 0f;
+				} else {
+					state = FSMStates.FollowingPlayer; //Começa a seguir o player.
+				}
+			} else {
 				timeBeforeFollow += Time.deltaTime;
+			}
 		} else if (isGuidingPlayer) {
 			timeBeforeFollow = 0f;
 			state = FSMStates.GuidingPlayer;
 		}
 
-		if(agent.isOnOffMeshLink)
+		if (agent.isOnOffMeshLink) {
 			animCtrl.SetBool ("isGrounded", false);
-		else
+			l_asa.SetActive (true);
+			r_asa.SetActive (true);
+		} else {
 			animCtrl.SetBool ("isGrounded", true);
+			l_asa.SetActive (false);
+			r_asa.SetActive (false);
+		}
 
 		animCtrl.SetBool ("isWalking", true);
 
@@ -137,7 +149,7 @@ public class FatherPath : MonoBehaviour {
 			GuidePlayer_State ();
 			break;
 		case FSMStates.WaypointBehaviour:
-			timeBeforeFollow = 0f;
+			//timeBeforeFollow = 0f;
 			animCtrl.SetBool ("isWalking", false);
 			WaypointBehaviour_State ();
 			break;
@@ -205,7 +217,7 @@ public class FatherPath : MonoBehaviour {
 		if(!agent.hasPath){
 			if(timeWaiting < maxTimeWaitingBeforeCall){
 				timeWaiting += Time.deltaTime;
-			} else if(currentBehaviour == FatherBehaviour.None) {
+			} else if(currentBehaviour == FatherBehaviour.None && distToPlayer > minDistToPlayer) {
 				timeWaiting = -2f;
 				StartCoroutine(CallPlayer ());
 			} else {
@@ -244,11 +256,12 @@ public class FatherPath : MonoBehaviour {
 		if (nextWaypoint >= target.Length - 1)
 		{
 			//nextWaypoint = 0;
-			state = FSMStates.Idle;
+			if(state != FSMStates.WaypointBehaviour)
+				state = FSMStates.Idle;
 			return;
 		}
 
-		if (esperaFilho || wait) {
+		if ((esperaFilho || wait) && state != FSMStates.WaypointBehaviour) {
 			state = FSMStates.Idle;
 		} else {
 			state = FSMStates.Path;
@@ -286,8 +299,10 @@ public class FatherPath : MonoBehaviour {
 	#region CallingPlayer
 	private IEnumerator CallPlayer(){
 		fatherSing.StartClarinet_Sustain (true);
+		animCtrl.SetBool ("isSinging", true);
 		yield return new WaitForSeconds (2f);
 		fatherSing.StartClarinet_Sustain (false);
+		animCtrl.SetBool ("isSinging", false);
 	}
 	#endregion
 
@@ -296,7 +311,11 @@ public class FatherPath : MonoBehaviour {
 		timeBeforeFollow = 0f;
 		agent.SetDestination(filho.position);
 
-		if (distToPlayer < minDistToPlayer) {
+		if(agent.pathStatus == NavMeshPathStatus.PathPartial || agent.pathStatus == NavMeshPathStatus.PathPartial){
+			nextWaypoint = currentWayPoint;
+			ChangeWaypoint (true);
+			state = FSMStates.Path;
+		} else if (distToPlayer < minDistToPlayer) {
 			//isGuidingPlayer = true;
 			nextWaypoint = currentWayPoint;
 			ChangeWaypoint (true);
@@ -317,7 +336,9 @@ public class FatherPath : MonoBehaviour {
 	#endregion
 
 	void WaypointBehaviour_State(){
-		
+		if(currentAttitude != FatherAttitudes.Distante && !agent.hasPath){
+			LookAtPlayer ();
+		}
 	}
 
 	#region ReactToPlayerActions
@@ -380,6 +401,7 @@ public class FatherPath : MonoBehaviour {
 		case FatherBehaviour.Sing_Default:
 			wait = ignorePlayer;
 			fatherSing.StartClarinet_Sustain (true);
+			animCtrl.SetBool ("isSinging", true);
 			StartCoroutine (StopBehaviour(fromWaypoint, holdBehaviour, behaviourTime, true));
 			break;
 
@@ -410,6 +432,7 @@ public class FatherPath : MonoBehaviour {
 		yield return new WaitForSeconds (0.25f);
 		fatherHeight.UpdateHeight (strength, animCtrl);
 		fatherSing.StartClarinet_Sustain (sing);
+		animCtrl.SetBool ("isSinging", sing);
 	}
 
 
@@ -455,6 +478,7 @@ public class FatherPath : MonoBehaviour {
 
 		yield return new WaitForSeconds (behaviourTime);
 		fatherSing.StartClarinet_Sustain (!stopSing);
+		animCtrl.SetBool ("isSinging", !stopSing);
 		fatherHeight.UpdateHeight (0f, animCtrl);
 		wait = false;
 		currentBehaviour = FatherBehaviour.None;

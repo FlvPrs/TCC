@@ -23,10 +23,13 @@ public class WindPointControl : MonoBehaviour {
 		transform.LookAt (wpCtrl.next, Vector3.up);
 
 		Vector3 newPos = Vector3.forward * (dir.magnitude / 2);
-		Vector3 newScale = Vector3.one * 2f;
+		Vector3 newScale = Vector3.one * 10f;
 		newScale.z = dir.magnitude + (dir.magnitude * 0.2f);
 
 		coll.center = newPos;
 		coll.size = newScale;
+
+		ParticleSystem.MainModule psMain = GetComponentInChildren<ParticleSystem> ().main;
+		psMain.startLifetime = new ParticleSystem.MinMaxCurve (dir.magnitude * 0.43f);
 	}
 }

@@ -6,13 +6,13 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 
 	public float drumForce = 30f;
 	public float windForce = 30f;
-	public float windcurrentForce = 400f;
+	public float windcurrentForce = 800f;
 
 	private int currentCount;
 	private Vector3 avrgCurrentMagnitude = Vector3.zero;
 	private Vector3 currentMomentum = Vector3.zero;
 
-	private Vector3 respawnPoint;
+	//private Vector3 respawnPoint;
 
 	private WalkingController playerCtrl;
 	private CameraFollowPOI camPOI;
@@ -20,6 +20,14 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 	private float originalGlideStrength;
 
 	public GameObject blackScrn;
+
+	private Transform oldWindPoint;
+	private Vector3 nextWindPoint;
+	private Vector3 centerOfWind;
+	private bool canCenterWind;
+
+	public Transform[] spawnPoints;
+	private int currentSpawnPoint = 0;
 
 	void Awake(){
 		playerCtrl = GetComponent<WalkingController> ();
@@ -53,6 +61,11 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 		col.enabled = true;
 	}
 
+	IEnumerator waitToRecenterWind(){
+		yield return new WaitForSeconds (0.2f);
+		canCenterWind = true;
+	}
+
 //	IEnumerator FallingCamera(){
 //		yield return new WaitForSeconds (2.0f);
 //		cvCamera_TopViewFalling.Priority = 21;
@@ -79,11 +92,18 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 		}
 
 		if(col.CompareTag("WindCurrent")){
+			canCenterWind = false;
+
 			currentCount++;
-			if(currentCount == 1)
+			if (currentCount == 1) {
 				playerCtrl.BypassGravity (true);
+			}
+
+			oldWindPoint = col.transform;
 			avrgCurrentMagnitude += col.transform.forward;
 			currentMomentum = col.transform.forward * (windcurrentForce / 100);
+			nextWindPoint = col.GetComponent<WaypointControl> ().next.position;
+			StartCoroutine(waitToRecenterWind());
 		}
 
 //		if(col.CompareTag("Falling_Trigger")){
@@ -102,10 +122,12 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 //		}
 
 		if(col.CompareTag("Respawn")){
-			respawnPoint = col.transform.position;
+			currentSpawnPoint = int.Parse(col.name);
+			//respawnPoint = col.transform.position;
 		}
 		if(col.CompareTag("DeathTrigger")){
-			transform.position = respawnPoint;
+			//transform.position = respawnPoint;
+			col.GetComponent<FadeOutRespawn> ().StartFade (transform, spawnPoints[currentSpawnPoint].position, currentSpawnPoint);
 		}
 
 		if(col.CompareTag("LookAt")){
@@ -119,7 +141,12 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			playerCtrl.ContinuousExternalForce (col.transform.up * windForce, false, false);
 		}
 		if(col.CompareTag("WindCurrent")){
-			playerCtrl.ContinuousExternalForce ((Vector3.ClampMagnitude(avrgCurrentMagnitude, 1f) * windcurrentForce) / currentCount, true, false);
+			centerOfWind = oldWindPoint.position + Vector3.Project(transform.position - oldWindPoint.position, oldWindPoint.forward);
+
+			if(canCenterWind)
+				transform.position = Vector3.MoveTowards (transform.position, centerOfWind, 0.1f);
+
+			playerCtrl.ContinuousExternalForce ((Vector3.ClampMagnitude(avrgCurrentMagnitude, 1f) * windcurrentForce) / currentCount, true, true);
 		}
 	}
 
