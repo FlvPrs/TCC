@@ -8,7 +8,7 @@ public class IntroCamController : MonoBehaviour {
 
 	[NoSaveDuringPlay]
 	public bool activateStartCam = true;
-
+	[NoSaveDuringPlay]
 	public WalkingController playerCtrl;
 	private float defaultSpeed;
 
@@ -19,8 +19,15 @@ public class IntroCamController : MonoBehaviour {
 
 	private bool startGame;
 
+	public GameObject pressButtonTxt;
+
 	// Use this for initialization
 	void Start () {
+		if(activateStartCam)
+			pressButtonTxt.SetActive (true);
+		else
+			pressButtonTxt.SetActive (false);
+
 		camTrack = GetComponent<CinemachineVirtualCamera> ().GetCinemachineComponent<CinemachineTrackedDolly>();
 		camTrack.m_PathPosition = 1f;
 
@@ -41,8 +48,10 @@ public class IntroCamController : MonoBehaviour {
 	void Update () {
 		playerCtrl.walkSpeed = 0;
 
-		if (playerCtrl.playerInputStartGame)
+		if (playerCtrl.playerInputStartGame) {
 			activateStartCam = false;
+			pressButtonTxt.SetActive (false);
+		}
 		
 		if (activateStartCam) {
 			if (camTrack.m_PathPosition >= 1.9f && towards) {

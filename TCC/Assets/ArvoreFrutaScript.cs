@@ -9,6 +9,7 @@ public class ArvoreFrutaScript : MonoBehaviour, ISustainInteractable {
 
 	public float holdNote = 5f;
 
+	[SerializeField]
 	private float holding = 0f;
 
 

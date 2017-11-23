@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class FadeOutRespawn : MonoBehaviour {
 
+	public bool fadeToEndLevel;
+
 	[Range(0f, 5f)]
 	public float fadeToBlack_Duration = 1f;
 	[Range(0f, 5f)]
@@ -16,6 +18,8 @@ public class FadeOutRespawn : MonoBehaviour {
 	private Color color = Color.black;
 
 	private bool fadeOut_ToBlack, fadeIn_FromBlack;
+
+	public PlayerRespawnCtrl playerRespawn;
 
 	public CamPriorityController camCtrl;
 	public int[] spawnCamIndex;
@@ -63,7 +67,14 @@ public class FadeOutRespawn : MonoBehaviour {
 
 		color.a = 1f;
 		fadeOut_ToBlack = false;
-		player.position = respawnPosition;
+
+		if (fadeToEndLevel) {
+			yield return new WaitForSeconds (3f);
+			EndGame.Restart ();
+		}
+
+		//player.position = respawnPosition;
+		StartCoroutine(playerRespawn.ReturnToSpawn (respawnPosition));
 
 		yield return new WaitForSeconds (1f);
 		fadeIn_FromBlack = true;
@@ -76,7 +87,7 @@ public class FadeOutRespawn : MonoBehaviour {
 		fadeOut_ToBlack = false;
 		fadeIn_FromBlack = false;
 
-		yield return new WaitForSeconds (2f);
+		yield return new WaitForSeconds (3f);
 		camCtrl.ChangeCameraTo (spawnCamIndex[spawnIndex]);
 	}
 }

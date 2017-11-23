@@ -108,9 +108,10 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 
 //		if(col.CompareTag("Falling_Trigger")){
 //			playerCtrl.glideStrength = 0f;
-//			cvCamera_Falling.Priority = 20;
+//			//cvCamera_Falling.Priority = 20;
 //			//transform.LookAt (GameObject.Find ("Father").transform);
-//			StartCoroutine ("FallingCamera");
+//			//StartCoroutine ("FallingCamera");
+//
 //			col.gameObject.SetActive (false);
 //		}
 //
@@ -148,6 +149,15 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 
 			playerCtrl.ContinuousExternalForce ((Vector3.ClampMagnitude(avrgCurrentMagnitude, 1f) * windcurrentForce) / currentCount, true, true);
 		}
+
+		if(col.CompareTag("StretchTrigger")){
+			if (playerCtrl.walkStates.CURR_HEIGHT_STATE == HeightState.High)
+				playerCtrl.holdHeight = true;
+		}
+		if(col.CompareTag("SquashTrigger")){
+			if (playerCtrl.walkStates.CURR_HEIGHT_STATE == HeightState.Low)
+				playerCtrl.holdHeight = true;
+		}
 	}
 
 	void OnTriggerExit(Collider col){
@@ -162,6 +172,10 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			if(currentCount < 1){
 				playerCtrl.AddExternalForce (currentMomentum, 0.5f);
 			}
+		}
+
+		if(col.CompareTag("StretchTrigger") || col.CompareTag("SquashTrigger")){
+			playerCtrl.holdHeight = false;
 		}
 	}
 }

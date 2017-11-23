@@ -94,6 +94,9 @@ public class WalkingController : Controller {
 	[HideInInspector]
 	public bool playerInputStartGame;
 
+	[HideInInspector]
+	public bool holdHeight = false;
+
 	protected override void Start() {
 		base.Start ();
 		if(OnFacingChange != null){
@@ -410,12 +413,14 @@ public class WalkingController : Controller {
 				timeOnAir += Time.deltaTime;
 			}
 
-			birdHeightCtrl.UpdateHeight (0, animCtrl);
+			if(!holdHeight)
+				birdHeightCtrl.UpdateHeight (0, animCtrl);
 			
 		} else {
 			asas.SetActive (false);
 			animCtrl.SetTrigger ("CanJump");
-			birdHeightCtrl.UpdateHeight (sanfonaStrength, animCtrl);
+			if(!holdHeight)
+				birdHeightCtrl.UpdateHeight (sanfonaStrength, animCtrl);
 			walkVelocity = Vector3.zero;
 			timeOnAir = 0f;
 		}

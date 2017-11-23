@@ -118,10 +118,13 @@ public class FatherPath : MonoBehaviour {
 		}
 
 		if (agent.isOnOffMeshLink) {
+			animCtrl.SetBool ("IsOnOffMeshLink", true);
 			animCtrl.SetBool ("isGrounded", false);
 			l_asa.SetActive (true);
 			r_asa.SetActive (true);
 		} else {
+			animCtrl.SetTrigger ("EnteredOffMeshLink");
+			animCtrl.SetBool ("IsOnOffMeshLink", false);
 			animCtrl.SetBool ("isGrounded", true);
 			l_asa.SetActive (false);
 			r_asa.SetActive (false);
@@ -241,6 +244,10 @@ public class FatherPath : MonoBehaviour {
 		}
 
         agent.SetDestination(target[nextWaypoint].transform.position);
+
+		if (agent.pathStatus == NavMeshPathStatus.PathPartial || agent.pathStatus == NavMeshPathStatus.PathInvalid) {
+			ChangeWaypoint (true);
+		}
     }
 
 	public void ChangeWaypoint(bool goToNearest)
@@ -286,6 +293,11 @@ public class FatherPath : MonoBehaviour {
 			nextWaypoint++;
 			//target[nextWaypoint].SetActive(true);
 		}
+		for (int i = 0; i < target.Length; i++) {
+			target[i].SetActive(false);
+		}
+		target[nextWaypoint].SetActive(true);
+		target [currentWayPoint].SetActive (true);
     }
 	#endregion
 
@@ -311,7 +323,7 @@ public class FatherPath : MonoBehaviour {
 		timeBeforeFollow = 0f;
 		agent.SetDestination(filho.position);
 
-		if(agent.pathStatus == NavMeshPathStatus.PathPartial || agent.pathStatus == NavMeshPathStatus.PathPartial){
+		if(agent.pathStatus == NavMeshPathStatus.PathPartial || agent.pathStatus == NavMeshPathStatus.PathInvalid){
 			nextWaypoint = currentWayPoint;
 			ChangeWaypoint (true);
 			state = FSMStates.Path;

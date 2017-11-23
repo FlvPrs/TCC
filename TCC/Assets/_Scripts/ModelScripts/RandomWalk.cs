@@ -10,6 +10,8 @@ public class RandomWalk : MonoBehaviour
 	Vector2 originalPos;
 	Vector3 currentDest;
 
+	bool pause;
+
     void Start()
     {
         m_agent = GetComponent<NavMeshAgent>();
@@ -18,7 +20,7 @@ public class RandomWalk : MonoBehaviour
 
     void Update()
     {
-        if (m_agent.pathPending || m_agent.remainingDistance > 0.1f)
+        if (pause || m_agent.pathPending || m_agent.remainingDistance > 0.1f)
             return;
 
 		Vector2 circleRand = originalPos + (m_Range * Random.insideUnitCircle);
@@ -31,4 +33,8 @@ public class RandomWalk : MonoBehaviour
 
 		m_agent.destination = dest;
     }
+
+	public void PauseWalk(bool doPause){
+		pause = doPause;
+	}
 }

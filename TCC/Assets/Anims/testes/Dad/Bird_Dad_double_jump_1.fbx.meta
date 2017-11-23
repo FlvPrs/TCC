@@ -162,15 +162,15 @@ ModelImporter:
     - serializedVersion: 16
       name: Dad_DoubleJump
       takeName: Take 001
-      firstFrame: 20
-      lastFrame: 40
+      firstFrame: 17
+      lastFrame: 30
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -183,8 +183,125 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events: []
-      transformMask: []
-      maskType: 3
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Body
+        weight: 1
+      - path: Eyes
+        weight: 1
+      - path: l_Pata
+        weight: 1
+      - path: l_wing
+        weight: 1
+      - path: r_Pata
+        weight: 1
+      - path: r_wing
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/pelvis
+        weight: 0
+      - path: root/pelvis/l_tight
+        weight: 0
+      - path: root/pelvis/l_tight/l_knee_
+        weight: 1
+      - path: root/pelvis/l_tight/l_knee_/l_foot
+        weight: 1
+      - path: root/pelvis/l_tight/l_knee_/l_foot/l_finger_back_01
+        weight: 1
+      - path: root/pelvis/l_tight/l_knee_/l_foot/l_finger_back_01/l_finger_back_02
+        weight: 1
+      - path: root/pelvis/l_tight/l_knee_/l_foot/l_finger_back_01/l_finger_back_02/l_finger_back_03
+        weight: 1
+      - path: root/pelvis/l_tight/l_knee_/l_foot/l_finger_l_01
+        weight: 1
+      - path: root/pelvis/l_tight/l_knee_/l_foot/l_finger_l_01/l_finger_l_02
+        weight: 1
+      - path: root/pelvis/l_tight/l_knee_/l_foot/l_finger_l_01/l_finger_l_02/l_finger_l_03
+        weight: 1
+      - path: root/pelvis/l_tight/l_knee_/l_foot/l_finger_r_01
+        weight: 1
+      - path: root/pelvis/l_tight/l_knee_/l_foot/l_finger_r_01/l_finger_r_02
+        weight: 1
+      - path: root/pelvis/l_tight/l_knee_/l_foot/l_finger_r_01/l_finger_r_02/l_finger_r_03
+        weight: 1
+      - path: root/pelvis/r_tight
+        weight: 0
+      - path: root/pelvis/r_tight/r_knee_
+        weight: 1
+      - path: root/pelvis/r_tight/r_knee_/r_foot
+        weight: 1
+      - path: root/pelvis/r_tight/r_knee_/r_foot/r_finger_back_01
+        weight: 1
+      - path: root/pelvis/r_tight/r_knee_/r_foot/r_finger_back_01/r_finger_back_02
+        weight: 1
+      - path: root/pelvis/r_tight/r_knee_/r_foot/r_finger_back_01/r_finger_back_02/r_finger_back_03
+        weight: 1
+      - path: root/pelvis/r_tight/r_knee_/r_foot/r_finger_r_01
+        weight: 1
+      - path: root/pelvis/r_tight/r_knee_/r_foot/r_finger_r_01/r_finger_r_02
+        weight: 1
+      - path: root/pelvis/r_tight/r_knee_/r_foot/r_finger_r_01/r_finger_r_02/r_finger_r_03
+        weight: 1
+      - path: root/pelvis/r_tight/r_knee_/r_foot/r_finger_r_04
+        weight: 1
+      - path: root/pelvis/r_tight/r_knee_/r_foot/r_finger_r_04/r_finger_r_02 1
+        weight: 1
+      - path: root/pelvis/r_tight/r_knee_/r_foot/r_finger_r_04/r_finger_r_02 1/r_finger_r_03
+          1
+        weight: 1
+      - path: root/pelvis/spine_01
+        weight: 1
+      - path: root/pelvis/spine_01/spine_02
+        weight: 0
+      - path: root/pelvis/spine_01/spine_02/spine_03
+        weight: 1
+      - path: root/pelvis/spine_01/spine_02/spine_03/head
+        weight: 0
+      - path: root/pelvis/spine_01/spine_02/spine_03/head/l_feather_01
+        weight: 1
+      - path: root/pelvis/spine_01/spine_02/spine_03/head/l_feather_01/l_feather_02
+        weight: 1
+      - path: root/pelvis/spine_01/spine_02/spine_03/head/l_feather_01/l_feather_02/l_feather_03
+        weight: 1
+      - path: root/pelvis/spine_01/spine_02/spine_03/head/m_feather_01
+        weight: 1
+      - path: root/pelvis/spine_01/spine_02/spine_03/head/m_feather_01/m_feather_02
+        weight: 1
+      - path: root/pelvis/spine_01/spine_02/spine_03/head/m_feather_01/m_feather_02/m_feather_03
+        weight: 1
+      - path: root/pelvis/spine_01/spine_02/spine_03/head/nozzle
+        weight: 1
+      - path: root/pelvis/spine_01/spine_02/spine_03/head/r_feather_01
+        weight: 1
+      - path: root/pelvis/spine_01/spine_02/spine_03/head/r_feather_01/r_feather_02
+        weight: 1
+      - path: root/pelvis/spine_01/spine_02/spine_03/head/r_feather_01/r_feather_02/r_feather_03
+        weight: 1
+      - path: root/pelvis/spine_01/spine_02/spine_03/l_wing_01
+        weight: 1
+      - path: root/pelvis/spine_01/spine_02/spine_03/l_wing_01/l_wing_02
+        weight: 1
+      - path: root/pelvis/spine_01/spine_02/spine_03/l_wing_01/l_wing_02/l_wing_03
+        weight: 1
+      - path: root/pelvis/spine_01/spine_02/spine_03/r_wing_01
+        weight: 1
+      - path: root/pelvis/spine_01/spine_02/spine_03/r_wing_01/r_wing_02
+        weight: 1
+      - path: root/pelvis/spine_01/spine_02/spine_03/r_wing_01/r_wing_02/r_wing_03
+        weight: 1
+      - path: root_ctrl
+        weight: 1
+      - path: root_ctrl/body_ctrl
+        weight: 1
+      - path: root_ctrl/body_ctrl/spine_ctrl
+        weight: 1
+      - path: root_ctrl/body_ctrl/spine_ctrl/head_ctrl
+        weight: 1
+      - path: root_ctrl/body_ctrl/spine_ctrl/head_ctrl/nozzle_ctrl
+        weight: 1
+      maskType: 0
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     isReadable: 1

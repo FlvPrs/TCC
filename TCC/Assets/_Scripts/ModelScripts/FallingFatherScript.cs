@@ -23,23 +23,24 @@ public class FallingFatherScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (fallingTrigger.activeSelf)
+		if (fallingTrigger.activeSelf) {
 			return;
+		}
 
-		if (distSonToFloor.vectorDistance < 300f){
+		if (distSonToFloor.vectorDistance < 400f){
 			saveSon = true;
 		}
 
 		if(!underTheSon) {
 			if (saveSon) {
-				if (myDistToSon.distAxis.y < 10) { //Se o pai estiver acima de (20 unidade abaixo do filho)
+				if (myDistToSon.distAxis.y < 0) { //Se o pai estiver acima de (20 unidade abaixo do filho)
 					underTheSon = false;
 					float son_TimeTillCrash = distSonToFloor.vectorDistance / filho.currentFallVelocity;
 					float dad_TimeTillSon = myDistToSon.vectorDistance / downForce;
 
-					if (dad_TimeTillSon > son_TimeTillCrash + 2.5f) { //O +3 garante que o pai vai chegar 3s antes do filho
+					if (dad_TimeTillSon > son_TimeTillCrash + 2f) { //O +3 garante que o pai vai chegar 3s antes do filho
 						downForce++;
-					} else if (dad_TimeTillSon < son_TimeTillCrash + 2.5f) {
+					} else if (dad_TimeTillSon < son_TimeTillCrash + 2f) {
 						downForce--;
 					}
 				} else {
@@ -56,7 +57,7 @@ public class FallingFatherScript : MonoBehaviour {
 			float xAmount = Mathf.Sign (myDistToSon.distAxis.x);
 			float zAmount = Mathf.Sign (myDistToSon.distAxis.z);
 
-			transform.Translate (xAmount * 0.2f, 0, zAmount * 0.2f, Space.World);
+			transform.Translate (xAmount * 0.35f, 0, zAmount * 0.35f, Space.World);
 		}
 
 		rb.velocity = Vector3.up * downForce;
