@@ -11,7 +11,7 @@ public class CamPriorityController : MonoBehaviour {
 	public Cinemachine.CinemachineVirtualCamera[] CM_Vcams;
 	public int startingCam = 0;
 
-	[HideInInspector]
+	//[HideInInspector]
 	public int currentCam;
 	//private int[] defaultCamPriorities;
 

@@ -373,8 +373,9 @@ public class WalkingController : Controller {
 			}
 			walkStates.IS_WALKING = false;
 
-			if (holdOrientation != orientation)
+			if (holdOrientation != orientation) {
 				orientation = holdOrientation;
+			}
 		}
 
 
