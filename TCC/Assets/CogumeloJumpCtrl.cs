@@ -6,12 +6,14 @@ public class CogumeloJumpCtrl : MonoBehaviour {
 
 	public float jumpForce = 10f;
 
+	public WalkingController player;
+
 	void OnTriggerEnter(Collider col){
 		if(col.CompareTag("Player")){
-			col.GetComponent<WalkingController>().externalForceAdded = true;
+			player.externalForceAdded = true;
 			//col.GetComponentInParent<AudioSource> ().Play ();
 			Vector3 dir = col.transform.up * jumpForce;
-			col.GetComponent<WalkingController>().AddExternalForce (dir, 0.5f);
+			player.AddExternalForce (dir, 0.5f);
 		}
 	}
 }

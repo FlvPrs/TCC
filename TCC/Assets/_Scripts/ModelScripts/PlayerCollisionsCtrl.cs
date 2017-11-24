@@ -78,7 +78,7 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			playerCtrl.StartCoroutine("GrabLedge", dir);
 		}
 
-//		if(col.CompareTag("Cogumelo")){
+//		if(col.CompareTag("Cogumelo")){ //DEIXA COMENTADO
 //			playerCtrl.externalForceAdded = true;
 //			//col.GetComponentInParent<AudioSource> ().Play ();
 //			Vector3 dir = col.transform.up * drumForce;

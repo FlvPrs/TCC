@@ -18,7 +18,7 @@ public class FallingFatherScript : MonoBehaviour {
 	void Start () {
 		rb = GetComponent<Rigidbody> ();
 		myDistToSon = GetComponent<DistanceMeasure> ();
-		downForce = filho.maxFallVelocity;
+		downForce = filho.maxFallVelocity * 2f;
 	}
 	
 	// Update is called once per frame

@@ -7,10 +7,16 @@ public class ArvoreFrutaScript : MonoBehaviour, ISustainInteractable {
 	public HeightState interactableState;
 	public GameObject fruta;
 
+	private Vector3 frutaInitPos;
+
 	public float holdNote = 5f;
 
 	[SerializeField]
 	private float holding = 0f;
+
+	void Start(){
+		frutaInitPos = fruta.transform.position;
+	}
 
 
 	public void Interact (HeightState currentHeight) {
@@ -26,6 +32,7 @@ public class ArvoreFrutaScript : MonoBehaviour, ISustainInteractable {
 			holding += Time.deltaTime;
 		} else {
 			holding = 0f;
+			fruta.transform.position = frutaInitPos;
 			fruta.SetActive (true);
 		}
 
