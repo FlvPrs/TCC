@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class FatherSingCtrl : MonoBehaviour {
 
+	[FMODUnity.EventRef]
+
+	public string paiMusic;
+	FMOD.Studio.EventInstance audiocantaPai;
+
 	public FatherSustainInteractions sustainCollider;
 //	public StaccatoInteractionsCtrl partituraCollider;
 

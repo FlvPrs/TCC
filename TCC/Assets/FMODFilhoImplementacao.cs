@@ -17,12 +17,12 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 
 	void Start () {
 		
-		FilhoAguda = "event:/Filho Nota Padrao Aguda";
-		FilhoMedia = "event:/Filho Nota Padrao Media";
-		FilhoGrave = "event:/Filho Nota Padrao Grave";
-		FilhoAguda2 = "event:/Filho Floreio Agudo";
-		FilhoMedia2 = "event:/Filho Floreio Medio";
-		FilhoGrave2 = "event:/Filho Floreio Grave";
+		FilhoAguda = "event:/Filho RB/Filho Nota Padrao Aguda";
+		FilhoMedia = "event:/Filho RB/Filho Nota Padrao Media";
+		FilhoGrave = "event:/Filho RB/Filho Nota Padrao Grave";
+		FilhoAguda2 = "event:/Filho RT/Filho Floreio Agudo";
+		FilhoMedia2 = "event:/Filho RT/Filho Floreio Medio";
+		FilhoGrave2 = "event:/Filho RT/Filho Floreio Grave";
 
 		filhoMelodyAguda = FMODUnity.RuntimeManager.CreateInstance (FilhoAguda);
 		filhoMelodyMedia = FMODUnity.RuntimeManager.CreateInstance (FilhoMedia);
