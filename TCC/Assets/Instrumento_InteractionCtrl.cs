@@ -10,15 +10,18 @@ public class Instrumento_InteractionCtrl : MonoBehaviour, IStaccatoInteractable 
 	[HideInInspector]
 	public bool interactionDone;
 
+	private ParticleSystem particle_Yay, particle_Nay;
+
 	// Use this for initialization
 	void Start () {
-		
+		particle_Yay = transform.Find ("Particle_Acerto").GetComponentInChildren<ParticleSystem> ();
+		particle_Nay = transform.Find ("Particle_Erro").GetComponentInChildren<ParticleSystem> ();
 	}
 
 	public void Interact (HeightState height){
 		if(canInteract && height == pitch){
 			interactionDone = true;
-			gameObject.SetActive (false);
+			//gameObject.SetActive (false);
 		}
 	}
 
