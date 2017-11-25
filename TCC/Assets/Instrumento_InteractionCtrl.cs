@@ -10,18 +10,24 @@ public class Instrumento_InteractionCtrl : MonoBehaviour, IStaccatoInteractable 
 	[HideInInspector]
 	public bool interactionDone;
 
-	private ParticleSystem particle_Yay, particle_Nay;
+	public GameObject particle_Yay, particle_Nay;
+
+	private InstrumentoCtrl instrumentoCtrl;
 
 	// Use this for initialization
 	void Start () {
-		particle_Yay = transform.Find ("Particle_Acerto").GetComponentInChildren<ParticleSystem> ();
-		particle_Nay = transform.Find ("Particle_Erro").GetComponentInChildren<ParticleSystem> ();
+		instrumentoCtrl = GetComponentInParent<InstrumentoCtrl> ();
 	}
 
 	public void Interact (HeightState height){
-		if(canInteract && height == pitch){
+		if(canInteract){
 			interactionDone = true;
-			//gameObject.SetActive (false);
+
+			bool correctPitch = false;
+			if(height == pitch)
+				correctPitch = true;
+
+			instrumentoCtrl.UpdateInstrumento (correctPitch);
 		}
 	}
 
