@@ -6,8 +6,8 @@ public class FatherSingCtrl : MonoBehaviour {
 
 	[FMODUnity.EventRef]
 
-	public string paiMusic;
-	FMOD.Studio.EventInstance audiocantaPai;
+	public string paiCalling;
+	FMOD.Studio.EventInstance audiochamaPai;
 
 	public FatherSustainInteractions sustainCollider;
 //	public StaccatoInteractionsCtrl partituraCollider;
@@ -24,6 +24,13 @@ public class FatherSingCtrl : MonoBehaviour {
 	//private bool tocouPartitura;
 
 	void Awake () {
+
+		//FMOD
+		paiCalling = "event:/Pai/PaiChamado";
+		audiochamaPai = FMODUnity.RuntimeManager.CreateInstance (paiCalling);
+
+
+
 		sustainCollider.gameObject.SetActive (false);
 //		partituraCollider.gameObject.SetActive (false);
 
@@ -39,10 +46,11 @@ public class FatherSingCtrl : MonoBehaviour {
 
 		if (sustainCollider.stopSing && !waitToSing) {
 			waitToSing = true;
-			sing.Stop ();
+			//sing.Stop ();
 		} else if (!sustainCollider.stopSing && waitToSing) {
 			waitToSing = false;
-			sing.Play ();
+			//sing.Play ();
+			audiochamaPai.start();
 		}
 	}
 
@@ -60,11 +68,13 @@ public class FatherSingCtrl : MonoBehaviour {
 
 	public void StartClarinet_Sustain(bool start){
 		if (start) { //ou seja, se ainda tiver 25% de ar disponível
-			sing.Play ();
+			//sing.Play ();
 			//sustainCollider.currentHeight = oldState;
+			audiochamaPai.start();
+
 			sustainCollider.gameObject.SetActive (true);
 		} else {
-			sing.Stop ();
+			//sing.Stop ();
 			sustainCollider.gameObject.SetActive (false);
 		}
 	}
