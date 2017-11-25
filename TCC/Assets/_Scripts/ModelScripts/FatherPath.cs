@@ -107,7 +107,7 @@ public class FatherPath : MonoBehaviour {
 				if(state == FSMStates.WaypointBehaviour || wait){
 					timeBeforeFollow = 0f;
 				} else {
-					state = FSMStates.FollowingPlayer; //Começa a seguir o player.
+					//state = FSMStates.FollowingPlayer; //Começa a seguir o player.
 				}
 			} else {
 				timeBeforeFollow += Time.deltaTime;

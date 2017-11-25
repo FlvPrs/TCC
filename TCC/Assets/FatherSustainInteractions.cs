@@ -16,7 +16,8 @@ public class FatherSustainInteractions : MonoBehaviour {
 	}
 
 	void OnTriggerStay(Collider col){
-		canAdvance = col.GetComponent<IFatherInteractable> ().FatherInteraction (out stopSing);
+		if(col.CompareTag("PaiCanInteract"))
+			canAdvance = col.GetComponent<IFatherInteractable> ().FatherInteraction (out stopSing);
 	}
 
 	void OnTriggerExit(Collider col){

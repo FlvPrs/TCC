@@ -11,7 +11,6 @@ public class ArvoreFrutaScript : MonoBehaviour, ISustainInteractable {
 
 	public float holdNote = 5f;
 
-	[SerializeField]
 	private float holding = 0f;
 
 	void Start(){
@@ -27,13 +26,17 @@ public class ArvoreFrutaScript : MonoBehaviour, ISustainInteractable {
 		}
 
 		StopAllCoroutines ();
+		StartCoroutine (HideFruit ());
 
 		if(holding < holdNote){
 			holding += Time.deltaTime;
 		} else {
 			holding = 0f;
-			fruta.transform.position = frutaInitPos;
-			fruta.SetActive (true);
+			if (!fruta.activeSelf) {
+				fruta.transform.position = frutaInitPos;
+				fruta.SetActive (true);
+				StartCoroutine (HideFruit ());
+			}
 		}
 
 		StartCoroutine ("StoppedHolding");
@@ -42,5 +45,10 @@ public class ArvoreFrutaScript : MonoBehaviour, ISustainInteractable {
 	IEnumerator StoppedHolding(){
 		yield return new WaitForSeconds (0.2f);
 		holding = 0f;
+	}
+
+	IEnumerator HideFruit(){
+		yield return new WaitForSeconds (3f);
+		fruta.SetActive (false);
 	}
 }

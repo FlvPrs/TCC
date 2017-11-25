@@ -70,6 +70,7 @@ public class WalkingController : Controller {
 	float accelerationTimeGrounded = .1f;
 	float jumpGravity;
 	float jumpVelocity;
+	bool canFly;
 
 	[HideInInspector]
 	public float currentFallVelocity;
@@ -87,6 +88,7 @@ public class WalkingController : Controller {
 	private AnimationForward anim;
 
 	public GameObject asas;
+	public GameObject bonusJumpParticle;
 
 	[HideInInspector]
 	public bool hasBonusJump;
@@ -117,6 +119,8 @@ public class WalkingController : Controller {
 		jumpVelocity = Mathf.Abs (jumpGravity) * timeToJumpApex;
 
 		playerInputStartGame = false;
+
+		bonusJumpParticle.SetActive (false);
 	}
 
 	public override void ReadInput (InputData data) {
@@ -178,13 +182,13 @@ public class WalkingController : Controller {
 					adjVertVelocity = jumpVelocity;
 					jumpCooldown = maxJumpCooldown;
 					jumpInertia = walkVelocity;
-				} else if (!stopGravity && !isClimbing && flyStamina > 0) {
+				} else if (canFly && !stopGravity && !isClimbing && flyStamina > 0) {
 					isFlying = true;
 					adjVertVelocity = jumpVelocity * 0.8f;
 					//adjVertVelocity = jumpSpeed;
 					jumpInertia = walkVelocity;
 					flyStamina--;
-				} else if (!stopGravity && !isClimbing && hasBonusJump) {
+				} else if (canFly && !stopGravity && !isClimbing && hasBonusJump) {
 					isFlying = true;
 					adjVertVelocity = jumpVelocity * 0.8f;
 					//adjVertVelocity = jumpSpeed;
@@ -407,6 +411,7 @@ public class WalkingController : Controller {
 			isGrounded = false;
 
 			if (timeOnAir >= 0.2f) {
+				canFly = true;
 				asas.SetActive (true);
 				hudScript.UpdateWingUI (true, flyStamina, hasBonusJump);
 				timeOnAir = 0.2f;
@@ -419,6 +424,7 @@ public class WalkingController : Controller {
 			
 		} else {
 			asas.SetActive (false);
+			canFly = false;
 			animCtrl.SetTrigger ("CanJump");
 			if(!holdHeight)
 				birdHeightCtrl.UpdateHeight (sanfonaStrength, animCtrl);
@@ -518,6 +524,12 @@ public class WalkingController : Controller {
 			animCtrl.SetBool ("IsSinging", true);
 		else
 			animCtrl.SetBool ("IsSinging", false);
+
+		if(hasBonusJump){
+			bonusJumpParticle.SetActive (true);
+		} else{
+			bonusJumpParticle.SetActive (false);
+		}
 
 		newInput = false;
 	}
