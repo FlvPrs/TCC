@@ -350,10 +350,10 @@ public class WalkingController : Controller {
 	}
 
 	void FixedUpdate(){
-		if(Input.GetKeyDown(KeyCode.X)){
+		if(Input.GetKeyDown(KeyCode.Q)){
 			maxFlyStamina = 10;
 		}
-		if(Input.GetKeyDown(KeyCode.Z)){
+		if(Input.GetKeyDown(KeyCode.E)){
 			maxFlyStamina = 1;
 		}
 
