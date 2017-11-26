@@ -10,7 +10,7 @@ public class Instrumento_InteractionCtrl : MonoBehaviour, IStaccatoInteractable 
 	[HideInInspector]
 	public bool interactionDone;
 
-	public GameObject particle_Yay, particle_Nay;
+	public ParticleSystem particle_Yay, particle_Nay;
 
 	private InstrumentoCtrl instrumentoCtrl;
 

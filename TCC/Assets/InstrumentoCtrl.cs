@@ -10,7 +10,7 @@ public class InstrumentoCtrl : MonoBehaviour {
 	private bool tocouPrimeira, tocouSegunda, tocouTerceira, fimDaInteracao;
 	public GameObject objToAppear;
 	public Instrumento_InteractionCtrl instrumento_PrimeiraNota, instrumento_SegundaNota, instrumento_TerceiraNota;
-	private GameObject primeira_Yay, primeira_Nay, segunda_Yay, segunda_Nay, terceira_Yay, terceira_Nay;
+	private ParticleSystem primeira_Yay, primeira_Nay, segunda_Yay, segunda_Nay, terceira_Yay, terceira_Nay;
 
 	void Awake(){
 		primeira_Yay = instrumento_PrimeiraNota.particle_Yay;
@@ -26,30 +26,36 @@ public class InstrumentoCtrl : MonoBehaviour {
 	public void UpdateInstrumento(bool correctInteraction){
 		if(!correctInteraction){
 			ResetNotasTocadas ();
-			StopCoroutine (HideParticles ());
-			StartCoroutine (HideParticles ());
+			//StopCoroutine (HideParticles ());
+			//StartCoroutine (HideParticles ());
 			return;
 		}
 
 		if(instrumento_PrimeiraNota.interactionDone && !tocouPrimeira){
 			if(!tocouSegunda && !tocouTerceira){
 				tocouPrimeira = true;
-				primeira_Yay.SetActive (true);
+				primeira_Yay.Play ();
+				var yay = primeira_Yay.emission;
+				yay.enabled = true;
 			} else {
 				ResetNotasTocadas ();
 			}
 		}
-		if(instrumento_SegundaNota.interactionDone && !tocouSegunda){
+		 else if(instrumento_SegundaNota.interactionDone && !tocouSegunda){
 			if(tocouPrimeira && !tocouTerceira){
 				tocouSegunda = true;
-				segunda_Yay.SetActive (true);
+				segunda_Yay.Play ();
+				var yay = segunda_Yay.emission;
+				yay.enabled = true;
 			} else {
 				ResetNotasTocadas ();
 			}
 		}
-		if(instrumento_TerceiraNota.interactionDone && !tocouTerceira){
+		else if(instrumento_TerceiraNota.interactionDone && !tocouTerceira){
 			if(tocouPrimeira && tocouSegunda){
-				terceira_Yay.SetActive (true);
+				terceira_Yay.Play ();
+				var yay = terceira_Yay.emission;
+				yay.enabled = true;
 				tocouTerceira = true;
 				objToAppear.SetActive (true);
 				enabled = false;
@@ -57,32 +63,51 @@ public class InstrumentoCtrl : MonoBehaviour {
 				ResetNotasTocadas ();
 			}
 		}
+		else {
+			ResetNotasTocadas ();
+		}
 
-		StopCoroutine (HideParticles ());
-		StartCoroutine (HideParticles ());
+		//StopCoroutine (HideParticles ());
+		//StartCoroutine (HideParticles ());
 	}
 
 	void ResetNotasTocadas(){
+		
 		tocouPrimeira = false;
 		instrumento_PrimeiraNota.interactionDone = false;
-		primeira_Nay.SetActive (true);
+//		primeira_Yay.Stop ();
+//		primeira_Yay.emission.enabled = false;
+		primeira_Nay.Play ();
+		var nay = primeira_Nay.emission;
+		nay.enabled = true;
+
 		tocouSegunda = false;
 		instrumento_SegundaNota.interactionDone = false;
-		segunda_Nay.SetActive (true);
+//		segunda_Yay.Stop ();
+//		segunda_Yay.emission.enabled = false;
+		segunda_Nay.Play ();
+		nay = segunda_Nay.emission;
+		nay.enabled = true;
+
 		tocouTerceira = false;
 		instrumento_TerceiraNota.interactionDone = false;
-		terceira_Nay.SetActive (true);
+//		terceira_Yay.Stop ();
+//		terceira_Yay.emission.enabled = false;
+		terceira_Nay.Play ();
+		nay = terceira_Nay.emission;
+		nay.enabled = true;
+
 	}
 
-	IEnumerator HideParticles(){
-		yield return new WaitForSeconds (0.5f);
-		primeira_Yay.SetActive (false);
-		segunda_Yay.SetActive (false);
-		terceira_Yay.SetActive (false);
-
-		primeira_Nay.SetActive (false);
-		segunda_Nay.SetActive (false);
-		terceira_Nay.SetActive (false);
-	}
+//	IEnumerator HideParticles(){
+//		yield return new WaitForSeconds (2.2f);
+//		primeira_Yay.SetActive (false);
+//		segunda_Yay.SetActive (false);
+//		terceira_Yay.SetActive (false);
+//
+//		primeira_Nay.SetActive (false);
+//		segunda_Nay.SetActive (false);
+//		terceira_Nay.SetActive (false);
+//	}
 }
 
