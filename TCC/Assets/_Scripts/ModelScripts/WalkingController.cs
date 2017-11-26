@@ -350,6 +350,13 @@ public class WalkingController : Controller {
 	}
 
 	void FixedUpdate(){
+		if(Input.GetKeyDown(KeyCode.X)){
+			maxFlyStamina = 10;
+		}
+		if(Input.GetKeyDown(KeyCode.Z)){
+			maxFlyStamina = 1;
+		}
+
 		//float cameraY = Input.GetAxis ("Mouse X") * GameConstants.MOUSE_SENSITIVITY * Time.deltaTime; 
 		//float cameraY = cameraRotation * GameConstants.MOUSE_SENSITIVITY * Time.deltaTime;
 
