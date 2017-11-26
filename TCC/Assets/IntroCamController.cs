@@ -21,8 +21,13 @@ public class IntroCamController : MonoBehaviour {
 
 	public GameObject pressButtonTxt;
 
+	[HideInInspector]
+	public static bool playerRegainedCtrl;
+
 	// Use this for initialization
 	void Start () {
+		playerRegainedCtrl = false;
+
 		if(activateStartCam)
 			pressButtonTxt.SetActive (true);
 		else
@@ -79,6 +84,7 @@ public class IntroCamController : MonoBehaviour {
 
 			if (camTrack.m_PathPosition <= 0.1f) {
 				GetComponent<CinemachineVirtualCamera> ().m_Priority = 0;
+				playerRegainedCtrl = true;
 				playerCtrl.walkSpeed = defaultSpeed;
 				enabled = false;
 			}

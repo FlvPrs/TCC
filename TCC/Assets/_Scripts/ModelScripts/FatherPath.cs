@@ -220,7 +220,7 @@ public class FatherPath : MonoBehaviour {
 		if(!agent.hasPath){
 			if(timeWaiting < maxTimeWaitingBeforeCall){
 				timeWaiting += Time.deltaTime;
-			} else if(currentBehaviour == FatherBehaviour.None && distToPlayer > minDistToPlayer) {
+			} else if(currentBehaviour == FatherBehaviour.None && distToPlayer > minDistToPlayer && IntroCamController.playerRegainedCtrl) {
 				timeWaiting = -2f;
 				StartCoroutine(CallPlayer ());
 			} else {
