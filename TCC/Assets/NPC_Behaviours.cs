@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class NPC_Behaviours : MonoBehaviour {
 
 	public bool randomizeOnStart;
-	public bool walk, reactToPlayerHeight, reactToPlayerSing, followPlayerOnSing;
+	public bool walk, reactToPlayerHeight, reactToPlayerSing, followPlayerOnSing, lookAtPlayer;
 
 	public WalkingController playerCtrl;
 
@@ -25,13 +25,19 @@ public class NPC_Behaviours : MonoBehaviour {
 
 	private bool isFollowingPlayer;
 
+	private Transform t;
+	private Vector3 dir;
+
 	// Use this for initialization
 	void Start () {
+		t = GetComponent<Transform> ();
+
 		if(randomizeOnStart){
 			do {
 				walk = (Random.Range (0, 10) >= 5) ? true : false;
 				reactToPlayerHeight = (Random.Range (0, 10) >= 5) ? true : false;
 				reactToPlayerSing = (Random.Range (0, 10) >= 5) ? true : false;
+				lookAtPlayer = (Random.Range (0, 10) >= 5) ? true : false;
 
 				if(reactToPlayerHeight){
 					squashOnTrigger = (Random.Range (0, 10) >= 5) ? true : false;
@@ -94,6 +100,11 @@ public class NPC_Behaviours : MonoBehaviour {
 				rndWalk.PauseWalk(true);
 				isFollowingPlayer = true;
 			}
+		}
+
+		if(!walk && lookAtPlayer){
+			dir = playerCtrl.transform.position - t.position;
+			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir, Vector3.up), Time.deltaTime * 3f);
 		}
 	}
 
@@ -166,6 +177,11 @@ public class NPC_Behaviours : MonoBehaviour {
 				anim.SetFloat ("Height", -1f);
 			} else if (stretchOnTrigger) {
 				anim.SetFloat ("Height", 1f);
+			}
+
+			if(lookAtPlayer){
+				dir = playerCtrl.transform.position - t.position;
+				transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir, Vector3.up), Time.deltaTime * 3f);
 			}
 		}
 	}

@@ -64,13 +64,13 @@ public class PlataformasCoopCtrl : MonoBehaviour, ISustainInteractable, IFatherI
 		if (currentHeight != interactableState) 
 			return;
 
-		StartCoroutine ("InteractionStopped");
+		//StartCoroutine ("InteractionStopped");
 
 		for (int i = 0; i < plataformas.Length; i++) {
 			Vector3 newPos = originalPos [i] + son_Distance [i] + dad_deltaY [i];
 
 			Vector3 oldPos = plataformas [i].platform.localPosition;
-			plataformas [i].platform.localPosition = Vector3.MoveTowards (plataformas [i].platform.localPosition, newPos, 0.05f);
+			plataformas [i].platform.localPosition = Vector3.MoveTowards (plataformas [i].platform.localPosition, newPos, 0.2f);
 			son_deltaY [i] += plataformas [i].platform.localPosition - oldPos;
 		}
 	}
@@ -104,7 +104,7 @@ public class PlataformasCoopCtrl : MonoBehaviour, ISustainInteractable, IFatherI
 				continue;
 			} else {
 				Vector3 oldPos = plataformas [i].platform.localPosition;
-				plataformas [i].platform.localPosition = Vector3.MoveTowards (plataformas [i].platform.localPosition, newPos, 0.03f);
+				plataformas [i].platform.localPosition = Vector3.MoveTowards (plataformas [i].platform.localPosition, newPos, 0.1f);
 				dad_deltaY [i] += plataformas [i].platform.localPosition - oldPos;
 			}
 		}

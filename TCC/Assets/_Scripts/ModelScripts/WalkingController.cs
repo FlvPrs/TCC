@@ -184,13 +184,13 @@ public class WalkingController : Controller {
 					jumpInertia = walkVelocity;
 				} else if (canFly && !stopGravity && !isClimbing && flyStamina > 0) {
 					isFlying = true;
-					adjVertVelocity = jumpVelocity * 0.8f;
+					adjVertVelocity = jumpVelocity * 0.9f;
 					//adjVertVelocity = jumpSpeed;
 					jumpInertia = walkVelocity;
 					flyStamina--;
 				} else if (canFly && !stopGravity && !isClimbing && hasBonusJump) {
 					isFlying = true;
-					adjVertVelocity = jumpVelocity * 0.8f;
+					adjVertVelocity = jumpVelocity * 0.9f;
 					//adjVertVelocity = jumpSpeed;
 					jumpInertia = walkVelocity;
 					hasBonusJump = false;
@@ -402,8 +402,8 @@ public class WalkingController : Controller {
 		if(externalForceAdded){
 			externalForceAdded = false;
 			externalForce = Vector3.zero;
-			//newInput = false;
-			//return;
+			newInput = false;
+			return;
 		}
 
 		bool isGrounded = true;
@@ -601,10 +601,11 @@ public class WalkingController : Controller {
 	}
 
 	public void AddExternalForce(Vector3 force, float duration){
+		adjVertVelocity = 0f;
 		externalForceAdded = true;
 		rb.velocity = Vector3.zero;
-		rb.AddForce (force, ForceMode.Impulse);
-		externalForce = rb.velocity + force; 
+		rb.AddForce (force, ForceMode.VelocityChange);
+		//externalForce = rb.velocity + force; 
 		//StartCoroutine ("RegainControl", duration);
 	}
 
