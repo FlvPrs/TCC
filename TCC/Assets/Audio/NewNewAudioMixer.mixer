@@ -21,6 +21,7 @@ AudioMixerController:
     - 657a6b6d216f0aa49b81dd0080d16d58
     - d3fdff93dfade8f47b0d5e83b83aa5e5
     - e6e299b9688b32848a13b1e56710a658
+    - db4e7ecb795793248ae019715a555a80
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -36,6 +37,7 @@ AudioMixerGroupController:
   - {fileID: 243475461599378228}
   - {fileID: 243586828063589862}
   - {fileID: 243375560578916466}
+  - {fileID: 243471835298308288}
   m_Volume: acf3f6c87a9d4954892610035df8941b
   m_Pitch: afdb0bd95b9fbaa48949ec9fe8b34d31
   m_Effects:
@@ -96,6 +98,23 @@ AudioMixerGroupController:
   m_Effects:
   - {fileID: 244962038395485740}
   - {fileID: 244241775764220098}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
+--- !u!243 &243471835298308288
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Wind
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: db4e7ecb795793248ae019715a555a80
+  m_Children: []
+  m_Volume: 64bf187bfac0a6742a6e89728622fdb3
+  m_Pitch: 3acf2f4cff37a6746aaa1c43da4f7fc8
+  m_Effects:
+  - {fileID: 244575724163519578}
   m_UserColorIndex: 0
   m_Mute: 0
   m_Solo: 0
@@ -194,6 +213,19 @@ AudioMixerEffectController:
   m_EffectID: 3648758658d39c945917f5a5bc14118f
   m_EffectName: Attenuation
   m_MixLevel: a2cdc4fdff33db04bb34220b4cbf9dc6
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!244 &244575724163519578
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  m_EffectID: 83d76f793b09c2642b2fdb30db25e470
+  m_EffectName: Attenuation
+  m_MixLevel: 3393db3bbf2c54843a1d55c7c9e4bdb3
   m_Parameters: []
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
