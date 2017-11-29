@@ -6,11 +6,15 @@ using Cinemachine;
 
 public class IntroCamController : MonoBehaviour {
 
+	public FallingFatherScript fallctrl;
+
 	[FMODUnity.EventRef]
 	public string audioIntro, audioTrilha;
 	FMOD.Studio.EventInstance musicaIntro, musicaTema;
 	public FMOD.Studio.PLAYBACK_STATE playingIntro;
 	public FMOD.Studio.PLAYBACK_STATE playingTema;
+
+	private bool tocou2 = false;
 
 	[NoSaveDuringPlay]
 	public bool activateStartCam = true;
@@ -65,6 +69,12 @@ public class IntroCamController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		if (fallctrl.af == false && playingTema == FMOD.Studio.PLAYBACK_STATE.PLAYING){
+			musicaTema.stop (FMOD.Studio.STOP_MODE.IMMEDIATE);
+			print ("parou");
+
+		}
 		playerCtrl.walkSpeed = 0;
 
 		if (playerCtrl.playerInputStartGame) {
@@ -74,9 +84,11 @@ public class IntroCamController : MonoBehaviour {
 			pressButtonTxt.SetActive (false);
 
 			musicaTema.getPlaybackState (out playingTema);
-			if (playingTema != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
+			if (playingTema != FMOD.Studio.PLAYBACK_STATE.PLAYING && fallctrl.af == true) {
 				musicaTema.start ();
 			}
+
+
 
 		}
 		
