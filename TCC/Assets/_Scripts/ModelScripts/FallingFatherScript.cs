@@ -23,7 +23,7 @@ public class FallingFatherScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (fallingTrigger.activeSelf) {
+		if (!fallingTrigger.activeSelf) {
 			return;
 		}
 

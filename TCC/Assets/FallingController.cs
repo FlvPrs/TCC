@@ -9,20 +9,30 @@ public class FallingController : MonoBehaviour {
 	public CamPriorityController camCtrl;
 	public WalkingController playerCtrl;
 
+	bool isFalling;
+
 	// Use this for initialization
 	void Start () {
 		
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		
-	}
+//	void Update () {
+//		if (isFalling) {
+//			//playerCtrl.ResetFlyStamina ();
+//			playerCtrl.animCtrl.SetBool ("IsFallingToDeath", true);
+//		}
+//	}
 
 	void OnTriggerEnter(Collider col){
 		if(col.CompareTag("Player")){
+			isFalling = true;
 			camCtrl.ChangeCameraTo (cam1_Index);
+			playerCtrl.isFallingToDeath = true;
 			playerCtrl.glideStrength = 0f;
+			playerCtrl.ChangeJumpHeight (0f);
+			playerCtrl.animCtrl.SetTrigger ("startDeathFall");
+			playerCtrl.animCtrl.SetBool ("IsFallingToDeath", true);
 			StartCoroutine (ChangeToNextCam (cam2_Index));
 		}
 	}
@@ -30,6 +40,6 @@ public class FallingController : MonoBehaviour {
 	IEnumerator ChangeToNextCam(int nextIndex){
 		yield return new WaitForSeconds (1f);
 		camCtrl.ChangeCameraTo (nextIndex);
-		gameObject.SetActive (false);
+		//gameObject.SetActive (false);
 	}
 }

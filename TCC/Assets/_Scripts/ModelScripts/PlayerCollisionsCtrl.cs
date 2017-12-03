@@ -106,9 +106,9 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			StartCoroutine(waitToRecenterWind());
 		}
 
-		if(col.CompareTag("Falling_Trigger")){
-			playerCtrl.animCtrl.SetTrigger ("startDeathFall");
-		}
+//		if(col.CompareTag("Falling_Trigger")){
+//			playerCtrl.animCtrl.SetTrigger ("startDeathFall");
+//		}
 
 //		if(col.CompareTag("Falling_Trigger")){
 //			playerCtrl.glideStrength = 0f;

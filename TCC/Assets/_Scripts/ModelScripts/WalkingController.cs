@@ -99,6 +99,9 @@ public class WalkingController : Controller {
 	[HideInInspector]
 	public bool holdHeight = false;
 
+	[HideInInspector]
+	public bool isFallingToDeath = false;
+
 	protected override void Start() {
 		base.Start ();
 		if(OnFacingChange != null){
@@ -194,7 +197,10 @@ public class WalkingController : Controller {
 					//adjVertVelocity = jumpSpeed;
 					jumpInertia = walkVelocity;
 					hasBonusJump = false;
+				} else if (isFallingToDeath) {
+					animCtrl.SetTrigger ("FakeFly");
 				}
+
 			} 
 //			else {
 //				animCtrl.SetBool ("Jumped", false);
@@ -581,6 +587,11 @@ public class WalkingController : Controller {
 		flyStamina = maxFlyStamina;
 	}
 
+	public void ChangeJumpHeight(float newHeight){
+		jumpGravity = -(2 * newHeight) / Mathf.Pow (timeToJumpApex, 2);
+		jumpVelocity = Mathf.Abs (jumpGravity) * timeToJumpApex;
+	}
+
 	public void BypassGravity(bool stopGrav){
 		if (stopGrav) {
 			rb.velocity = Vector3.zero;
@@ -610,8 +621,8 @@ public class WalkingController : Controller {
 	public void AddExternalForce(Vector3 force, float duration){
 		adjVertVelocity = 0f;
 		externalForceAdded = true;
-		rb.velocity = Vector3.zero;
-		rb.AddForce (force, ForceMode.VelocityChange);
+		rb.velocity = force;
+//		rb.AddForce (force, ForceMode.VelocityChange);
 		//externalForce = rb.velocity + force; 
 		//StartCoroutine ("RegainControl", duration);
 	}
@@ -622,6 +633,11 @@ public class WalkingController : Controller {
 //		//externalForceAdded = false;
 //	}
 
+
+	IEnumerator DelayedJump(){
+		yield return new WaitForSeconds (0.2f);
+		animCtrl.SetBool ("IsFlying", true);
+	}
 
 	public void ChangeOrientationToCamera(Transform t, bool changedCam){
 		if (changedCam && walkVelocity != Vector3.zero && !automaticOrientation)

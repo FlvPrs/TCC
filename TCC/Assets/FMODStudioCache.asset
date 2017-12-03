@@ -33,7 +33,7 @@ MonoBehaviour:
   - {fileID: 114915837015444288}
   MasterBankRef: {fileID: 114158701465132578}
   StringsBankRef: {fileID: 114535906935034592}
-  stringsBankWriteTime: 636473432608513008
+  stringsBankWriteTime: 636475143214655874
   cacheVersion: 2
 --- !u!114 &114008514706386150
 MonoBehaviour:
@@ -69,6 +69,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: A-C
+  Min: 0
+  Max: 1
+  Default: 0
+--- !u!114 &114011987744547264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: A-B
   Min: 0
   Max: 1
   Default: 0
@@ -370,7 +385,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: C:\Users\Fabio\Documents\GitHub\TCC\TCC\Assets\Audio\FMOD\Project Test 1\Build\Desktop\Master
     Bank.bank
-  lastModified: 636473432608473006
+  lastModified: 636475143214465863
   LoadResult: 0
   FileSizes:
   - Name: Desktop
@@ -398,6 +413,21 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 500
+--- !u!114 &114163159695859246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: musicaParte3
+  Min: 0
+  Max: 1
+  Default: 0
 --- !u!114 &114164025953074658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -642,6 +672,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: A-C
+  Min: 0
+  Max: 1
+  Default: 0
+--- !u!114 &114270130718806720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: A-A
   Min: 0
   Max: 1
   Default: 0
@@ -892,12 +937,12 @@ MonoBehaviour:
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: 114581732151210494}
-  - {fileID: 114432215303439932}
-  - {fileID: 114697457887072104}
-  - {fileID: 114889698183740572}
-  - {fileID: 114996614666371716}
-  - {fileID: 114333987410708018}
+  - {fileID: 114382431730957242}
+  - {fileID: 114904792209669802}
+  - {fileID: 114011987744547264}
+  - {fileID: 114270130718806720}
+  - {fileID: 114163159695859246}
+  - {fileID: 114691071261474080}
   MinDistance: 0
   MaxDistance: 0
   Length: 92000
@@ -913,6 +958,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: musicaParte2
+  Min: 0
+  Max: 1
+  Default: 0
+--- !u!114 &114382431730957242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: musicaParte1
   Min: 0
   Max: 1
   Default: 0
@@ -958,6 +1018,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: A-C
+  Min: 0
+  Max: 1
+  Default: 0
+--- !u!114 &114411094256348118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: musicaParte1
   Min: 0
   Max: 1
   Default: 0
@@ -1130,7 +1205,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Path: Assets\Audio\FMOD\Project Test 1\Build\Desktop\Master Bank.strings.bank
-  lastModified: 636473432608513008
+  lastModified: 636475143214655874
   LoadResult: 0
   FileSizes:
   - Name: Desktop
@@ -1292,6 +1367,21 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 500
+--- !u!114 &114640120061193832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: musicaParte3
+  Min: 0
+  Max: 1
+  Default: 0
 --- !u!114 &114644930695200774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1386,6 +1476,21 @@ MonoBehaviour:
   Min: 0
   Max: 1
   Default: 0
+--- !u!114 &114691071261474080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: A-C
+  Min: 0
+  Max: 1
+  Default: 0
 --- !u!114 &114691130828186798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1398,6 +1503,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: musicaParte1
+  Min: 0
+  Max: 1
+  Default: 0
+--- !u!114 &114696844675184778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: musicaParte2
   Min: 0
   Max: 1
   Default: 0
@@ -1457,7 +1577,7 @@ MonoBehaviour:
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: 114189990461516230}
+  - {fileID: 114640120061193832}
   MinDistance: 0
   MaxDistance: 0
   Length: 12000
@@ -1480,7 +1600,7 @@ MonoBehaviour:
   Is3D: 1
   IsOneShot: 0
   Parameters:
-  - {fileID: 114305696177922158}
+  - {fileID: 114816013500671038}
   MinDistance: 1
   MaxDistance: 10
   Length: 59268
@@ -1518,7 +1638,7 @@ MonoBehaviour:
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: 114724334214087252}
+  - {fileID: 114411094256348118}
   MinDistance: 0
   MaxDistance: 0
   Length: 12000
@@ -1660,6 +1780,21 @@ MonoBehaviour:
   MaxDistance: 20
   Length: 437
 --- !u!114 &114815242857926476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Volume
+  Min: 0
+  Max: 6
+  Default: 0
+--- !u!114 &114816013500671038
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -1827,7 +1962,7 @@ MonoBehaviour:
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: 114902530696085928}
+  - {fileID: 114696844675184778}
   MinDistance: 0
   MaxDistance: 0
   Length: 12000
@@ -1907,6 +2042,21 @@ MonoBehaviour:
   Max: 1
   Default: 0
 --- !u!114 &114902530696085928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: musicaParte2
+  Min: 0
+  Max: 1
+  Default: 0
+--- !u!114 &114904792209669802
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
