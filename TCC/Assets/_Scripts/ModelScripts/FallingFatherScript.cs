@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class FallingFatherScript : MonoBehaviour {
 
+	[FMODUnity.EventRef]
+	public string paiQueda;
+	FMOD.Studio.EventInstance fatherFall;
+
 	private Rigidbody rb;
 	private DistanceMeasure myDistToSon;
 
@@ -15,7 +19,15 @@ public class FallingFatherScript : MonoBehaviour {
 	private bool underTheSon = false; //(Under the Son!)
 	private float downForce;
 
+	public bool tocou= false;
+	public bool af = false;
+
 	void Start () {
+		af = true;
+		//fmod
+		paiQueda = "event:/Pai/PaiQueda";
+		fatherFall = FMODUnity.RuntimeManager.CreateInstance (paiQueda);
+
 		rb = GetComponent<Rigidbody> ();
 		myDistToSon = GetComponent<DistanceMeasure> ();
 		downForce = filho.maxFallVelocity * 2f;
@@ -23,7 +35,8 @@ public class FallingFatherScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!fallingTrigger.activeSelf) {
+		if (fallingTrigger.activeSelf) {
+			
 			return;
 		}
 
@@ -33,6 +46,16 @@ public class FallingFatherScript : MonoBehaviour {
 
 		if(!underTheSon) {
 			if (saveSon) {
+				
+				tocou = true;
+
+				if (tocou && af == true) {
+					fatherFall.start ();
+					af = false;
+					print ("af = falze");
+				}
+
+				
 				if (myDistToSon.distAxis.y < 0) { //Se o pai estiver acima de (20 unidade abaixo do filho)
 					underTheSon = false;
 					float son_TimeTillCrash = distSonToFloor.vectorDistance / filho.currentFallVelocity;

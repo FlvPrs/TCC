@@ -6,6 +6,16 @@ using Cinemachine;
 
 public class IntroCamController : MonoBehaviour {
 
+	public FallingFatherScript fallctrl;
+
+	[FMODUnity.EventRef]
+	public string audioIntro, audioTrilha;
+	FMOD.Studio.EventInstance musicaIntro, musicaTema;
+	public FMOD.Studio.PLAYBACK_STATE playingIntro;
+	public FMOD.Studio.PLAYBACK_STATE playingTema;
+
+	private bool tocou2 = false;
+
 	[NoSaveDuringPlay]
 	public bool activateStartCam = true;
 	[NoSaveDuringPlay]
@@ -26,6 +36,14 @@ public class IntroCamController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		// fmod
+
+		audioIntro = "event:/Musica/Intro";
+		musicaIntro = FMODUnity.RuntimeManager.CreateInstance (audioIntro);
+
+		audioTrilha = "event:/Musica/Muzika";
+		musicaTema = FMODUnity.RuntimeManager.CreateInstance (audioTrilha);
+
 		playerRegainedCtrl = false;
 
 		if(activateStartCam)
@@ -51,14 +69,36 @@ public class IntroCamController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		if (fallctrl.af == false && playingTema == FMOD.Studio.PLAYBACK_STATE.PLAYING){
+			musicaTema.stop (FMOD.Studio.STOP_MODE.IMMEDIATE);
+			print ("parou");
+
+		}
 		playerCtrl.walkSpeed = 0;
 
 		if (playerCtrl.playerInputStartGame) {
+			musicaIntro.stop (FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+
 			activateStartCam = false;
 			pressButtonTxt.SetActive (false);
+
+			musicaTema.getPlaybackState (out playingTema);
+			if (playingTema != FMOD.Studio.PLAYBACK_STATE.PLAYING && fallctrl.af == true) {
+				musicaTema.start ();
+			}
+
+
+
 		}
 		
 		if (activateStartCam) {
+			musicaIntro.getPlaybackState (out playingIntro);
+
+			if (playingIntro != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
+				musicaIntro.start ();
+			}
+
 			if (camTrack.m_PathPosition >= 1.9f && towards) {
 				startTime = Time.time;
 				towards = false;
