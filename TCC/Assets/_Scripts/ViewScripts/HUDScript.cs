@@ -11,7 +11,7 @@ public class HUDScript : MonoBehaviour {
 	public GameObject bonusJump;
 
 
-	void Awake(){
+	void Start(){
 		wingsL.gameObject.SetActive (false);
 		wingsR.gameObject.SetActive (false);
 		bonusJump.SetActive (false);

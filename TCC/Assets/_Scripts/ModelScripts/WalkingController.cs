@@ -346,7 +346,7 @@ public class WalkingController : Controller {
 			}
 
 			flyStamina = maxFlyStamina;
-			hudScript.UpdateWingUI (false, flyStamina, hasBonusJump);
+			//hudScript.UpdateWingUI (false, flyStamina, hasBonusJump);
 			return true;
 		}
 
@@ -426,7 +426,7 @@ public class WalkingController : Controller {
 			if (timeOnAir >= 0.2f) {
 				canFly = true;
 				asas.SetActive (true);
-				hudScript.UpdateWingUI (true, flyStamina, hasBonusJump);
+				//hudScript.UpdateWingUI (true, flyStamina, hasBonusJump);
 				timeOnAir = 0.2f;
 			} else {
 				timeOnAir += Time.deltaTime;
