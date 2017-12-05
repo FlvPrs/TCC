@@ -19,11 +19,12 @@ public class FallingFatherScript : MonoBehaviour {
 	private bool underTheSon = false; //(Under the Son!)
 	private float downForce;
 
-	public bool tocou= false;
-	public bool af = false;
+	public bool tocou;
+	public bool af;
 
 	void Start () {
-		af = true;
+		tocou = true;
+		af = false;
 		//fmod
 		paiQueda = "event:/Pai/PaiQueda";
 		fatherFall = FMODUnity.RuntimeManager.CreateInstance (paiQueda);
@@ -35,7 +36,7 @@ public class FallingFatherScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (fallingTrigger.activeSelf) {
+		if (!fallingTrigger.activeSelf) {
 			
 			return;
 		}
@@ -46,13 +47,11 @@ public class FallingFatherScript : MonoBehaviour {
 
 		if(!underTheSon) {
 			if (saveSon) {
-				
-				tocou = true;
 
-				if (tocou && af == true) {
+				if (tocou ) {
 					fatherFall.start ();
-					af = false;
-					print ("af = falze");
+					tocou = false;
+					af = true;
 				}
 
 				
