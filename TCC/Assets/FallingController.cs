@@ -30,7 +30,7 @@ public class FallingController : MonoBehaviour {
 			camCtrl.ChangeCameraTo (cam1_Index);
 			playerCtrl.isFallingToDeath = true;
 			playerCtrl.glideStrength = 0f;
-			playerCtrl.ChangeJumpHeight (0f);
+			playerCtrl.ChangeJumpHeight (0f, 0f);
 			playerCtrl.animCtrl.SetTrigger ("startDeathFall");
 			playerCtrl.animCtrl.SetBool ("IsFallingToDeath", true);
 			StartCoroutine (ChangeToNextCam (cam2_Index));

@@ -2,22 +2,52 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum FacingDirection{
-	North,
-	East,
-	South,
-	West
-}
+//[RequireComponent (typeof(PlayerWalkInput))]
+public class WalkingController : MonoBehaviour {
+
+	public float maxJumpHeight = 4;
+	public float minJumpHeight = 1;
+	public float timeToJumpApex = .4f;
+	float accelerationTimeAirborne = .2f;
+	float accelerationTimeGrounded = .02f;
+	public float moveSpeed = 6;
+
+	public float wallSlideSpeedMax = 3;
+
+	float gravity;
+	float maxJumpVelocity;
+	float minJumpVelocity;
+	[SerializeField]
+	Vector3 velocity;
+	float velocityXSmoothing;
+	float velocityZSmoothing;
+
+	Vector3 directionalInput;
 
 
-public class WalkingController : Controller {
-
-	//Movement information
-	Vector3 walkVelocity;
-	FacingDirection facing = FacingDirection.South;
-	float adjVertVelocity;
-	float jumpPressTime;
+	#region variables
+	float sanfonaStrength;
 	Vector3 jumpInertia;
+
+	public bool automaticOrientation;
+	Transform holdOrientation;
+	[HideInInspector]
+	public Transform orientation;
+	public Transform collTransform;
+
+	Transform myT;
+	Rigidbody rb;
+	[SerializeField]
+	BoxCollider coll;
+	HUDScript hudScript;
+	Transform playerT;
+	BirdStatureCtrl birdHeightCtrl;
+	BirdSingCtrl birdSingCtrl;
+	public Animator animCtrl;
+	#endregion
+
+	#region walkCtrl variables
+	//Movement information
 	bool isFlying;
 	bool isOnLedge;
 	[HideInInspector]
@@ -25,18 +55,9 @@ public class WalkingController : Controller {
 	Vector3 externalForce;
 	int flyStamina;
 	float cameraRotation;
-	float sanfonaStrength;
 	float jumpTriggerStrength;
 	float singPressTime;
-	bool stopGravity;
-	Transform holdOrientation;
-	Transform orientation;
-
-	float maxJumpCooldown = 0.2f;
-	float jumpCooldown = 0f;
-
-	float maxClimbAngle = 50f;
-	bool isClimbing = false;
+	bool stopGravity = false;
 
 	[HideInInspector]
 	public bool canPlayStaccato = true;
@@ -46,15 +67,6 @@ public class WalkingController : Controller {
 	float timeOnAir = 0f;
 
 	//Settings
-	public bool automaticOrientation;
-
-	public float walkSpeed = 5f;
-	public float jumpSpeed = 8.3f;
-	public float interactDuration = 0.1f;
-	public float attackDamage = 5f;
-	public float gravity = 10.0f;
-	public float fallMultiplier = 2.5f;
-	//public float lowJumpMultiplier = 2f;
 	[Range (0.4f, 7f)]
 	public float glideStrength = 5f;
 	[Range (0, 1)]
@@ -64,12 +76,6 @@ public class WalkingController : Controller {
 
 	public float maxFallVelocity = 70f;
 
-	public float jumpHeight = 4f;
-	public float timeToJumpApex = .4f;
-	float accelerationTimeAirborne = .2f;
-	float accelerationTimeGrounded = .1f;
-	float jumpGravity;
-	float jumpVelocity;
 	bool canFly;
 
 	[HideInInspector]
@@ -78,12 +84,6 @@ public class WalkingController : Controller {
 	public LayerMask raycastMask = -1;
 
 	public WalkingStates walkStates;
-
-	//Delegates and events
-	public delegate void FacingChangeHandler (FacingDirection fd);
-	public static event FacingChangeHandler OnFacingChange;
-//	public delegate void HitboxEventHandler (float dur, float sec, ActionType act);
-//	public static event HitboxEventHandler OnInteract;
 
 	private AnimationForward anim;
 
@@ -101,306 +101,75 @@ public class WalkingController : Controller {
 
 	[HideInInspector]
 	public bool isFallingToDeath = false;
+	#endregion
 
-	protected override void Start() {
-		base.Start ();
-		if(OnFacingChange != null){
-			OnFacingChange (facing);
-		}
+	private bool isGrounded;
+	private bool collisionAbove;
+	private bool holdingJump = false;
+	private float secondJumpStrengthMultiplier = 0.9f;
+
+	//Raycast settings
+	const float skinWidth = .03f;
+	const float distBetweenRays = .25f;
+	int verticalRayCount;
+	float verticalRaySpacing;
+	Transform bottomFrontLeft;
+	Transform topFrontLeft;
+
+
+	float raycastMoveDistance;
+	public float maxSlopeAngle = 50;
+
+
+
+	void Awake(){
+		rb = GetComponent<Rigidbody> ();
+		myT = GetComponent<Transform> ();
+		playerT = myT.Find ("PlayerCharacter").GetComponent <Transform> ();
+		birdHeightCtrl = GetComponent<BirdStatureCtrl> ();
+		birdSingCtrl = GetComponent<BirdSingCtrl> ();
+		hudScript = GameObject.FindObjectOfType<HUDScript> ();
+		anim = GetComponentInChildren<AnimationForward> ();
+
+		bottomFrontLeft = collTransform.Find ("bottomFrontLeft").GetComponent<Transform> ();
+		topFrontLeft = collTransform.Find ("topFrontLeft").GetComponent<Transform> ();
+
+		if (orientation == null)
+			orientation = myT;
+	}
+
+	void Start () {
+		isGrounded = true;
+		collisionAbove = false;
 		flyStamina = maxFlyStamina;
 		maxFallVelocity = -maxFallVelocity;
 
-		if (orientation == null)
-			orientation = transform;
+		gravity = -(2 * maxJumpHeight) / Mathf.Pow (timeToJumpApex, 2);
+		maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
+		minJumpVelocity = Mathf.Sqrt (2 * Mathf.Abs (gravity) * minJumpHeight);
 
 		holdOrientation = orientation;
-
-		anim = GetComponentInChildren<AnimationForward> ();
-
-
-		jumpGravity = -(2 * jumpHeight) / Mathf.Pow (timeToJumpApex, 2);
-		jumpVelocity = Mathf.Abs (jumpGravity) * timeToJumpApex;
 
 		playerInputStartGame = false;
 
 		bonusJumpParticle.SetActive (false);
+
+		CalculateRaySpacing ();
 	}
 
-	public override void ReadInput (InputData data) {
-		playerInputStartGame = true;
+	void LateUpdate(){
+		CalculateVelocity ();
+		isGrounded = Grounded (out collisionAbove);
 
-		//prevWalkVelocity = walkVelocity;
-		ResetMovementToZero ();
-
-		bool axis0 = false;
-		bool axis1 = false;
-
-		//Set vertical movement
-		if(data.axes[0] != 0f){
-			walkVelocity += orientation.forward * data.axes [0] * walkSpeed;
-			axis0 = true;
+		if (velocity.y <= 0 && isGrounded) {
+			velocity = Vector3.up * velocity.y; //Pq o movimento é a partir da animação
 		}
 
-		//Set horizontal movement
-		if(data.axes[1] != 0f){
-			walkVelocity += orientation.right * data.axes [1] * walkSpeed;
-			axis1 = true;
-		}
-
-		//Set Sanfona
-		if(data.axes[2] != 0f){
-			sanfonaStrength = data.axes [2];
-		}
-
-		//Set camera rotation
-//		if(data.axes[3] != 0f){
-//			cameraRotation = data.axes [3];
-//		}
-
-		//Check vertical Jump on Controller
-//		if(data.axes[4] != 0f){
-//			jumpTriggerStrength = data.axes [4];
-//			if (jumpPressTime == 0f) {
-//				if (Grounded() && jumpCooldown <= 0f) {
-//					adjVertVelocity = jumpSpeed;
-//					jumpCooldown = maxJumpCooldown;
-//					jumpInertia = walkVelocity;
-//				} else if (!stopGravity && flyStamina > 0) {
-//					isFlying = true;
-//					adjVertVelocity = jumpSpeed;
-//					jumpInertia = walkVelocity;
-//					flyStamina--;
-//				}
-//			}
-//			jumpPressTime += Time.deltaTime;
-//		} else {
-//			jumpPressTime = 0f;
-//		}
-		if(data.buttons[0]){
-			jumpTriggerStrength = 1f;
-			if (jumpPressTime == 0f) {
-				if (Grounded() && jumpCooldown <= 0f) {
-					//animCtrl.SetBool ("Jumped", true);
-					//adjVertVelocity = jumpSpeed;
-					adjVertVelocity = jumpVelocity;
-					jumpCooldown = maxJumpCooldown;
-					jumpInertia = walkVelocity;
-				} else if (canFly && !stopGravity && !isClimbing && flyStamina > 0) {
-					isFlying = true;
-					adjVertVelocity = jumpVelocity * 0.9f;
-					//adjVertVelocity = jumpSpeed;
-					jumpInertia = walkVelocity;
-					flyStamina--;
-				} else if (canFly && !stopGravity && !isClimbing && hasBonusJump) {
-					isFlying = true;
-					adjVertVelocity = jumpVelocity * 0.9f;
-					//adjVertVelocity = jumpSpeed;
-					jumpInertia = walkVelocity;
-					hasBonusJump = false;
-				} else if (isFallingToDeath) {
-					animCtrl.SetTrigger ("FakeFly");
-				}
-
-			} 
-//			else {
-//				animCtrl.SetBool ("Jumped", false);
-//			}
-			animCtrl.SetBool ("IsFlying", isFlying);
-			jumpPressTime += Time.deltaTime;
-		} else {
-			//animCtrl.SetBool ("Jumped", false);
-			jumpPressTime = 0f;
-		}
-
-		//============= Check Sing on Controller ==================
-		//Check Sustain. Que não é mais sustain, mas sim Floreio
-		if(data.axes[5] != 0 && !walkStates.TOCANDO_STACCATO && canPlayFloreio){
-			if(singPressTime == 0f){
-				//birdSingCtrl.StartClarinet_Sustain (true, data.axes [5]);
-				walkStates.TOCANDO_FLOREIO = true;
-				canPlayFloreio = false;
-				birdSingCtrl.StartClarinet_Floreio();
-			}
-			birdSingCtrl.UpdateSoundVolume (data.axes [5]);
-			singPressTime += Time.deltaTime;
-		} else if(data.axes[5] == 0 && !walkStates.TOCANDO_STACCATO && !walkStates.TOCANDO_FLOREIO) {
-			singPressTime = 0f;
-			//birdSingCtrl.StartClarinet_Sustain (false, 1f);
-			canPlayFloreio = true;
-		} else {
-			walkStates.TOCANDO_FLOREIO = false;
-		}
-
-		/*
-		if(data.axes[5] != 0 && !walkStates.TOCANDO_STACCATO && canPlayFloreio){
-			walkStates.TOCANDO_FLOREIO = true;
-			canPlayFloreio = false;
-			birdSingCtrl.StartClarinet_Floreio ();
-		} else if(data.axes[5] == 0 && !walkStates.TOCANDO_FLOREIO && !walkStates.TOCANDO_STACCATO) {
-			canPlayFloreio = true;
-		} else {
-			walkStates.TOCANDO_FLOREIO = false;
-		}
-		 */
-
-		//Chech Staccato
-		if(data.buttons[1] && !walkStates.TOCANDO_FLOREIO && canPlayStaccato){
-			walkStates.TOCANDO_STACCATO = true;
-			canPlayStaccato = false;
-			birdSingCtrl.StartClarinet_Staccato ();
-		} else if(!data.buttons[1] && !walkStates.TOCANDO_STACCATO && !walkStates.TOCANDO_FLOREIO) {
-			canPlayStaccato = true;
-		} else {
-			walkStates.TOCANDO_STACCATO = false;
-		}
-
-//		//Check if Interact Button is pressed
-//		if(data.buttons[1] == true){
-//			if(OnInteract != null){
-//				OnInteract (interactDuration, 0, ActionType.Interact);
-//			}
-//		}
-//
-//		//Check if Attack Button is pressed
-//		if(data.buttons[2] == true){
-//			if(OnInteract != null){
-//				OnInteract (interactDuration, attackDamage, ActionType.Attack);
-//			}
-//		}
-
-		//Change facing
-		if (axis0 || axis1) {
-			walkStates.IS_WALKING = true;
-			//ChangeFacing (axis0, axis1, data);
-			anim.ChangeForward(walkVelocity.normalized);
-			animCtrl.SetFloat ("WalkVelocity", walkVelocity.magnitude / 6f);
-		} else {
-			walkStates.IS_WALKING = false;
-		}
-
-		newInput = true;
-
-	}
-
-	//Method that will look below our character and see if there is a collider
-	bool Grounded(){
-		RaycastHit[] hit = new RaycastHit[9];
-
-		bool ray1 = Physics.Raycast(coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f), Vector3.down, out hit[0], 0.25f, raycastMask);
-		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f), Vector3.down * (0.25f));
-
-		bool ray2 = Physics.Raycast (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) + (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down, out hit[1], 0.25f, raycastMask);
-		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) + (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down * (0.25f));
-		bool ray3 = Physics.Raycast(coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) - (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down, out hit[2], 0.25f, raycastMask);
-		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) - (Vector3.Scale (myT.forward / 2, myT.localScale)), Vector3.down * (0.25f));
-		bool ray4 = Physics.Raycast(coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) + (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down, out hit[3], 0.25f, raycastMask);
-		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) + (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down * (0.25f));
-		bool ray5 = Physics.Raycast(coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) - (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down, out hit[4], 0.25f, raycastMask);
-		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) - (Vector3.Scale (myT.right / 2, myT.localScale)), Vector3.down * (0.25f));
-
-		bool ray6 = Physics.Raycast (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) + (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down, out hit[5], 0.25f, raycastMask);
-		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) + (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down * (0.25f));
-		bool ray7 = Physics.Raycast (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) - (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down, out hit[6], 0.25f, raycastMask);
-		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) - (Vector3.Scale ((myT.forward - myT.right) / 2, myT.localScale)), Vector3.down * (0.25f));
-		bool ray8 = Physics.Raycast (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) + (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down, out hit[7], 0.25f, raycastMask);
-		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) + (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down * (0.25f));
-		bool ray9 = Physics.Raycast (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) - (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down, out hit[8], 0.25f, raycastMask);
-		Debug.DrawRay (coll.bounds.center - myT.up * coll.bounds.extents.y + (myT.up * 0.1f) - (Vector3.Scale ((myT.right + myT.forward) / 2, myT.localScale)), Vector3.down * (0.25f));
-
-//		for (int i = 0; i < hit.Length; i++) {
-//			Debug.DrawRay (hit [i].point, hit [i].normal, Color.blue);
-//		}
-
-		if (ray1 || ray2 || ray3 || ray4 || ray5 || ray6 || ray7 || ray8 || ray9) {
-			bool climbing = false;
-			//float angle = 0f;
-			//Vector3 dir = Vector3.zero;
-			for (int i = 0; i < hit.Length; i++) {
-				if (hit [i].normal == Vector3.zero)
-					continue;
-
-				if (!hit [i].collider.CompareTag("Untagged")){
-					climbing = false;
-					break;
-				}
-				
-				float slopeAngle = Vector3.Angle (hit [i].normal, Vector3.up);
-				if(slopeAngle >= maxClimbAngle){
-					climbing = true;
-//					if (slopeAngle > angle) {
-//						angle = slopeAngle;
-//						//dir = hit [i].normal;
-//					}
-				} else if(slopeAngle < maxClimbAngle) {
-					climbing = false;
-					break;
-				}
-			}
-
-			isClimbing = climbing;
-
-			if (climbing) {
-				//rb.AddForce (dir * rb.mass * 2f);
-				//rb.AddForce (new Vector3 (0, -gravity * rb.mass * 100f/angle, 0));
-				return false;
-			}
-
-			flyStamina = maxFlyStamina;
-			//hudScript.UpdateWingUI (false, flyStamina, hasBonusJump);
-			return true;
-		}
-
-		isClimbing = false;
-		//hudScript.UpdateWingUI (true, flyStamina, hasBonusJump);
-		return false;
-	}
-
-	void FixedUpdate(){
-		if(Input.GetKeyDown(KeyCode.Q)){
-			maxFlyStamina = 10;
-		}
-		if(Input.GetKeyDown(KeyCode.E)){
-			maxFlyStamina = 1;
-		}
-
-		//float cameraY = Input.GetAxis ("Mouse X") * GameConstants.MOUSE_SENSITIVITY * Time.deltaTime; 
-		//float cameraY = cameraRotation * GameConstants.MOUSE_SENSITIVITY * Time.deltaTime;
-
-		//myT.Rotate (0, cameraY, 0);
-
-		if(jumpCooldown > 0){
-			jumpCooldown -= Time.deltaTime;
-		}
-	}
-
-	//Always called after Updates are called
-	void LateUpdate() {
-		// if(!newInput || isClimbing){
-		if (!newInput) {
-			//prevWalkVelocity = walkVelocity;
-			ResetMovementToZero ();
-			jumpPressTime = 0f;
-			singPressTime = 0f;
-			if (!walkStates.TOCANDO_STACCATO) {
-				//birdSingCtrl.StartClarinet_Sustain (false, 1f);
-				canPlayStaccato = true;
-			}
-			if(!walkStates.TOCANDO_FLOREIO){
-				canPlayFloreio = true;
-			}
-			walkStates.IS_WALKING = false;
-
+		if (directionalInput == Vector3.zero) {
 			if (holdOrientation != orientation) {
 				orientation = holdOrientation;
 			}
 		}
-
-
-		if(isClimbing){
-			jumpPressTime = 0f;
-			adjVertVelocity = 0f;
-		}
-
 
 		animCtrl.SetBool ("isWalking", walkStates.IS_WALKING);
 
@@ -412,131 +181,81 @@ public class WalkingController : Controller {
 			canPlayFloreio = true;
 		}
 
-		if(externalForceAdded){
-			externalForceAdded = false;
-			externalForce = Vector3.zero;
-			newInput = false;
-			return;
-		}
+		walkStates.IS_GROUNDED = isGrounded;
+		animCtrl.SetBool ("isGrounded", walkStates.IS_GROUNDED);
 
-		bool isGrounded = true;
-		if (!Grounded ()) {
-			isGrounded = false;
 
-			if (timeOnAir >= 0.2f) {
-				canFly = true;
-				asas.SetActive (true);
-				//hudScript.UpdateWingUI (true, flyStamina, hasBonusJump);
-				timeOnAir = 0.2f;
-			} else {
-				timeOnAir += Time.deltaTime;
-			}
+		if(isGrounded) {//-------------Se eu estou no chão--------------------------
+			rb.velocity = velocity;
+			jumpInertia = Vector3.zero;
 
-			if(!holdHeight)
-				birdHeightCtrl.UpdateHeight (0, animCtrl);
-			
-		} else {
 			asas.SetActive (false);
 			canFly = false;
 			animCtrl.SetTrigger ("CanJump");
 			if(!holdHeight)
 				birdHeightCtrl.UpdateHeight (sanfonaStrength, animCtrl);
-			walkVelocity = Vector3.zero;
 			timeOnAir = 0f;
-		}
-			
-		
-		walkStates.IS_GROUNDED = isGrounded;
-		animCtrl.SetBool ("isGrounded", walkStates.IS_GROUNDED);
 
+		} 
+		else {		//--------------Se eu não estou no chão---------------------
+			jumpInertia += new Vector3(velocity.x, 0, velocity.z) + externalForce;
+			jumpInertia = Vector3.ClampMagnitude (jumpInertia, moveSpeed * 1.5f);
+			rb.velocity = new Vector3 (jumpInertia.x, velocity.y, jumpInertia.z);
 
-		if (!isGrounded && (flyStamina > 0 || hasBonusJump)) {
-			animCtrl.SetTrigger ("CanFly");
-		}
-
-		//print (isGrounded);
-			
-		if (!isGrounded) {
-			jumpInertia += (walkVelocity * aerialCtrl) + externalForce;
-
-//			if(!walkStates.IS_GLIDING)
-//				jumpInertia = Vector3.ClampMagnitude (jumpInertia, walkSpeed);
-//			else
-				jumpInertia = Vector3.ClampMagnitude (jumpInertia, walkSpeed * 1.5f);
-
-			if (!isFlying)
-				adjVertVelocity += rb.velocity.y;
-			else
-				isFlying = false;
-			
-			if (!isClimbing)
-				rb.velocity = new Vector3 (jumpInertia.x, adjVertVelocity, jumpInertia.z);
-			else {
-				//rb.AddForce (new Vector3 (jumpInertia.x * 0.25f, adjVertVelocity, jumpInertia.z * 0.25f), ForceMode.Acceleration);
-				rb.velocity = new Vector3 (jumpInertia.x * 0.35f, adjVertVelocity, jumpInertia.z * 0.35f);
-				rb.AddForce (Vector3.up * -gravity);
+			#region Pulo Duplo limiter
+			if (timeOnAir >= 0.15f) { //Só permite pulo duplo após 0.15s no ar
+				canFly = true;
+				asas.SetActive (true);
+				if (flyStamina > 0 || hasBonusJump) {
+					animCtrl.SetTrigger ("CanFly");
+				}
+				timeOnAir = 0.15f;
+			} else {
+				timeOnAir += Time.deltaTime;
 			}
-			
-		} else {
-			walkVelocity = Vector3.ClampMagnitude (walkVelocity, walkSpeed);
-			rb.velocity = new Vector3 (walkVelocity.x, rb.velocity.y + adjVertVelocity, walkVelocity.z);
-		}
+			#endregion
 
+			if (isFlying) //isFlying deve estar ativo durante um unico frame
+				isFlying = false;
+
+			if (!holdHeight) {
+				sanfonaStrength = 0;
+				CalculateRaySpacing ();
+				birdHeightCtrl.UpdateHeight (sanfonaStrength, animCtrl); //Não permite mudar altura no ar
+			}
+		}
+		//------------------------------------------------------------------
+
+		#region Glide Ctrl
 		bool isGliding = false;
 
-//		if (rb.velocity.y < 0 && jumpPressTime == 0) { //Queda normal
-//			rb.velocity += Vector3.up * -gravity * (fallMultiplier - 1) * Time.deltaTime;
-//		} else 
-		if (!isGrounded && rb.velocity.y < 0 && jumpPressTime > 0 && !isClimbing) {	//Queda com Glide
+		if (!isGrounded && rb.velocity.y < 0 && holdingJump) {	//Queda com Glide
 			isGliding = true;
-			rb.velocity += Vector3.up * Mathf.Abs (rb.velocity.y) * 4f * glideStrength * jumpTriggerStrength * Time.deltaTime;
-		} 
-//		else if (rb.velocity.y > 0 && jumpPressTime == 0) {	//Pulo baixo (o pulo alto é o default)
-//			rb.velocity += Vector3.up * -gravity * ((lowJumpMultiplier) - 1) * Time.deltaTime;
-//		}
+			velocity += Vector3.up * Mathf.Abs (velocity.y) * 4f * glideStrength * Time.deltaTime;
+		}
 
 		walkStates.IS_GLIDING = isGliding;
 		animCtrl.SetBool ("IsGliding", isGliding);
 
 		if(!isGrounded && !isGliding)
 			animCtrl.SetTrigger ("CanStartGlide");
+		#endregion
 
-		bool isFallingHard = false;
-
-		//Aplicando a Gravidade
-		if (!stopGravity) {
-			if (!isGrounded) {
-				if(rb.velocity.y < maxFallVelocity){
-					Vector3 clampedVelocity = rb.velocity;
-					clampedVelocity.y = maxFallVelocity;
-					rb.velocity = clampedVelocity;
-					isFallingHard = true;
-				} else {
-//					if(!isClimbing)
-					rb.AddForce (new Vector3 (0, jumpGravity, 0));
-//					else
-//						rb.AddForce (new Vector3 (0, -gravity * rb.mass, 0), ForceMode.VelocityChange);
-				}
-			} 
-			else if (isGrounded && adjVertVelocity == 0f) {
-				//rb.velocity = new Vector3 (rb.velocity.x, jumpGravity, rb.velocity.z);
-				rb.AddForce (new Vector3 (0, jumpGravity, 0));
-			}
-		}
-			
-		walkStates.IS_FALLING_MAX = isFallingHard;
+		walkStates.IS_FALLING_MAX = LimitFallVelocity ();
 
 		currentFallVelocity = rb.velocity.y;
 
-		if(rb.velocity.y >= 0f)
+
+		if(rb.velocity.y >= 0.1f)
 			animCtrl.SetTrigger ("CanBeginFall");
-		
-		animCtrl.SetFloat ("VelocityY", rb.velocity.y);
+
+		animCtrl.SetFloat ("VelocityY", currentFallVelocity);
 
 		if(walkStates.TOCANDO_FLOREIO || walkStates.TOCANDO_STACCATO || walkStates.TOCANDO_SUSTAIN)
 			animCtrl.SetBool ("IsSinging", true);
 		else
 			animCtrl.SetBool ("IsSinging", false);
+
 
 		if(hasBonusJump){
 			bonusJumpParticle.SetActive (true);
@@ -544,60 +263,230 @@ public class WalkingController : Controller {
 			bonusJumpParticle.SetActive (false);
 		}
 
-		newInput = false;
+		//HandleWallSliding ();
+
+		//if (isGrounded /*|| isCollidingTop*/) {
+			//			if (controller.collisions.slidingDownMaxSlope) {
+			//				velocity.y += controller.collisions.slopeNormal.y * -gravity * Time.deltaTime;
+			//			} 
+			//			else {
+			//				velocity.y = 0;
+			//			}
+		//}
 	}
 
-	void ChangeFacing(bool axis0, bool axis1, InputData data){
-//		if(axis0){
-//			facing = (data.axes[0] > 0) ? FacingDirection.North : FacingDirection.South;
-//		} else if(axis1){
-//			facing = (data.axes[1] > 0) ? FacingDirection.East : FacingDirection.West;
-//		}
+	//	public void CheckNewInput(bool hasNewInput){
+	//		newInput = hasNewInput;
+	//	}
 
-		//Call change facing event
-		if (OnFacingChange != null) {
-			OnFacingChange (facing);
+	#region Input Control
+
+	public void SetDirectionalInput(Vector3 input){
+		directionalInput = input;
+	}
+
+	public void OnJumpInputDown(){
+
+		if(isGrounded)	//------ Se eu estou no chão ----------------------------------------------------------------------------------------------
+		{
+			//			if(controller.collisions.slidingDownMaxSlope){
+			//				if(directionalInput.x != -Mathf.Sign(controller.collisions.slopeNormal.x)){ // not jumping against max slope
+			//					velocity.y = maxJumpVelocity * controller.collisions.slopeNormal.y;
+			//					velocity.x = maxJumpVelocity * controller.collisions.slopeNormal.x;
+			//				}
+			//			} 
+			//			else {
+			//				velocity.y = maxJumpVelocity;
+			//			}
+
+			velocity.y = maxJumpVelocity;
+			jumpInertia = velocity;
+		} 
+		else if (canFly && !stopGravity && (flyStamina > 0 || hasBonusJump))	//------ Se eu estou no ar e consigo voar -------------------------
+		{
+			isFlying = true;
+			rb.velocity = Vector3.zero;
+			velocity.y = maxJumpVelocity * secondJumpStrengthMultiplier;
+			jumpInertia = velocity;
+			if (flyStamina > 0) {
+				flyStamina--;
+			} else {
+				hasBonusJump = false;
+			}
 		}
+		else if (isFallingToDeath) {	//------ Se eu estou caindo sem chance de recuperar -------------------------------------------------------
+			animCtrl.SetTrigger ("FakeFly");
+		}
+
+		animCtrl.SetBool ("IsFlying", isFlying);
 	}
 
-	public IEnumerator GrabLedge(Vector3 dir){
-		if(dir.z != 0.0f){
-			if (Mathf.Sign (walkVelocity.z) == Mathf.Sign(dir.z))
-				isOnLedge = true;
-		} else if (dir.x != 0.0f) {
-			if(Mathf.Sign(walkVelocity.x) == Mathf.Sign(dir.x))
-				isOnLedge = true;
+	public void OnJumpInputHold(){
+		holdingJump = true;
+	}
+
+	public void OnJumpInputUp(){
+		if (velocity.y > minJumpVelocity) {
+			velocity.y = minJumpVelocity;
+		}
+		holdingJump = false;
+	}
+
+	public void SetSanfonaStrength(float strength){
+		if (!isGrounded)
+			return;
+
+		sanfonaStrength = strength;
+		
+		CalculateRaySpacing ();
+	}
+
+	public void OnFloreioInputDown(){
+		walkStates.TOCANDO_FLOREIO = true;
+		canPlayFloreio = false;
+		birdSingCtrl.StartClarinet_Floreio();
+	}
+
+	public void OnStaccatoInputDown(){
+		walkStates.TOCANDO_STACCATO = true;
+		canPlayStaccato = false;
+		birdSingCtrl.StartClarinet_Staccato ();
+	}
+
+	public void SetCheatState(bool activateCheat){
+		maxFlyStamina = (activateCheat) ? 10 : 1;
+	}
+
+	#endregion
+
+	//	void HandleWallSliding () {
+	//		bool wallSliding = false;
+	//		if((controller.collisions.front) && !controller.collisions.below && velocity.y < 0){
+	//			wallSliding = true;
+	//
+	//			if(velocity.y < -wallSlideSpeedMax){
+	//				velocity.y = -wallSlideSpeedMax;
+	//			}
+	//		}
+	//	}
+
+	void CalculateVelocity () {
+		float targetVelocityX = directionalInput.x * moveSpeed;
+		float targetVelocityZ = directionalInput.z * moveSpeed;
+		velocity.x = Mathf.SmoothDamp (velocity.x, targetVelocityX, ref velocityXSmoothing, (isGrounded) ? accelerationTimeGrounded : accelerationTimeAirborne);
+		velocity.z = Mathf.SmoothDamp (velocity.z, targetVelocityZ, ref velocityZSmoothing, (isGrounded) ? accelerationTimeGrounded : accelerationTimeAirborne);
+
+		if (!stopGravity)
+			velocity.y += gravity * Time.deltaTime;
+		else
+			velocity.y = 0;
+
+		if(directionalInput.x != 0 || directionalInput.z != 0){
+			walkStates.IS_WALKING = true;
+			anim.ChangeForward(directionalInput.normalized);
+			Vector3 clampedAnimSpeed = new Vector3 (directionalInput.x, 0, directionalInput.z);
+			clampedAnimSpeed = Vector3.ClampMagnitude (clampedAnimSpeed, 1f);
+			animCtrl.SetFloat ("WalkVelocity", clampedAnimSpeed.magnitude);
 		} else {
-			StopCoroutine ("GrabLedge");
-		}
-
-		if (isOnLedge) {
-			Vector3 up = Vector3.up;
-			rb.velocity = Vector3.zero;
-			rb.AddForce (up * 10, ForceMode.Impulse);
-
-			yield return new WaitForSeconds (0.1f);
-			rb.velocity = Vector3.zero;
-			rb.AddForce (dir * 30, ForceMode.Impulse);
-			isOnLedge = false;
+			walkStates.IS_WALKING = false;
 		}
 	}
 
-	public void ResetFlyStamina(){
-		flyStamina = maxFlyStamina;
+	bool LimitFallVelocity () {
+		bool isFallingHard = false;
+
+		if (!isGrounded) {
+			if(rb.velocity.y < maxFallVelocity){
+				Vector3 clampedVelocity = rb.velocity;
+				clampedVelocity.y = maxFallVelocity;
+				rb.velocity = clampedVelocity;
+				isFallingHard = true;
+			}
+		}
+		return isFallingHard;
 	}
 
-	public void ChangeJumpHeight(float newHeight){
-		jumpGravity = -(2 * newHeight) / Mathf.Pow (timeToJumpApex, 2);
-		jumpVelocity = Mathf.Abs (jumpGravity) * timeToJumpApex;
+
+	bool Grounded(out bool collAbove){
+		bool collBelow = false;
+		collAbove = false;
+
+		float lowestAngle = 0;
+
+		float directionY = Mathf.Sign (velocity.y);
+		float rayLength = 1f + skinWidth;
+
+		for (int i = 0; i < verticalRayCount; i++) {
+			for (int j = 0; j < verticalRayCount; j++) {
+				Vector3 rayOrigin = (directionY == -1) ? bottomFrontLeft.position : topFrontLeft.position;
+				rayOrigin += bottomFrontLeft.right * (verticalRaySpacing * j);
+				rayOrigin -= bottomFrontLeft.forward * (verticalRaySpacing * i);
+				RaycastHit hit;
+				bool hitSomething = Physics.Raycast (rayOrigin, myT.up * directionY, out hit, rayLength, raycastMask);
+
+				Debug.DrawRay (rayOrigin, myT.up * directionY * rayLength, Color.red);
+
+				if(hitSomething){
+					float slopeAngle = Vector3.Angle (hit.normal, Vector3.up);
+					Debug.DrawRay (hit.point, hit.normal * 5, Color.black);
+					if (slopeAngle < lowestAngle)
+						lowestAngle = slopeAngle;
+					//velocity.y = (hit.distance - skinWidth) * directionY;
+					//rayLength = hit.distance;
+
+					//if(climbingSlope){
+						//velocity.x = velocity.y / Mathf.Tan (collisions.slopeAngle * Mathf.Deg2Rad) * Mathf.Sign (velocity.x);
+					//}
+
+					raycastMoveDistance = (hit.distance - skinWidth);
+
+					if(Mathf.Abs(raycastMoveDistance) <= skinWidth){ //Permite continuar movendo mesmo tendo detectado hit.
+						//float timeBeforeStop = raycastMoveDistance / velocity.y;
+						velocity.y = 0;
+
+					}
+					collBelow = (directionY == -1);
+					collAbove = (directionY == 1);
+				}
+			}
+		}
+
+		if(lowestAngle >= maxSlopeAngle){
+			collBelow = false;
+		}
+
+		if(collBelow)
+			ResetFlyStamina ();
+		if (collAbove)
+			velocity.y = gravity * Time.deltaTime; //Se der merda, mudar pra 0.
+		
+		return collBelow;
 	}
+
+	void CalculateRaySpacing(){
+		//Bounds bounds = coll.bounds;
+		//bounds.Expand (skinWidth * -2);
+
+		float boundsWidth = coll.size.x - (skinWidth * 2);
+
+		verticalRayCount = Mathf.RoundToInt (boundsWidth / distBetweenRays);
+		verticalRaySpacing = boundsWidth / (verticalRayCount -1);
+
+		bottomFrontLeft.localPosition = new Vector3 (-0.5f + sanfonaStrength/4f + skinWidth, skinWidth, 0.5f - sanfonaStrength/4f - skinWidth);
+	}
+
+
 
 	public void BypassGravity(bool stopGrav){
 		if (stopGrav) {
 			rb.velocity = Vector3.zero;
 		}
-		
+
 		stopGravity = stopGrav;
+	}
+
+	public void ResetFlyStamina(){
+		flyStamina = maxFlyStamina;
 	}
 
 	public void ContinuousExternalForce(Vector3 force, bool ignoreGravity, bool ignoreInput){
@@ -612,52 +501,32 @@ public class WalkingController : Controller {
 
 		rb.AddForce (force, ForceMode.Force);
 
-		if (jumpPressTime == 0) {
+		if (!holdingJump) {
 			Vector3 counterForce = -Vector3.up * (force.magnitude * 0.2f);
 			rb.AddForce (counterForce, ForceMode.Force);
 		}
 	}
 
 	public void AddExternalForce(Vector3 force, float duration){
-		adjVertVelocity = 0f;
+		velocity.y = 0f;
 		externalForceAdded = true;
 		rb.velocity = force;
-//		rb.AddForce (force, ForceMode.VelocityChange);
-		//externalForce = rb.velocity + force; 
-		//StartCoroutine ("RegainControl", duration);
 	}
 
-//	IEnumerator RegainControl(float duration){
-//		yield return new WaitForSeconds (duration);
-//		externalForce = Vector3.zero;
-//		//externalForceAdded = false;
-//	}
+	public void ChangeJumpHeight (float newMaxHeight, float newMinHeight) {
+		maxJumpHeight = newMaxHeight;
+		minJumpHeight = newMinHeight;
 
-
-	IEnumerator DelayedJump(){
-		yield return new WaitForSeconds (0.2f);
-		animCtrl.SetBool ("IsFlying", true);
+		gravity = -(2 * maxJumpHeight) / Mathf.Pow (timeToJumpApex, 2);
+		maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
+		minJumpVelocity = Mathf.Sqrt (2 * Mathf.Abs (gravity) * minJumpHeight);
 	}
 
 	public void ChangeOrientationToCamera(Transform t, bool changedCam){
-		if (changedCam && walkVelocity != Vector3.zero && !automaticOrientation)
+		if (changedCam && velocity != Vector3.zero && !automaticOrientation)
 			holdOrientation = t;
 		else if(holdOrientation == orientation || automaticOrientation)
 			orientation = t;
-	}
-
-
-	void ResetMovementToZero(){
-		walkVelocity = Vector3.zero;
-		adjVertVelocity = 0f;
-		cameraRotation = 0f;
-		sanfonaStrength = 0f;
-		jumpTriggerStrength = 0f;
-
-		if(jumpInertia != Vector3.zero){
-			if (Grounded ())
-				jumpInertia = Vector3.zero;
-		}
 	}
 
 	public struct WalkingStates
@@ -671,5 +540,4 @@ public class WalkingController : Controller {
 		public bool TOCANDO_STACCATO;
 		public bool TOCANDO_FLOREIO;
 	}
-
 }

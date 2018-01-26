@@ -63,7 +63,7 @@ public class IntroCamController : MonoBehaviour {
 			GetComponent<CinemachineVirtualCamera> ().m_Priority = 99;
 		}
 
-		defaultSpeed = playerCtrl.walkSpeed;
+		defaultSpeed = playerCtrl.moveSpeed;
 	}
 	
 	// Update is called once per frame
@@ -77,7 +77,7 @@ public class IntroCamController : MonoBehaviour {
 			print ("parou");
 
 		}
-		playerCtrl.walkSpeed = 0;
+		playerCtrl.moveSpeed = 0;
 
 		if (playerCtrl.playerInputStartGame) {
 			musicaIntro.stop (FMOD.Studio.STOP_MODE.IMMEDIATE);
@@ -128,7 +128,7 @@ public class IntroCamController : MonoBehaviour {
 			if (camTrack.m_PathPosition <= 0.1f) {
 				GetComponent<CinemachineVirtualCamera> ().m_Priority = 0;
 				playerRegainedCtrl = true;
-				playerCtrl.walkSpeed = defaultSpeed;
+				playerCtrl.moveSpeed = defaultSpeed;
 				enabled = false;
 			}
 			else
