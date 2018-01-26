@@ -411,7 +411,12 @@ public class WalkingController : MonoBehaviour {
 		bool collBelow = false;
 		collAbove = false;
 
-		float lowestAngle = 0;
+		float lowestAngle = 360f;
+		bool climbingSlope = false;
+		//float totalDist = 0;
+		//int totalHits = 0;
+		bool canStopGravity = false;
+		Vector3 normalDir = Vector3.zero;
 
 		float directionY = Mathf.Sign (velocity.y);
 		float rayLength = 1f + skinWidth;
@@ -427,10 +432,13 @@ public class WalkingController : MonoBehaviour {
 				Debug.DrawRay (rayOrigin, myT.up * directionY * rayLength, Color.red);
 
 				if(hitSomething){
+					//totalHits++;
 					float slopeAngle = Vector3.Angle (hit.normal, Vector3.up);
-					Debug.DrawRay (hit.point, hit.normal * 5, Color.black);
-					if (slopeAngle < lowestAngle)
+					//Debug.DrawRay (hit.point, hit.normal * 5, Color.black);
+					if (slopeAngle < lowestAngle) {
 						lowestAngle = slopeAngle;
+						normalDir = hit.normal;
+					}
 					//velocity.y = (hit.distance - skinWidth) * directionY;
 					//rayLength = hit.distance;
 
@@ -438,9 +446,10 @@ public class WalkingController : MonoBehaviour {
 						//velocity.x = velocity.y / Mathf.Tan (collisions.slopeAngle * Mathf.Deg2Rad) * Mathf.Sign (velocity.x);
 					//}
 
-					raycastMoveDistance = (hit.distance - skinWidth);
+					raycastMoveDistance = hit.distance - skinWidth;
+					//totalDist += (raycastMoveDistance - skinWidth);
 
-					if(Mathf.Abs(raycastMoveDistance) <= skinWidth){ //Permite continuar movendo mesmo tendo detectado hit.
+					if(Mathf.Abs(raycastMoveDistance) <= 0.05f){ //Se deu hit mas ainda estou longe, mantenha a velocidade Y. Caso contrario...
 						//float timeBeforeStop = raycastMoveDistance / velocity.y;
 						velocity.y = 0;
 
@@ -451,8 +460,14 @@ public class WalkingController : MonoBehaviour {
 			}
 		}
 
+		//print (lowestAngle);
+
 		if(lowestAngle >= maxSlopeAngle){
 			collBelow = false;
+			Vector3 refVector = Vector3.Cross (normalDir, Vector3.up);
+			Vector3 perpendicular = Vector3.Cross(normalDir, refVector);
+			rb.AddForce (perpendicular * 2f, ForceMode.VelocityChange);
+			Debug.DrawRay (myT.position, perpendicular * 5, Color.magenta);
 		}
 
 		if(collBelow)
