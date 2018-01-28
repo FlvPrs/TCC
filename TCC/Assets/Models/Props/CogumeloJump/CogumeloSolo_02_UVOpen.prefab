@@ -19,7 +19,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4554445794283706}
-  - component: {fileID: 95032548678922410}
   m_Layer: 0
   m_Name: CogumeloSolo_02_UVOpen
   m_TagString: Untagged
@@ -38,7 +37,7 @@ GameObject:
   - component: {fileID: 33657290593591616}
   - component: {fileID: 23885401418494116}
   - component: {fileID: 64268045780668384}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: polySurface2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54,13 +53,14 @@ GameObject:
   m_Component:
   - component: {fileID: 4238587931567192}
   - component: {fileID: 64500942135478112}
+  - component: {fileID: 114728705121485268}
   m_Layer: 2
   m_Name: MeshCollider
   m_TagString: Cogumelo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1972363641847924
 GameObject:
   m_ObjectHideFlags: 0
@@ -111,8 +111,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1646461487862562}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -33.32213, y: 0.2741723, z: 33.20642}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -28, y: 0.6, z: 35.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4129055648226944}
@@ -254,20 +254,16 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: e53b76b32b2a5c541a740b29bba81b65, type: 3}
---- !u!95 &95032548678922410
-Animator:
-  serializedVersion: 3
+--- !u!114 &114728705121485268
+MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1646461487862562}
+  m_GameObject: {fileID: 1825225041141950}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: e53b76b32b2a5c541a740b29bba81b65, type: 3}
-  m_Controller: {fileID: 9100000, guid: b7677001cc013f240aa0727bc984fc92, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f1e097b969bc8d4fbf0e5edae47b398, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpForce: 25
+  player: {fileID: 0}

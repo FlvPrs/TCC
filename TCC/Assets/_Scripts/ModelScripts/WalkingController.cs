@@ -331,7 +331,7 @@ public class WalkingController : MonoBehaviour {
 		CalculateRaySpacing ();
 	}
 
-	public void OnFloreioInputDown(){
+	public void OnFloreioInputDown(){		
 		walkStates.TOCANDO_FLOREIO = true;
 		canPlayFloreio = false;
 		birdSingCtrl.StartClarinet_Floreio();
@@ -420,19 +420,12 @@ public class WalkingController : MonoBehaviour {
 				Debug.DrawRay (rayOrigin, myT.up * directionY * rayLength, Color.red);
 
 				if(hitSomething){
-					//totalHits++;
 					float slopeAngle = Vector3.Angle (hit.normal, Vector3.up);
 					//Debug.DrawRay (hit.point, hit.normal * 5, Color.black);
 					if (slopeAngle < lowestAngle) {
 						lowestAngle = slopeAngle;
 						normalDir = hit.normal;
 					}
-					//velocity.y = (hit.distance - skinWidth) * directionY;
-					//rayLength = hit.distance;
-
-					//if(climbingSlope){
-						//velocity.x = velocity.y / Mathf.Tan (collisions.slopeAngle * Mathf.Deg2Rad) * Mathf.Sign (velocity.x);
-					//}
 
 					raycastMoveDistance = hit.distance - skinWidth;
 
@@ -557,7 +550,7 @@ public class WalkingController : MonoBehaviour {
 		public bool IS_FALLING_MAX;
 		public HeightState CURR_HEIGHT_STATE;
 		public bool TOCANDO_SUSTAIN;
-		public bool TOCANDO_STACCATO;
-		public bool TOCANDO_FLOREIO;
+		public bool TOCANDO_STACCATO; //Fica true apenas no frame que começou a tocar
+		public bool TOCANDO_FLOREIO; //Fica true apenas no frame que começou a tocar
 	}
 }

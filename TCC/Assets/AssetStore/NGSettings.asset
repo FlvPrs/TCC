@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 206920661, guid: 9b45efdbb4318dd448b04234823c769d, type: 3}
+  m_Name: NGSettings
+  m_EditorClassIdentifier: 
+  version: 2
+  once: 0
+--- !u!114 &114421625153349756
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1155771812, guid: 5e18b6ae3dead9c488b08f638c825826, type: 3}
+  m_Name: NGToolsEditor.NGFav.FavSettings
+  m_EditorClassIdentifier: 
+  changeSelection: 3
+  selectModifiers: 2
+  deleteModifiers: 6
+  favorites:
+  - name: default
+    favorites:
+    - refs:
+      - object: {fileID: 0}
+        hierarchy:
+        - Player
+        resolverAssemblyQualifiedName: 
+        dataResolver: 0
+    - refs:
+      - object: {fileID: 0}
+        hierarchy:
+        - Cameras
+        resolverAssemblyQualifiedName: 
+        dataResolver: 0

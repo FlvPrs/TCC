@@ -51,12 +51,12 @@ public class BirdSingCtrl : MonoBehaviour {
 				UpdatePartituraAtual (oldState);
 			}
 		}
-		if(playerCtrl.walkStates.TOCANDO_SUSTAIN){
-			if(oldState != playerCtrl.walkStates.CURR_HEIGHT_STATE){
-				oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
-				sustainCollider.currentHeight = oldState;
-			}
-		}
+//		if(playerCtrl.walkStates.TOCANDO_SUSTAIN){
+//			if(oldState != playerCtrl.walkStates.CURR_HEIGHT_STATE){
+//				oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
+//				sustainCollider.currentHeight = oldState;
+//			}
+//		}
 
 		if(clarinet.isPlaying && currentAir > 0){
 			currentAir -= Time.deltaTime;
@@ -128,25 +128,25 @@ public class BirdSingCtrl : MonoBehaviour {
 		sustainCollider.gameObject.SetActive (false);
 	}
 
-	public void StartClarinet_Sustain(bool start, float volume){
-		if (start && currentAir >= maxAir/4f) { //ou seja, se ainda tiver 25% de ar disponível
-			playerCtrl.walkStates.TOCANDO_SUSTAIN = true;
-			clarinet.Play ();
-			oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
-			sustainCollider.currentHeight = oldState;
-			sustainCollider.gameObject.SetActive (true);
-		} else {
-			playerCtrl.walkStates.TOCANDO_SUSTAIN = false;
-			clarinet.Stop ();
-			sustainCollider.gameObject.SetActive (false);
-		}
-
-		UpdateSoundVolume (volume);
-	}
-
-	public void UpdateSoundVolume(float volume){
-		clarinet.volume = volume;
-	}
+//	public void StartClarinet_Sustain(bool start, float volume){
+//		if (start && currentAir >= maxAir/4f) { //ou seja, se ainda tiver 25% de ar disponível
+//			playerCtrl.walkStates.TOCANDO_SUSTAIN = true;
+//			clarinet.Play ();
+//			oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
+//			sustainCollider.currentHeight = oldState;
+//			sustainCollider.gameObject.SetActive (true);
+//		} else {
+//			playerCtrl.walkStates.TOCANDO_SUSTAIN = false;
+//			clarinet.Stop ();
+//			sustainCollider.gameObject.SetActive (false);
+//		}
+//
+//		UpdateSoundVolume (volume);
+//	}
+//
+//	public void UpdateSoundVolume(float volume){
+//		clarinet.volume = volume;
+//	}
 
 	public void UpdateColor(){
 		//playerMat.color = Color.black;
