@@ -120,6 +120,7 @@ public class WalkingController : MonoBehaviour {
 	float raycastMoveDistance;
 	public float maxSlopeAngle = 50;
 
+	bool holdVelocity;
 
 
 	void Awake(){
@@ -158,7 +159,9 @@ public class WalkingController : MonoBehaviour {
 	}
 
 	void LateUpdate(){
-		CalculateVelocity ();
+		if(!holdVelocity)
+			CalculateVelocity ();
+		
 		isGrounded = Grounded (out collisionAbove);
 
 		if (velocity.y <= 0 && isGrounded) {
@@ -246,7 +249,7 @@ public class WalkingController : MonoBehaviour {
 		currentFallVelocity = rb.velocity.y;
 
 
-		if(rb.velocity.y >= 0.1f)
+		if(rb.velocity.y >= 0.05f)
 			animCtrl.SetTrigger ("CanBeginFall");
 
 		animCtrl.SetFloat ("VelocityY", currentFallVelocity);
@@ -264,20 +267,7 @@ public class WalkingController : MonoBehaviour {
 		}
 
 		//HandleWallSliding ();
-
-		//if (isGrounded /*|| isCollidingTop*/) {
-			//			if (controller.collisions.slidingDownMaxSlope) {
-			//				velocity.y += controller.collisions.slopeNormal.y * -gravity * Time.deltaTime;
-			//			} 
-			//			else {
-			//				velocity.y = 0;
-			//			}
-		//}
 	}
-
-	//	public void CheckNewInput(bool hasNewInput){
-	//		newInput = hasNewInput;
-	//	}
 
 	#region Input Control
 
@@ -413,8 +403,6 @@ public class WalkingController : MonoBehaviour {
 
 		float lowestAngle = 360f;
 		bool climbingSlope = false;
-		//float totalDist = 0;
-		//int totalHits = 0;
 		bool canStopGravity = false;
 		Vector3 normalDir = Vector3.zero;
 
@@ -447,20 +435,28 @@ public class WalkingController : MonoBehaviour {
 					//}
 
 					raycastMoveDistance = hit.distance - skinWidth;
-					//totalDist += (raycastMoveDistance - skinWidth);
 
 					if(Mathf.Abs(raycastMoveDistance) <= 0.05f){ //Se deu hit mas ainda estou longe, mantenha a velocidade Y. Caso contrario...
 						//float timeBeforeStop = raycastMoveDistance / velocity.y;
 						velocity.y = 0;
-
 					}
-					collBelow = (directionY == -1);
-					collAbove = (directionY == 1);
+
+					bool collNotGround = false;
+
+					if(hit.transform.gameObject.layer == 16){ //Se for a layer NotGround, reseta gravidade e não considera chão.
+						collBelow = false;
+						collAbove = false;
+						collNotGround = true;
+						ForceGravity(velocity.y);
+					}
+
+					if (!collNotGround) { 
+						collBelow = (directionY == -1);
+						collAbove = (directionY == 1);
+					}
 				}
 			}
 		}
-
-		//print (lowestAngle);
 
 		if(lowestAngle >= maxSlopeAngle){
 			collBelow = false;
@@ -473,15 +469,19 @@ public class WalkingController : MonoBehaviour {
 		if(collBelow)
 			ResetFlyStamina ();
 		if (collAbove)
-			velocity.y = gravity * Time.deltaTime; //Se der merda, mudar pra 0.
+			ResetGravity ();
 		
 		return collBelow;
 	}
 
-	void CalculateRaySpacing(){
-		//Bounds bounds = coll.bounds;
-		//bounds.Expand (skinWidth * -2);
+	void ForceGravity(float newYVelocity){
+		velocity.y = newYVelocity;
+	}
+	void ResetGravity(float gravMultiplier = 1f){
+		velocity.y = gravity * gravMultiplier * Time.deltaTime;
+	}
 
+	void CalculateRaySpacing(){
 		float boundsWidth = coll.size.x - (skinWidth * 2);
 
 		verticalRayCount = Mathf.RoundToInt (boundsWidth / distBetweenRays);
@@ -490,11 +490,16 @@ public class WalkingController : MonoBehaviour {
 		bottomFrontLeft.localPosition = new Vector3 (-0.5f + sanfonaStrength/4f + skinWidth, skinWidth, 0.5f - sanfonaStrength/4f - skinWidth);
 	}
 
-
+	public void SetVelocityTo(Vector3 newVelocity, bool hold){
+		velocity = newVelocity;
+		rb.velocity = jumpInertia = velocity;
+		holdVelocity = hold;
+	}
 
 	public void BypassGravity(bool stopGrav){
 		if (stopGrav) {
 			rb.velocity = Vector3.zero;
+			velocity.y = 0f;
 		}
 
 		stopGravity = stopGrav;
@@ -509,6 +514,7 @@ public class WalkingController : MonoBehaviour {
 			BypassGravity (true);
 		}
 		if(ignoreInput){
+			velocity = Vector3.zero;
 			jumpInertia = Vector3.zero;
 		} else {
 			jumpInertia = jumpInertia * 0.6f;
@@ -523,9 +529,8 @@ public class WalkingController : MonoBehaviour {
 	}
 
 	public void AddExternalForce(Vector3 force, float duration){
-		velocity.y = 0f;
 		externalForceAdded = true;
-		rb.velocity = force;
+		velocity = force;
 	}
 
 	public void ChangeJumpHeight (float newMaxHeight, float newMinHeight) {

@@ -19,8 +19,6 @@ public class PlayerRespawnCtrl : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		//pai = transform.GetChild (0).gameObject;
-		//pai = anim.transform.parent.gameObject;
 		anim.SetBool ("IsReturningPlayer", true);
 		flyingPai.SetActive(false);
 		paiCanShow = true;
@@ -30,7 +28,6 @@ public class PlayerRespawnCtrl : MonoBehaviour {
 	void FixedUpdate () {
 		if(isReturning){
 			player.localPosition = Vector3.zero;
-			player.GetComponent<Rigidbody> ().velocity = Vector3.zero;
 		}
 		if (!paiCanShow) {
 			actualPai.position = paiRespawnPoint.position;
@@ -44,6 +41,7 @@ public class PlayerRespawnCtrl : MonoBehaviour {
 	}
 
 	public IEnumerator ReturnToSpawn(Vector3 pos){
+		player.GetComponent<WalkingController> ().SetVelocityTo (Vector3.zero, true);
 		actualPai.position = paiRespawnPoint.position;
 		paiCanShow = false;
 		isReturning = true;
@@ -57,6 +55,7 @@ public class PlayerRespawnCtrl : MonoBehaviour {
 		goDown = false;
 		goUp = true;
 		isReturning = false;
+		player.GetComponent<WalkingController> ().SetVelocityTo (Vector3.zero, false);
 		yield return new WaitForSeconds (1f);
 		paiCanShow = true;
 		yield return new WaitForSeconds (3f);

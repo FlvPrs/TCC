@@ -73,11 +73,6 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 
 
 	void OnTriggerEnter(Collider col){
-		if(col.CompareTag("Ledge")){
-			Vector3 dir = col.transform.GetChild(0).transform.position - col.transform.position;
-			playerCtrl.StartCoroutine("GrabLedge", dir);
-		}
-
 //		if(col.CompareTag("Cogumelo")){ //DEIXA COMENTADO
 //			playerCtrl.externalForceAdded = true;
 //			//col.GetComponentInParent<AudioSource> ().Play ();
