@@ -8,12 +8,19 @@ public class CogumeloJumpCtrl : MonoBehaviour {
 
 	public WalkingController player;
 
+	private Animator mushAnimCtrl;
+
+	void Awake(){
+		mushAnimCtrl = GetComponentInParent<Animator> ();
+	}
+
 	void OnTriggerEnter(Collider col){
 		if(col.CompareTag("Player")){
 			player.externalForceAdded = true;
 			//col.GetComponentInParent<AudioSource> ().Play ();
 			Vector3 dir = col.transform.up * jumpForce;
 			player.AddExternalForce (dir, 0.5f);
+			mushAnimCtrl.SetTrigger ("boing");
 		}
 	}
 }

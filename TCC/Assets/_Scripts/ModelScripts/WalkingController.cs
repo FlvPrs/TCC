@@ -95,6 +95,8 @@ public class WalkingController : MonoBehaviour {
 
 	[HideInInspector]
 	public bool playerInputStartGame;
+	[HideInInspector]
+	public bool playerCanMove;
 
 	[HideInInspector]
 	public bool holdHeight = false;
@@ -137,6 +139,8 @@ public class WalkingController : MonoBehaviour {
 
 		if (orientation == null)
 			orientation = myT;
+
+		playerCanMove = true; //Por padrão, pode mover. Porem, outro script pode alterar seu valor.
 	}
 
 	void Start () {
@@ -316,7 +320,7 @@ public class WalkingController : MonoBehaviour {
 	}
 
 	public void OnJumpInputUp(){
-		if (velocity.y > minJumpVelocity) {
+		if (velocity.y > minJumpVelocity && velocity.y <= maxJumpVelocity) {
 			velocity.y = minJumpVelocity;
 		}
 		holdingJump = false;
@@ -368,8 +372,6 @@ public class WalkingController : MonoBehaviour {
 
 		if (!stopGravity)
 			velocity.y += gravity * Time.deltaTime;
-		else
-			velocity.y = 0;
 
 		if(directionalInput.x != 0 || directionalInput.z != 0){
 			walkStates.IS_WALKING = true;

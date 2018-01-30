@@ -19,6 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4554445794283706}
+  - component: {fileID: 95796202559748814}
   m_Layer: 0
   m_Name: CogumeloSolo_02_UVOpen
   m_TagString: Untagged
@@ -254,6 +255,23 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: e53b76b32b2a5c541a740b29bba81b65, type: 3}
+--- !u!95 &95796202559748814
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1646461487862562}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: e53b76b32b2a5c541a740b29bba81b65, type: 3}
+  m_Controller: {fileID: 9100000, guid: b7677001cc013f240aa0727bc984fc92, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114728705121485268
 MonoBehaviour:
   m_ObjectHideFlags: 1

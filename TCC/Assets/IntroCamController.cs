@@ -19,7 +19,6 @@ public class IntroCamController : MonoBehaviour {
 	public bool activateStartCam = true;
 	[NoSaveDuringPlay]
 	public WalkingController playerCtrl;
-	private float defaultSpeed;
 
 	private CinemachineTrackedDolly camTrack;
 	public float duration = 300f;
@@ -62,8 +61,8 @@ public class IntroCamController : MonoBehaviour {
 		else {
 			GetComponent<CinemachineVirtualCamera> ().m_Priority = 99;
 		}
-
-		defaultSpeed = playerCtrl.moveSpeed;
+			
+		playerCtrl.playerCanMove = false;
 	}
 	
 	// Update is called once per frame
@@ -128,11 +127,14 @@ public class IntroCamController : MonoBehaviour {
 			if (camTrack.m_PathPosition <= 0.1f) {
 				GetComponent<CinemachineVirtualCamera> ().m_Priority = 0;
 				playerRegainedCtrl = true;
-				playerCtrl.moveSpeed = defaultSpeed;
+				playerCtrl.playerCanMove = true;
 				enabled = false;
 			}
 			else
 				camTrack.m_PathPosition = Mathf.SmoothStep (camTrack.m_PathPosition, 0f, t);
 		}
+
+		if(!playerCtrl.playerInputStartGame && Input.anyKeyDown)
+			playerCtrl.playerInputStartGame = true;
 	}
 }
