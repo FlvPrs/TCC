@@ -8,9 +8,9 @@ public class WalkingController : MonoBehaviour {
 	public float maxJumpHeight = 4;
 	public float minJumpHeight = 1;
 	public float timeToJumpApex = .4f;
-	float accelerationTimeAirborne = .2f;
+	float accelerationTimeAirborne = .3f;
 	float accelerationTimeGrounded = .02f;
-	public float moveSpeed = 6;
+	public float moveSpeed = 10;
 
 	public float wallSlideSpeedMax = 3;
 
@@ -23,9 +23,8 @@ public class WalkingController : MonoBehaviour {
 	float velocityZSmoothing;
 
 	Vector3 directionalInput;
+	//Vector3 rawInput;
 
-
-	#region variables
 	float sanfonaStrength;
 	Vector3 jumpInertia;
 
@@ -44,9 +43,7 @@ public class WalkingController : MonoBehaviour {
 	BirdStatureCtrl birdHeightCtrl;
 	BirdSingCtrl birdSingCtrl;
 	public Animator animCtrl;
-	#endregion
 
-	#region walkCtrl variables
 	//Movement information
 	bool isFlying;
 	bool isOnLedge;
@@ -103,7 +100,6 @@ public class WalkingController : MonoBehaviour {
 
 	[HideInInspector]
 	public bool isFallingToDeath = false;
-	#endregion
 
 	private bool isGrounded;
 	private bool collisionAbove;
@@ -162,7 +158,7 @@ public class WalkingController : MonoBehaviour {
 		CalculateRaySpacing ();
 	}
 
-	void LateUpdate(){
+	void FixedUpdate(){
 		if(!holdVelocity)
 			CalculateVelocity ();
 		
@@ -205,9 +201,11 @@ public class WalkingController : MonoBehaviour {
 
 		} 
 		else {		//--------------Se eu não estou no chão---------------------
-			jumpInertia += new Vector3(velocity.x, 0, velocity.z) + externalForce;
-			jumpInertia = Vector3.ClampMagnitude (jumpInertia, moveSpeed * 1.5f);
+			jumpInertia += new Vector3(velocity.x * aerialCtrl, 0, velocity.z * aerialCtrl);
+			jumpInertia = Vector3.ClampMagnitude (jumpInertia, moveSpeed);
 			rb.velocity = new Vector3 (jumpInertia.x, velocity.y, jumpInertia.z);
+
+			//Debug.DrawRay (myT.position, rb.velocity.normalized * 5, Color.magenta);
 
 			#region Pulo Duplo limiter
 			if (timeOnAir >= 0.15f) { //Só permite pulo duplo após 0.15s no ar
@@ -222,8 +220,9 @@ public class WalkingController : MonoBehaviour {
 			}
 			#endregion
 
-			if (isFlying) //isFlying deve estar ativo durante um unico frame
-				isFlying = false;
+//			if (isFlying) { //isFlying deve estar ativo durante um unico frame
+//				isFlying = false;
+//			}
 
 			if (!holdHeight) {
 				sanfonaStrength = 0;
@@ -269,14 +268,13 @@ public class WalkingController : MonoBehaviour {
 		} else{
 			bonusJumpParticle.SetActive (false);
 		}
-
-		//HandleWallSliding ();
 	}
 
 	#region Input Control
 
 	public void SetDirectionalInput(Vector3 input){
-		directionalInput = input;
+		//rawInput = input;
+		directionalInput = orientation.TransformVector(input);
 	}
 
 	public void OnJumpInputDown(){
@@ -320,10 +318,15 @@ public class WalkingController : MonoBehaviour {
 	}
 
 	public void OnJumpInputUp(){
-		if (velocity.y > minJumpVelocity && velocity.y <= maxJumpVelocity) {
+		if (velocity.y > minJumpVelocity && velocity.y <= maxJumpVelocity && !isFlying) {
 			velocity.y = minJumpVelocity;
 		}
 		holdingJump = false;
+
+		if(isFlying){
+			isFlying = false;
+			animCtrl.SetBool ("IsFlying", isFlying);
+		}
 	}
 
 	public void SetSanfonaStrength(float strength){
@@ -353,17 +356,6 @@ public class WalkingController : MonoBehaviour {
 
 	#endregion
 
-	//	void HandleWallSliding () {
-	//		bool wallSliding = false;
-	//		if((controller.collisions.front) && !controller.collisions.below && velocity.y < 0){
-	//			wallSliding = true;
-	//
-	//			if(velocity.y < -wallSlideSpeedMax){
-	//				velocity.y = -wallSlideSpeedMax;
-	//			}
-	//		}
-	//	}
-
 	void CalculateVelocity () {
 		float targetVelocityX = directionalInput.x * moveSpeed;
 		float targetVelocityZ = directionalInput.z * moveSpeed;
@@ -375,7 +367,10 @@ public class WalkingController : MonoBehaviour {
 
 		if(directionalInput.x != 0 || directionalInput.z != 0){
 			walkStates.IS_WALKING = true;
-			anim.ChangeForward(directionalInput.normalized);
+			if(isGrounded)
+				anim.ChangeForward(directionalInput.normalized);
+			else
+				anim.ChangeForward ((myT.forward + rb.velocity).normalized);
 			Vector3 clampedAnimSpeed = new Vector3 (directionalInput.x, 0, directionalInput.z);
 			clampedAnimSpeed = Vector3.ClampMagnitude (clampedAnimSpeed, 1f);
 			animCtrl.SetFloat ("WalkVelocity", clampedAnimSpeed.magnitude);

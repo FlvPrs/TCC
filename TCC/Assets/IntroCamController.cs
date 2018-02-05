@@ -76,7 +76,6 @@ public class IntroCamController : MonoBehaviour {
 			print ("parou");
 
 		}
-		playerCtrl.moveSpeed = 0;
 
 		if (playerCtrl.playerInputStartGame) {
 			musicaIntro.stop (FMOD.Studio.STOP_MODE.IMMEDIATE);
