@@ -11,6 +11,7 @@ public class WalkingController : MonoBehaviour {
 	float accelerationTimeAirborne = .3f;
 	float accelerationTimeGrounded = .02f;
 	public float moveSpeed = 10;
+	public float TimeToFall = 0.5f;
 
 	public float wallSlideSpeedMax = 3;
 
@@ -69,7 +70,7 @@ public class WalkingController : MonoBehaviour {
 	[Range (0, 1)]
 	public float aerialCtrl = 0.1f;
 
-	public int maxFlyStamina = 4;
+	public int maxFlyStamina = 4;// tem que ser 4 aqui?
 
 	public float maxFallVelocity = 70f;
 
@@ -268,6 +269,14 @@ public class WalkingController : MonoBehaviour {
 		} else{
 			bonusJumpParticle.SetActive (false);
 		}
+		if(isGrounded==false){
+			if (secondJumpStrengthMultiplier > 0.0f) {
+				secondJumpStrengthMultiplier -= 0.3f*Time.deltaTime;
+			} 
+			print (secondJumpStrengthMultiplier);
+		}else {
+			secondJumpStrengthMultiplier = 0.9f;
+		}
 	}
 
 	#region Input Control
@@ -290,9 +299,10 @@ public class WalkingController : MonoBehaviour {
 			//			else {
 			//				velocity.y = maxJumpVelocity;
 			//			}
-
+			secondJumpStrengthMultiplier = 0.9f;
 			velocity.y = maxJumpVelocity;
 			jumpInertia = velocity;
+			print (secondJumpStrengthMultiplier);
 		} 
 		else if (canFly && !stopGravity && (flyStamina > 0 || hasBonusJump))	//------ Se eu estou no ar e consigo voar -------------------------
 		{
@@ -300,11 +310,12 @@ public class WalkingController : MonoBehaviour {
 			rb.velocity = Vector3.zero;
 			velocity.y = maxJumpVelocity * secondJumpStrengthMultiplier;
 			jumpInertia = velocity;
-			if (flyStamina > 0) {
+
+			/*if (flyStamina > 0) {
 				flyStamina--;
 			} else {
 				hasBonusJump = false;
-			}
+			}*/
 		}
 		else if (isFallingToDeath) {	//------ Se eu estou caindo sem chance de recuperar -------------------------------------------------------
 			animCtrl.SetTrigger ("FakeFly");
@@ -320,12 +331,14 @@ public class WalkingController : MonoBehaviour {
 	public void OnJumpInputUp(){
 		if (velocity.y > minJumpVelocity && velocity.y <= maxJumpVelocity && !isFlying) {
 			velocity.y = minJumpVelocity;
+			print ("funciona o pulo");
 		}
 		holdingJump = false;
 
 		if(isFlying){
 			isFlying = false;
 			animCtrl.SetBool ("IsFlying", isFlying);
+			print ("funciona o pulo2");
 		}
 	}
 
