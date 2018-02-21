@@ -45,6 +45,7 @@ public class WalkingController : MonoBehaviour {
 	public Animator animCtrl;
 
 	//Movement information
+	bool startedFly;
 	bool isFlying;
 	bool isOnLedge;
 	[HideInInspector]
@@ -220,9 +221,10 @@ public class WalkingController : MonoBehaviour {
 			}
 			#endregion
 
-//			if (isFlying) { //isFlying deve estar ativo durante um unico frame
-//				isFlying = false;
-//			}
+			if (startedFly) { //startedFly deve estar ativo durante um unico frame
+				startedFly = false;
+				//animCtrl.SetBool ("IsFlying", startedFly);
+			}
 
 			if (!holdHeight) {
 				sanfonaStrength = 0;
@@ -296,6 +298,8 @@ public class WalkingController : MonoBehaviour {
 		} 
 		else if (canFly && !stopGravity && (flyStamina > 0 || hasBonusJump))	//------ Se eu estou no ar e consigo voar -------------------------
 		{
+			startedFly = true;
+			animCtrl.SetTrigger ("StartFly");
 			isFlying = true;
 			rb.velocity = Vector3.zero;
 			velocity.y = maxJumpVelocity * secondJumpStrengthMultiplier;
@@ -310,7 +314,7 @@ public class WalkingController : MonoBehaviour {
 			animCtrl.SetTrigger ("FakeFly");
 		}
 
-		animCtrl.SetBool ("IsFlying", isFlying);
+		animCtrl.SetBool ("IsFlying", startedFly);
 	}
 
 	public void OnJumpInputHold(){
@@ -318,14 +322,13 @@ public class WalkingController : MonoBehaviour {
 	}
 
 	public void OnJumpInputUp(){
-		if (velocity.y > minJumpVelocity && velocity.y <= maxJumpVelocity && !isFlying) {
+		if (velocity.y > minJumpVelocity && velocity.y <= maxJumpVelocity && !startedFly) {
 			velocity.y = minJumpVelocity;
 		}
 		holdingJump = false;
 
 		if(isFlying){
 			isFlying = false;
-			animCtrl.SetBool ("IsFlying", isFlying);
 		}
 	}
 
@@ -367,10 +370,10 @@ public class WalkingController : MonoBehaviour {
 
 		if(directionalInput.x != 0 || directionalInput.z != 0){
 			walkStates.IS_WALKING = true;
-			if(isGrounded)
+//			if(isGrounded)
 				anim.ChangeForward(directionalInput.normalized);
-			else
-				anim.ChangeForward ((myT.forward + rb.velocity).normalized);
+//			else
+//				anim.ChangeForward ((myT.forward + rb.velocity).normalized);
 			Vector3 clampedAnimSpeed = new Vector3 (directionalInput.x, 0, directionalInput.z);
 			clampedAnimSpeed = Vector3.ClampMagnitude (clampedAnimSpeed, 1f);
 			animCtrl.SetFloat ("WalkVelocity", clampedAnimSpeed.magnitude);
