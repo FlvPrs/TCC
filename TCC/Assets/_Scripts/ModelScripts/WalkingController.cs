@@ -11,6 +11,7 @@ public class WalkingController : MonoBehaviour {
 	float accelerationTimeAirborne = .3f;
 	float accelerationTimeGrounded = .02f;
 	public float moveSpeed = 10;
+	public float TimeToFall = 0.5f;
 
 	public float wallSlideSpeedMax = 3;
 
@@ -201,13 +202,20 @@ public class WalkingController : MonoBehaviour {
 			timeOnAir = 0f;
 
 		} 
-		else {		//--------------Se eu não estou no chão---------------------
+		else {		//--------------Se eu não estou no chão---------------------		
 			jumpInertia += new Vector3(velocity.x * aerialCtrl, 0, velocity.z * aerialCtrl);
 			jumpInertia = Vector3.ClampMagnitude (jumpInertia, moveSpeed);
 			rb.velocity = new Vector3 (jumpInertia.x, velocity.y, jumpInertia.z);
 
 			//Debug.DrawRay (myT.position, rb.velocity.normalized * 5, Color.magenta);
 
+			if (secondJumpStrengthMultiplier > 0.0f) {
+				secondJumpStrengthMultiplier -= 0.3f*Time.deltaTime;
+			} else {
+				secondJumpStrengthMultiplier = 0.0f;
+			}
+			print (secondJumpStrengthMultiplier);
+			
 			#region Pulo Duplo limiter
 			if (timeOnAir >= 0.15f) { //Só permite pulo duplo após 0.15s no ar
 				canFly = true;
@@ -221,10 +229,12 @@ public class WalkingController : MonoBehaviour {
 			}
 			#endregion
 
+			//TODO: Erick deixou comentado. Manter?
 			if (startedFly) { //startedFly deve estar ativo durante um unico frame
 				startedFly = false;
 				//animCtrl.SetBool ("IsFlying", startedFly);
 			}
+			//
 
 			if (!holdHeight) {
 				sanfonaStrength = 0;
@@ -293,6 +303,7 @@ public class WalkingController : MonoBehaviour {
 			//				velocity.y = maxJumpVelocity;
 			//			}
 
+			secondJumpStrengthMultiplier = 0.9f;
 			velocity.y = maxJumpVelocity;
 			jumpInertia = velocity;
 		} 
@@ -304,11 +315,12 @@ public class WalkingController : MonoBehaviour {
 			rb.velocity = Vector3.zero;
 			velocity.y = maxJumpVelocity * secondJumpStrengthMultiplier;
 			jumpInertia = velocity;
-			if (flyStamina > 0) {
+			
+			/* if (flyStamina > 0) {
 				flyStamina--;
 			} else {
 				hasBonusJump = false;
-			}
+			} */
 		}
 		else if (isFallingToDeath) {	//------ Se eu estou caindo sem chance de recuperar -------------------------------------------------------
 			animCtrl.SetTrigger ("FakeFly");
