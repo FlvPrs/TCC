@@ -303,6 +303,7 @@ public class WalkingController : MonoBehaviour {
 			//				velocity.y = maxJumpVelocity;
 			//			}
 
+			secondJumpStrengthMultiplier = 0.9f;
 			velocity.y = maxJumpVelocity;
 			jumpInertia = velocity;
 		} 
