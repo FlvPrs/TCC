@@ -214,7 +214,7 @@ public class WalkingController : MonoBehaviour {
 			} else {
 				secondJumpStrengthMultiplier = 0.0f;
 			}
-			print (secondJumpStrengthMultiplier);
+			//print (secondJumpStrengthMultiplier);
 			
 			#region Pulo Duplo limiter
 			if (timeOnAir >= 0.15f) { //Só permite pulo duplo após 0.15s no ar
