@@ -70,7 +70,7 @@ public class FatherCollisionsCtrl : MonoBehaviour {
 		if(col.CompareTag("Player")){
 			WalkingController filhoCtrl = fatherPath.filho.GetComponent<WalkingController> ();
 
-			if(filhoCtrl.walkStates.TOCANDO_FLOREIO){
+			if(filhoCtrl.walkStates.TOCANDO_NOTAS){
 				fatherPath.ReactToSing (filhoCtrl.walkStates.CURR_HEIGHT_STATE);
 			} else {
 				if(filhoCtrl.walkStates.CURR_HEIGHT_STATE != HeightState.Default){

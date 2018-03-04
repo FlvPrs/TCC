@@ -6,6 +6,9 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 
 	public WalkingController feedbackBt;
 
+	public bool canStartSustain;
+	public bool canStartStaccato;
+
 	[FMODUnity.EventRef]
 
 	public string FilhoAguda, FilhoMedia, FilhoGrave, FilhoAguda2, FilhoMedia2, FilhoGrave2;
@@ -13,7 +16,6 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 
 
 
-	public 
 
 	void Start () {
 		
@@ -61,7 +63,10 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 
 	public void VerificaNota()
 	{
-		if (feedbackBt.walkStates.TOCANDO_STACCATO) {
+		if (!feedbackBt.walkStates.TOCANDO_NOTAS) {
+			canStartStaccato = true;
+		} else if (feedbackBt.walkStates.TOCANDO_NOTAS && !feedbackBt.walkStates.SEGURANDO_NOTA && canStartStaccato) {
+			canStartStaccato = false;
 
 			FMOD.Studio.PLAYBACK_STATE playing1;
 			filhoMelodyMedia.getPlaybackState (out playing1);
@@ -79,7 +84,7 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 					filhoMelodyMedia.start ();
 				//}
 
-				print ("tocando media");
+				//print ("tocando media");
 				break;
 			case HeightState.High:				
 
@@ -87,7 +92,7 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 					filhoMelodyAguda.start ();
 			//	}
 
-				print ("tocando aguda");
+				//print ("tocando aguda");
 
 				break;
 			case HeightState.Low:
@@ -95,7 +100,7 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 				//if (playing2 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing1 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing3 != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
 					filhoMelodyGrave.start ();
 				//}
-				print ("tocando grave");
+				//print ("tocando grave");
 				break;
 			default:
 				print ("fez mierda");
@@ -106,7 +111,10 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 
 
 	public void VerificaNota2()	{
-		if (feedbackBt.walkStates.TOCANDO_FLOREIO) {
+		if (!feedbackBt.walkStates.SEGURANDO_NOTA) {
+			canStartSustain = true;
+		} else if (feedbackBt.walkStates.SEGURANDO_NOTA && canStartSustain) {
+			canStartSustain = false;
 
 			FMOD.Studio.PLAYBACK_STATE playing4;
 			filhoMelodyMedia2.getPlaybackState (out playing4);

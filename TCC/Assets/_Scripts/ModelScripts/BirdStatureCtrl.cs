@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
-//This is a temporary solution.
-//Not usable when final character is finally implemented.
-//Instead of Scale, then we'll use actual animation.
 public class BirdStatureCtrl : MonoBehaviour {
 
 	public AudioMixerSnapshot clarinetDefault;
@@ -82,4 +79,10 @@ public class BirdStatureCtrl : MonoBehaviour {
 		currentSize = defaultHeight;
 		currentSize -= (((Mathf.Abs (strength) + tempStrength) / -2) * minDifference) + (((Mathf.Abs (strength) - tempStrength) /2) * maxDifference);
 	}
+}
+
+public enum HeightState {
+	High,
+	Default,
+	Low
 }

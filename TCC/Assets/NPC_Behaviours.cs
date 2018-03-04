@@ -90,7 +90,7 @@ public class NPC_Behaviours : MonoBehaviour {
 			isFollowingPlayer = false;
 		}
 
-		if (!playerCtrl.walkStates.TOCANDO_FLOREIO && !playerCtrl.walkStates.TOCANDO_STACCATO && !playerCtrl.walkStates.TOCANDO_SUSTAIN) {
+		if (!playerCtrl.walkStates.TOCANDO_NOTAS && !playerCtrl.walkStates.SEGURANDO_NOTA) {
 			waitTime -= Time.deltaTime;
 		} else {
 			if (followPlayerOnSing && (playerCtrl.transform.position - transform.position).magnitude < 15f) {
@@ -167,7 +167,7 @@ public class NPC_Behaviours : MonoBehaviour {
 
 			if (reactToPlayerSing) {
 				StopCoroutine (ReactToSing ());
-				if (canSingAgain && (playerCtrl.walkStates.TOCANDO_FLOREIO || playerCtrl.walkStates.TOCANDO_STACCATO || playerCtrl.walkStates.TOCANDO_SUSTAIN)){
+				if (canSingAgain && (playerCtrl.walkStates.TOCANDO_NOTAS || playerCtrl.walkStates.SEGURANDO_NOTA)){
 					waitTime = 1f;
 					StartCoroutine(ReactToSing ());
 				}

@@ -55,13 +55,12 @@ public class WalkingController : MonoBehaviour {
 	int flyStamina;
 	float cameraRotation;
 	float jumpTriggerStrength;
-	float singPressTime;
+	public float singHoldTreshold = 0.3f;
+	public float singHoldTime;
 	bool stopGravity = false;
 
-	[HideInInspector]
-	public bool canPlayStaccato = true;
-	[HideInInspector]
-	public bool canPlayFloreio = true;
+	//[HideInInspector]
+	public bool canStartSing = true;
 
 	float timeOnAir = 0f;
 
@@ -160,7 +159,14 @@ public class WalkingController : MonoBehaviour {
 		CalculateRaySpacing ();
 	}
 
+
+	public bool TOCANDO;
+	public bool SEGURANDO;
+
 	void FixedUpdate(){
+		TOCANDO = walkStates.TOCANDO_NOTAS;
+		SEGURANDO = walkStates.SEGURANDO_NOTA;
+
 		if(!holdVelocity)
 			CalculateVelocity ();
 		
@@ -181,9 +187,17 @@ public class WalkingController : MonoBehaviour {
 		//TODO: Provavelmente tem um jeito facil bem mais otimizado de fazer isso...
 		HeightState oldState = walkStates.CURR_HEIGHT_STATE;
 		walkStates.CURR_HEIGHT_STATE = birdHeightCtrl.currentHeightState;
-		if (oldState != walkStates.CURR_HEIGHT_STATE) {
-			canPlayStaccato = true;
-			canPlayFloreio = true;
+		if(walkStates.TOCANDO_NOTAS){
+			if (oldState != walkStates.CURR_HEIGHT_STATE && singHoldTime > 0f) {
+				if (walkStates.SEGURANDO_NOTA) {
+					GetComponent<FMODFilhoImplementacao> ().canStartSustain = true;
+					birdSingCtrl.SustainNote ();
+				} else {
+					FindObjectOfType<PlayerWalkInput> ().singPressTime = 0f;
+					GetComponent<FMODFilhoImplementacao> ().canStartStaccato = true;
+					birdSingCtrl.SingNote ();
+				}
+			}
 		}
 
 		walkStates.IS_GROUNDED = isGrounded;
@@ -269,7 +283,7 @@ public class WalkingController : MonoBehaviour {
 
 		animCtrl.SetFloat ("VelocityY", currentFallVelocity);
 
-		if(walkStates.TOCANDO_FLOREIO || walkStates.TOCANDO_STACCATO || walkStates.TOCANDO_SUSTAIN)
+		if(walkStates.TOCANDO_NOTAS)
 			animCtrl.SetBool ("IsSinging", true);
 		else
 			animCtrl.SetBool ("IsSinging", false);
@@ -353,17 +367,19 @@ public class WalkingController : MonoBehaviour {
 		CalculateRaySpacing ();
 	}
 
-	public void OnFloreioInputDown(){		
-		walkStates.TOCANDO_FLOREIO = true;
-		canPlayFloreio = false;
-		birdSingCtrl.StartClarinet_Floreio();
+	public void OnSingInputDown(){
+		walkStates.TOCANDO_NOTAS = true;
+		birdSingCtrl.SingNote();
 	}
-
-	public void OnStaccatoInputDown(){
-		walkStates.TOCANDO_STACCATO = true;
-		canPlayStaccato = false;
-		birdSingCtrl.StartClarinet_Staccato ();
+	public void OnSingInputHold(){ //É sempre chamada apenas 1x, antes de <singleNoteMinimumDuration>s, se o player estiver segurando o botao de canto
+		walkStates.SEGURANDO_NOTA = true;
+		birdSingCtrl.SustainNote();
 	}
+//	public void OnSingInputUp(){
+//		walkStates.SEGURANDO_NOTA = false;
+//		//canStartSing = true;
+//		//birdSingCtrl.StopSing();
+//	}
 
 	public void SetCheatState(bool activateCheat){
 		maxFlyStamina = (activateCheat) ? 10 : 1;
@@ -561,8 +577,8 @@ public class WalkingController : MonoBehaviour {
 		public bool IS_GLIDING;
 		public bool IS_FALLING_MAX;
 		public HeightState CURR_HEIGHT_STATE;
-		public bool TOCANDO_SUSTAIN;
-		public bool TOCANDO_STACCATO; //Fica true apenas no frame que começou a tocar
-		public bool TOCANDO_FLOREIO; //Fica true apenas no frame que começou a tocar
+		public bool TOCANDO_NOTAS; //Fica true apenas no frame que começou a tocar
+		public bool SEGURANDO_NOTA;
+		public playerSongs CURR_SONG;
 	}
 }
