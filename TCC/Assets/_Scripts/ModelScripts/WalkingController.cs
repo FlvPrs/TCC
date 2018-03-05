@@ -105,7 +105,7 @@ public class WalkingController : MonoBehaviour {
 	private bool isGrounded;
 	private bool collisionAbove;
 	private bool holdingJump = false;
-	private float secondJumpStrengthMultiplier = 0.9f;
+	public float secondJumpStrengthMultiplier = 0.9f;
 
 	//Raycast settings
 	const float skinWidth = .03f;
@@ -317,7 +317,7 @@ public class WalkingController : MonoBehaviour {
 			//				velocity.y = maxJumpVelocity;
 			//			}
 
-			secondJumpStrengthMultiplier = 0.9f;
+			secondJumpStrengthMultiplier = 1.8f;
 			velocity.y = maxJumpVelocity;
 			jumpInertia = velocity;
 		} 
