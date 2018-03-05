@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Audio;
 
 public class AgentFather : MonoBehaviour {
 
@@ -10,9 +11,17 @@ public class AgentFather : MonoBehaviour {
 	protected Transform agentTransform;
 	protected Rigidbody rb;
 	protected Animator animCtrl;
+	protected BoxCollider coll;
 
 	#region ========== Debug Variables ==========
 	public Transform targetReference;
+	protected AudioSource sing;
+	[SerializeField]
+	protected AudioSource singSustain;
+
+	public AudioMixerSnapshot clarinetDefault;
+	public AudioMixerSnapshot clarinetLow;
+	public AudioMixerSnapshot clarinetHigh;
 	#endregion
 
 	protected virtual void Start (){
@@ -20,6 +29,11 @@ public class AgentFather : MonoBehaviour {
 		agentTransform = GetComponent<Transform> ();
 		rb = GetComponent<Rigidbody> ();
 		animCtrl = GetComponentInChildren<Animator> ();
+		coll = GetComponent<BoxCollider> ();
+
+		#region ========== Temporary Code ==========
+		sing = GetComponent<AudioSource> ();
+		#endregion
 	}
 
 	protected virtual void Update (){
@@ -33,6 +47,12 @@ public class AgentFather : MonoBehaviour {
 	public float moveSpeed = 6f;
 	public float minDistToTarget = 5f;
 	public float angularSpeed = 2f;
+	public float CollHeight_Low = 2f;
+	public float CollHeight_Default = 4.5f;
+	public float CollHeight_High = 7f;
+
+	//TODO: Confirmar com Uiris
+	protected float singleNoteMinimumDuration = 0.5f;
 	// ==================================
 
 	// ---------- Control Vars ----------
@@ -43,8 +63,12 @@ public class AgentFather : MonoBehaviour {
 	protected bool isFollowingPlayer;
 	protected bool isJumping; 
 	protected bool isFlying;
+	protected bool isRepeatingNote;
+	protected bool isSustainingNote;
 	protected float counter_Fly = 0f;
 	protected float counter_Height = 0f;
+	protected int counter_SingRepeat = 0;
+	protected float counter_SingSustain = 0f;
 	// ----------------------------------
 
 	protected float gravity;
@@ -117,4 +141,41 @@ public class AgentFather : MonoBehaviour {
 
 		jumpOrFly = true;
 	}
+
+	protected void UpdateHeightCollider (HeightState currHeight) {
+		float height = CollHeight_Default;
+
+		switch (currHeight) {
+		case HeightState.Default:
+			height = CollHeight_Default;
+			break;
+		case HeightState.High:
+			height = CollHeight_High;
+			break;
+		case HeightState.Low:
+			height = CollHeight_Low;
+			break;
+		default:
+			break;
+		}
+
+		float newYValue = Mathf.Lerp (coll.size.y, height, 0.2f);
+		coll.size = new Vector3 (coll.size.x, newYValue, coll.size.z);
+		coll.center = new Vector3 (coll.center.x, newYValue / 2f, coll.center.z);
+	}
+}
+
+public enum FatherSongSimple {
+	Empty,
+	Estorvo,
+	Serenidade,
+	Ninar,
+	Alegria
+}
+
+public enum FatherSongSustain {
+	Empty,
+	Amizade,
+	Crescimento,
+	Encolhimento,
 }

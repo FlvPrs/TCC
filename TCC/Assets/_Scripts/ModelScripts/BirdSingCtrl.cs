@@ -210,7 +210,7 @@ public class BirdSingCtrl : MonoBehaviour {
 	}
 }
 
-public enum playerSongs {
+public enum PlayerSongs {
 	Empty,
 	Amizade,
 	Estorvo,

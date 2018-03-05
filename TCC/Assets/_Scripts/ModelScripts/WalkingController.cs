@@ -579,6 +579,6 @@ public class WalkingController : MonoBehaviour {
 		public HeightState CURR_HEIGHT_STATE;
 		public bool TOCANDO_NOTAS; //Fica true apenas no frame que começou a tocar
 		public bool SEGURANDO_NOTA;
-		public playerSongs CURR_SONG;
+		public PlayerSongs CURR_SONG;
 	}
 }

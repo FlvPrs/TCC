@@ -5,9 +5,13 @@ using UnityEngine;
 public class FatherActions : AgentFather {
 
 	protected HeightState currentState;
+	protected PlayerSongs currentSong;
 
 	protected override void Start (){
 		base.Start ();
+
+		currentState = HeightState.Default;
+		currentSong = PlayerSongs.Empty;
 	}
 
 	#region ========== Debug Variables ==========
@@ -18,12 +22,11 @@ public class FatherActions : AgentFather {
 	public bool guidePlayer;
 	public bool followPlayer;
 	public bool esticado, alturaDefault, abaixado;
+	public bool singSingle, singSingleRepeat, singSustainNote, singPartitura;
 
 	bool isMovingNavMesh;
 	bool isMovingRB;
 	#endregion
-
-
 
 	protected override void Update (){
 		base.Update ();
@@ -102,11 +105,49 @@ public class FatherActions : AgentFather {
 			esticado = alturaDefault = abaixado = false;
 			ChangeHeight(HeightState.Low);
 		}
+
+		if(singSingle){
+			singSingle = false;
+			Sing_SingleNote ();
+		}
+
+		if (singSingleRepeat){
+			singSingleRepeat = false;
+			Sing_SingleNoteRepeat (3);
+		}
+		if(isRepeatingNote){
+			singSingleRepeat = false;
+		}
+
+		if (singSustainNote){
+			Sing_SustainedNote (5f);
+		}
+		if(isSustainingNote){
+			singSustainNote = true;
+		}
+
+		if(singPartitura){
+			singPartitura = false;
+			PartituraInfo[] partituraTeste = new PartituraInfo[]
+			{
+				new PartituraInfo(HeightState.High, true, 0.5f, 2f),
+				new PartituraInfo(HeightState.High),
+				new PartituraInfo(HeightState.Low, false, 1.5f),
+				new PartituraInfo(HeightState.Default, true, 2f, 1f),
+				new PartituraInfo(HeightState.Low, false)
+			};
+			Sing_Partitura(partituraTeste);
+		}
+
 		#endregion
+
+		UpdateHeightCollider (currentState);
 	}
 
 	#region --------------------------------- TRIGGERS ---------------------------------
 	bool stopHoldFly;
+	bool stopSustainNote;
+	bool stopRepeatingNote;
 
 	#endregion
 
@@ -117,22 +158,22 @@ public class FatherActions : AgentFather {
 	}
 
 	//Util para se movimentar no chao
-	void MoveHere (Vector3 pos){
+	protected void MoveHere (Vector3 pos){
 		MoveAgentOnNavMesh (pos);
 	}
 
 	//Util quando estiver no ar
-	void MoveHereWithRB (Vector3 pos){
+	protected void MoveHereWithRB (Vector3 pos){
 		MoveAgentWithRB (pos);
 	}
 
-	void MoveToPlayer (){
+	protected void MoveToPlayer (){
 		MoveAgentOnNavMesh (player.position);
 	}
 
 	//SE <player> estiver DENTRO do raio <startDistance>, COMECE a Andar até <pos>
 	//SE <player> estiver FORA do raio <stopDistance>, PARE de andar
-	void GuidePlayerTo (Vector3 pos, float startDistance, float stopDistance){
+	protected void GuidePlayerTo (Vector3 pos, float startDistance, float stopDistance){
 		if (distToPlayer <= startDistance){
 			//Guide
 			isGuiding = true;
@@ -151,7 +192,7 @@ public class FatherActions : AgentFather {
 
 	//SE <player> estiver FORA do raio <startDistance>, ANDE até o <player>
 	//SE <player> estiver DENTRO do raio <stopDistance>, PARE de andar
-	void FollowPlayer (float startDistance, float stopDistance){
+	protected void FollowPlayer (float startDistance, float stopDistance){
 		if (distToPlayer >= startDistance){
 			//Follow
 			isFollowingPlayer = true;
@@ -168,7 +209,7 @@ public class FatherActions : AgentFather {
 		}
 	}
 
-	Vector3 RandomDestination (Vector3 areaCenter, float areaRadius){
+	protected Vector3 RandomDestination (Vector3 areaCenter, float areaRadius){
 		Vector2 circleRand = new Vector2 (areaCenter.x, areaCenter.z) + (areaRadius * Random.insideUnitCircle);
 		Vector3 dest = new Vector3 (circleRand.x, areaCenter.y, circleRand.y);
 
@@ -179,7 +220,8 @@ public class FatherActions : AgentFather {
 		return dest;
 	}
 
-	void JumpAndFall (float jHeight = 5f, float timeToApex = 0.3f){
+	//--- Após ser chamada uma vez, enquanto isJumping for true, esta função deve rodar todo frame ---
+	protected void JumpAndFall (float jHeight = 5f, float timeToApex = 0.3f){
 		if (!isJumping) {
 			CalculateJump (out isJumping, jHeight, timeToApex);
 		} else if (agentTransform.position.y <= oldPosY){
@@ -192,7 +234,8 @@ public class FatherActions : AgentFather {
 		}
 	}
 
-	void JumpAndHold (float seconds = 0f, bool allowSlowFalling = false, float jHeight = 5f, float timeToApex = 0.3f){
+	//--- Após ser chamada uma vez, enquanto isFlying for true, esta função deve rodar todo frame ---
+	protected void JumpAndHold (float seconds = 0f, bool allowSlowFalling = false, float jHeight = 5f, float timeToApex = 0.3f){
 		//Se eu acabei de começar o pulo
 		if (!isFlying) {
 			counter_Fly = 0f;
@@ -228,15 +271,27 @@ public class FatherActions : AgentFather {
 		}
 	}
 
-	void ChangeHeight (HeightState height, float seconds = 0f){
+	protected void ChangeHeight (HeightState height, float seconds = 0f){
 		switch (height) {
 		case HeightState.High:
+			//TODO: Delete this. Apenas para teste
+			clarinetHigh.TransitionTo (0.01f);
+			//endTODO
+
 			animCtrl.SetFloat ("Height", 0.9f);
 			break;
 		case HeightState.Default:
+			//TODO: Delete this. Apenas para teste
+			clarinetDefault.TransitionTo (0.01f);
+			//endTODO
+
 			animCtrl.SetFloat ("Height", 0f);
 			break;
 		case HeightState.Low:
+			//TODO: Delete this. Apenas para teste
+			clarinetLow.TransitionTo (0.01f);
+			//endTODO
+
 			animCtrl.SetFloat ("Height", -0.9f);
 			break;
 		default:
@@ -256,19 +311,159 @@ public class FatherActions : AgentFather {
 		yield return new WaitForSeconds (seconds);
 
 		currentState = HeightState.Default;
+
+		//TODO: Delete this. Apenas para teste
+		clarinetDefault.TransitionTo (0.01f);
+		//endTODO
+
 		animCtrl.SetFloat ("Height", 0f);
 	}
 
-	void Sing_SingleNote (){
-
+	protected void Sing_SingleNote (){
+		sing.Play ();
 	}
 
-	void Sing_SingleNoteRepeat (int times = 0){
+	//--- Após ser chamada uma vez, enquanto isRepeatingNote for true, esta função roda uma vez a cada <singleNoteMinimumDuration> segundos ---
+	protected void Sing_SingleNoteRepeat (int times = 0){
+		isRepeatingNote = true;
+		StopCoroutine ("RepeatNote");
 
+		if (times > 0){ //Se foi especificada a quantidade de vezes que deve tocar...
+			if (counter_SingRepeat < times){ //Se ainda não tocou <times> vezes,
+				counter_SingRepeat++; //aumenta o counter,
+				StartCoroutine ("RepeatNote", times); //toca a nota e roda esta função novamente.
+			} 
+			else { //Se ja tocou <times> vezes, reseta o counter e não toca mais.
+				counter_SingRepeat = 0;
+				isRepeatingNote = false;
+			}
+		} 
+		else if (!stopRepeatingNote) { //Caso contrario, enquanto o <trigger> for falso...
+			StartCoroutine ("RepeatNote", times); //toca a nota e roda esta função novamente.
+		} else { //Caso o <trigger> seja ativado...
+			stopRepeatingNote = false;
+			counter_SingRepeat = 0;
+			isRepeatingNote = false;
+		}
+	}
+	IEnumerator RepeatNote (int times){
+		Sing_SingleNote ();
+
+		yield return new WaitForSeconds (singleNoteMinimumDuration);
+		Sing_SingleNoteRepeat (times);
 	}
 
-	void Sing_Partitura (int partitura, float intervalBetweenNotes = 1f){
+	//--- Após ser chamada uma vez, enquanto isSustainingNote for true, esta função deve rodar todo frame ---
+	protected void Sing_SustainedNote (float duration = 0f){
+		if(!isSustainingNote){ //Se ainda nao começou a cantar, cante.
+			isSustainingNote = true;
+			singSustain.Play ();
+			counter_SingSustain = 0f; //Inicia o counter.
+		}
 
+		if(duration > 0f){ //Se foi definido um tempo limite...
+			if(counter_SingSustain >= duration){ //Se já cantou por <duration>s, pare.
+				isSustainingNote = false;
+				singSustainNote = false;
+				counter_SingSustain = 0f;
+				singSustain.Stop ();
+			}
+			else { //Se ainda não alcançou <duration>s, aumente o counter.
+				counter_SingSustain += Time.deltaTime;
+			}
+		}
+		else { //Se NÃO foi definido um tempo limite...
+			if(stopSustainNote){
+				isSustainingNote = false;
+				stopSustainNote = false;
+				singSustainNote = false;
+				counter_SingSustain = 0f;
+				singSustain.Stop ();
+			}
+		}
 	}
+
+	protected void Sing_Partitura (PartituraInfo[] partitura){
+		StopCoroutine("PlayPartitura");
+		StartCoroutine ("PlayPartitura", partitura);
+	}
+	IEnumerator PlayPartitura (PartituraInfo[] partitura){
+		for (int i = 0; i < partitura.Length; i++) {
+			ChangeHeight (partitura [i].Height);
+			if(partitura[i].Sustain){
+				Sing_SustainedNote (partitura [i].SustainTime);
+				yield return new WaitForSeconds (partitura [i].WaitTimeBeforeNext + partitura [i].SustainTime);
+			} else {
+				Sing_SingleNote ();
+				yield return new WaitForSeconds (partitura [i].WaitTimeBeforeNext);
+			}
+		}
+	}
+
+	protected void TocarMusicaSimples (FatherSongSimple song) {
+		switch (song) {
+		case FatherSongSimple.Alegria: //DISTRAIR
+			//TODO: Definir melodia especifica
+			break;
+		case FatherSongSimple.Estorvo: //IRRITAR
+			ChangeHeight (HeightState.High, singleNoteMinimumDuration * 6f);
+			Sing_SingleNoteRepeat (5);
+			break;
+		case FatherSongSimple.Serenidade: //ACALMAR
+			//TODO: Definir melodia especifica
+			break;
+		case FatherSongSimple.Ninar: //DORMIR
+			//TODO: Definir melodia especifica
+			break;
+		case FatherSongSimple.Empty:
+			//
+			break;
+
+		default:
+			Debug.LogWarning("BUG: O pai não conhece essa musica simples");
+			break;
+		}
+	}
+
+	protected void TocarMusicaComSustain (FatherSongSustain song, float duration = 0f) {
+		switch (song) {
+		case FatherSongSustain.Amizade: //SEGUIR
+			ChangeHeight (HeightState.Default);
+			Sing_SustainedNote (duration);
+			break;
+		case FatherSongSustain.Crescimento: //CRESCER
+			ChangeHeight (HeightState.High);
+			Sing_SustainedNote (duration);
+			break;
+		case FatherSongSustain.Encolhimento: //ENCOLHER
+			ChangeHeight (HeightState.Low);
+			Sing_SustainedNote (duration);
+			break;
+		case FatherSongSustain.Empty:
+			//
+			break;
+		default:
+			Debug.LogWarning("BUG: O pai não conhece essa musica com sustain");
+			break;
+		}
+	}
+
 	#endregion
+}
+
+
+public struct PartituraInfo
+{
+	public HeightState Height;
+	public bool Sustain;
+
+	public float WaitTimeBeforeNext;
+	public float SustainTime;
+
+	public PartituraInfo (HeightState height, bool sustain = false, float waitTimeBeforeNext = 1f, float sustainTime = 2f){
+		Height = height;
+		Sustain = sustain;
+		WaitTimeBeforeNext = waitTimeBeforeNext;
+		SustainTime = sustainTime;
+	}
 }
