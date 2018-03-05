@@ -84,6 +84,7 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			col.gameObject.SetActive (false);
 			//playerCtrl.ResetFlyStamina ();
 			playerCtrl.hasBonusJump = true;
+			playerCtrl.hasBonusJump_2 = true;
 		}
 
 		if(col.CompareTag("WindCurrent")){

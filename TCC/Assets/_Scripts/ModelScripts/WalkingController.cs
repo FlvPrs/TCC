@@ -15,6 +15,9 @@ public class WalkingController : MonoBehaviour {
 
 	public float wallSlideSpeedMax = 3;
 
+	private float timerSecondJumpPower = 5.0f;
+	private float powerJump;
+
 	float gravity;
 	float maxJumpVelocity;
 	float minJumpVelocity;
@@ -92,6 +95,12 @@ public class WalkingController : MonoBehaviour {
 	public bool hasBonusJump;
 
 	[HideInInspector]
+	public bool hasBonusJump_2;///erick higa teste poder temporario 
+
+	private float SpeedMovementSlowTimer;
+	private bool VelocidadeDiminuidaNoVoo;
+
+	[HideInInspector]
 	public bool playerInputStartGame;
 	[HideInInspector]
 	public bool playerCanMove;
@@ -146,6 +155,9 @@ public class WalkingController : MonoBehaviour {
 		flyStamina = maxFlyStamina;
 		maxFallVelocity = -maxFallVelocity;
 
+		hasBonusJump_2 = false;
+		powerJump = 0.9f;
+
 		gravity = -(2 * maxJumpHeight) / Mathf.Pow (timeToJumpApex, 2);
 		maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
 		minJumpVelocity = Mathf.Sqrt (2 * Mathf.Abs (gravity) * minJumpHeight);
@@ -166,6 +178,29 @@ public class WalkingController : MonoBehaviour {
 	void FixedUpdate(){
 		TOCANDO = walkStates.TOCANDO_NOTAS;
 		SEGURANDO = walkStates.SEGURANDO_NOTA;
+
+		#region power up limitado
+		if(hasBonusJump_2){
+			powerJump = 1.8f;
+			timerSecondJumpPower -= 1 *Time.deltaTime;
+			if(timerSecondJumpPower <= 0){
+				hasBonusJump_2 = false;
+				powerJump = 0.9f;
+			}
+		}
+		#endregion
+
+		#region ReduzindoVelocidadeVoo
+		if(VelocidadeDiminuidaNoVoo){
+			moveSpeed = 6.0f;
+			SpeedMovementSlowTimer += 1*Time.deltaTime;
+			if(SpeedMovementSlowTimer >= 0.2f){
+				SpeedMovementSlowTimer=0;
+				moveSpeed = 10.0f;
+				VelocidadeDiminuidaNoVoo = false;
+			}
+		}
+		#endregion
 
 		if(!holdVelocity)
 			CalculateVelocity ();
@@ -317,7 +352,7 @@ public class WalkingController : MonoBehaviour {
 			//				velocity.y = maxJumpVelocity;
 			//			}
 
-			secondJumpStrengthMultiplier = 1.8f;
+			secondJumpStrengthMultiplier = powerJump;
 			velocity.y = maxJumpVelocity;
 			jumpInertia = velocity;
 		} 
@@ -329,6 +364,7 @@ public class WalkingController : MonoBehaviour {
 			rb.velocity = Vector3.zero;
 			velocity.y = maxJumpVelocity * secondJumpStrengthMultiplier;
 			jumpInertia = velocity;
+			VelocidadeDiminuidaNoVoo = true;
 			
 			/* if (flyStamina > 0) {
 				flyStamina--;
