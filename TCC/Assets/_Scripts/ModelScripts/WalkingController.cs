@@ -16,7 +16,7 @@ public class WalkingController : MonoBehaviour {
 	public float wallSlideSpeedMax = 3;
 
 	private float timerSecondJumpPower = 5.0f;
-	private float powerJump;
+	private float fruitJumpPower;
 
 	float gravity;
 	float maxJumpVelocity;
@@ -156,7 +156,7 @@ public class WalkingController : MonoBehaviour {
 		maxFallVelocity = -maxFallVelocity;
 
 		hasBonusJump_2 = false;
-		powerJump = 0.9f;
+		fruitJumpPower = 0.9f;
 
 		gravity = -(2 * maxJumpHeight) / Mathf.Pow (timeToJumpApex, 2);
 		maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
@@ -179,20 +179,21 @@ public class WalkingController : MonoBehaviour {
 		TOCANDO = walkStates.TOCANDO_NOTAS;
 		SEGURANDO = walkStates.SEGURANDO_NOTA;
 
-		#region power up limitado
+		#region power up fruit limitado
 		if(hasBonusJump_2){
-			powerJump = 1.8f;
+			fruitJumpPower = 1.8f;
 			timerSecondJumpPower -= 1 *Time.deltaTime;
 			if(timerSecondJumpPower <= 0){
+				timerSecondJumpPower = 5.0f;
 				hasBonusJump_2 = false;
-				powerJump = 0.9f;
+				fruitJumpPower = 0.9f;
 			}
 		}
 		#endregion
 
-		#region ReduzindoVelocidadeVoo
+		#region Reduzindo Velocidade No Pulo
 		if(VelocidadeDiminuidaNoVoo){
-			moveSpeed = 6.0f;
+			moveSpeed = 20.0f;
 			SpeedMovementSlowTimer += 1*Time.deltaTime;
 			if(SpeedMovementSlowTimer >= 0.2f){
 				SpeedMovementSlowTimer=0;
@@ -352,7 +353,7 @@ public class WalkingController : MonoBehaviour {
 			//				velocity.y = maxJumpVelocity;
 			//			}
 
-			secondJumpStrengthMultiplier = powerJump;
+			secondJumpStrengthMultiplier = fruitJumpPower;
 			velocity.y = maxJumpVelocity;
 			jumpInertia = velocity;
 		} 
