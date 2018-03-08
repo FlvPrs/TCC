@@ -23,6 +23,7 @@ public class FatherActions : AgentFather {
 	public bool followPlayer;
 	public bool esticado, alturaDefault, abaixado;
 	public bool singSingle, singSingleRepeat, singSustainNote, singPartitura;
+	public bool singEstorvo;
 
 	bool isMovingNavMesh;
 	bool isMovingRB;
@@ -139,6 +140,11 @@ public class FatherActions : AgentFather {
 			Sing_Partitura(partituraTeste);
 		}
 
+		if(singEstorvo){
+			singEstorvo = false;
+			TocarMusicaSimples(FatherSongSimple.Estorvo);
+		}
+
 		#endregion
 
 		UpdateHeightCollider (currentState);
@@ -173,7 +179,7 @@ public class FatherActions : AgentFather {
 
 	//SE <player> estiver DENTRO do raio <startDistance>, COMECE a Andar até <pos>
 	//SE <player> estiver FORA do raio <stopDistance>, PARE de andar
-	protected void GuidePlayerTo (Vector3 pos, float startDistance, float stopDistance){
+	protected void GuidePlayerTo (Vector3 pos, float startDistance = 6f, float stopDistance = 15f){
 		if (distToPlayer <= startDistance){
 			//Guide
 			isGuiding = true;
@@ -192,7 +198,7 @@ public class FatherActions : AgentFather {
 
 	//SE <player> estiver FORA do raio <startDistance>, ANDE até o <player>
 	//SE <player> estiver DENTRO do raio <stopDistance>, PARE de andar
-	protected void FollowPlayer (float startDistance, float stopDistance){
+	protected void FollowPlayer (float startDistance = 12f, float stopDistance = 6f){
 		if (distToPlayer >= startDistance){
 			//Follow
 			isFollowingPlayer = true;

@@ -105,7 +105,7 @@ public class AgentFather : MonoBehaviour {
 		distToTarget = Vector3.Distance (target, agentTransform.position);
 	}
 
-	protected bool CheckArrivedOnDestination (bool movingWithRB = false){
+	public bool CheckArrivedOnDestination (bool movingWithRB = false){
 		//Se estiver andando com NavMesh --------------------------------
 		if(!movingWithRB){
 			if (!nmAgent.pathPending){
