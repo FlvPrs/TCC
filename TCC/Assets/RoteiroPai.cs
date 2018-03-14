@@ -9,6 +9,8 @@ public class RoteiroPai : MonoBehaviour {
 
 	public List<Roteiro> roteiro;
 
+	public int currentState;
+
 	void Start () {
 //		fatherActions.GuidePlayerTo (destinations [0]);
 //		fatherActions.MoveHere (destinations [1]);
@@ -45,12 +47,13 @@ public class RoteiroPai : MonoBehaviour {
 //		fatherActions.Sing_Partitura(partitura);
 //		fatherActions.MoveHere (destinations [9]);
 
-		StartCoroutine ("UpdateRoteiro");
+		StartCoroutine ("UpdateRoteiro", 0);
 	}
 
-	IEnumerator UpdateRoteiro (int index = 0){
+	IEnumerator UpdateRoteiro (int index){
 		for (int i = index; i < roteiro.Count; i++) {
-			
+
+			currentState = i;
 			fatherFSM.currentState = roteiro[i].state;
 
 			fatherFSM.SetStateChanger (roteiro [i].stateChanger, roteiro [i].triggerDetail);
@@ -74,6 +77,7 @@ public class RoteiroPai : MonoBehaviour {
 				break;
 			}
 
+			yield return new WaitForSeconds (0.1f);
 			yield return new WaitUntil (() => fatherFSM.changeState == true); //This is a Lambda Expression. Check it out later, it seems pretty cool!
 		}
 	}
@@ -81,6 +85,7 @@ public class RoteiroPai : MonoBehaviour {
 	[System.Serializable]
 	public class Roteiro
 	{
+		[Tooltip("Give a name to this state. Optional.")]
 		public string name;
 		public FatherStates state;
 
@@ -105,6 +110,7 @@ public class RoteiroPai : MonoBehaviour {
 		public float areaRadius;
 
 		public StateChangers stateChanger;
+		[Tooltip("May be optional, depending on StateChanger")]
 		public float triggerDetail;
 	}
 }

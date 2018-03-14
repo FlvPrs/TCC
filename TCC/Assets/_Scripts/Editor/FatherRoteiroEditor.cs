@@ -20,6 +20,7 @@ public class FatherRoteiroEditor : Editor {
 	float elementHeightSpace;
 
 	GUIStyle labelStyle = new GUIStyle ();
+	GUIStyle currStateStyle = new GUIStyle ();
 
 	private void OnEnable() {
 		if(target == null){
@@ -32,8 +33,9 @@ public class FatherRoteiroEditor : Editor {
 		lineHeightSpace = lineHeight + 5;
 		elementHeightSpace = lineHeight + 10;
 
-		labelStyle.fontStyle = FontStyle.Bold;
-		labelStyle.clipping = TextClipping.Clip;
+		labelStyle.fontStyle = currStateStyle.fontStyle = FontStyle.Bold;
+		labelStyle.clipping = currStateStyle.clipping = TextClipping.Clip;
+		currStateStyle.normal.textColor = new Color (0.7f, 0.1f, 0.3f);
 
 		list = new ReorderableList(serializedObject, 
 			serializedObject.FindProperty("roteiro"), 
@@ -132,27 +134,27 @@ public class FatherRoteiroEditor : Editor {
 
 			var element = list.serializedProperty.GetArrayElementAtIndex(index);
 
-			float i = 4;
+			float i = 4.5f;
 
 			if(element.FindPropertyRelative("show").boolValue){
 				switch (element.FindPropertyRelative("state").enumValueIndex) {
-				case 2:
-					i = 5;
+				case 2: //RandomWalk
+					i = 6;
 					break;
-				case 3:
-					i = (element.FindPropertyRelative("showAdvanced").boolValue)? 9 : 5;
+				case 3: //Gliding
+					i = (element.FindPropertyRelative("showAdvanced").boolValue)? 8.5f : 5;
 					break;
-				case 4:
+				case 4: //Jumping
 					i = (element.FindPropertyRelative("showAdvanced").boolValue)? 7 : 5;
 					break;
-				case 5:
-					i = (element.FindPropertyRelative("showAdvanced").boolValue)? 6 : 5;
+				case 5: //SimpleWalk
+					i = 5;
 					break;
-				case 7:
-					i = (element.FindPropertyRelative("showAdvanced").boolValue)? 6 : 5;
+				case 7: //GuidingPlayer
+					i = 5;
 					break;
-				case 8:
-					i = (element.FindPropertyRelative("showAdvanced").boolValue)? 10 : 5;
+				case 8: //Flying
+					i = (element.FindPropertyRelative("showAdvanced").boolValue)? 9 : 6;
 					break;
 				default:
 				break;
@@ -206,7 +208,21 @@ public class FatherRoteiroEditor : Editor {
 		//DrawDefaultInspector ();
 
 		serializedObject.Update();
+
+		EditorGUILayout.PropertyField (serializedObject.FindProperty("fatherFSM"), new GUIContent ("Father State Controller"));
+
+		EditorGUILayout.Separator ();
+
+		int currentStateIndex = serializedObject.FindProperty("currentState").intValue;
+		string currentStateName = " (" + currentStateIndex + ") - " + list.serializedProperty.GetArrayElementAtIndex (currentStateIndex).FindPropertyRelative ("name").stringValue;
+		EditorGUIUtility.labelWidth = 90;
+		EditorGUILayout.TextField(new GUIContent("Current State: "), currentStateName, currStateStyle);
+		EditorGUIUtility.labelWidth = 0;
+
+		EditorGUILayout.Separator ();
+
 		list.DoLayoutList();
+
 		serializedObject.ApplyModifiedProperties();
 	}
 

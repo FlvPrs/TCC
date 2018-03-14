@@ -62,7 +62,11 @@ public class AgentFather : MonoBehaviour {
 			}
 		}
 			
-		animCtrl.SetBool ("isWalking", isWalking);
+		if (rb.isKinematic) {
+			animCtrl.SetBool ("isWalking", (!nmAgent.isStopped)? isWalking : false);
+		} else {
+			animCtrl.SetBool ("isWalking", isWalking);
+		}
 	}
 
 	protected void openWings (bool open){

@@ -253,17 +253,17 @@ public class FatherActions : AgentFather {
 	public void StartRandomWalk(Vector3 areaCenter, float areaRadius){
 		if(isRandomWalking){
 			if (CheckArrivedOnDestination ()) {
-				currentTargetPos = RandomDestination (areaCenter, areaRadius);
+				Vector3 newPos = RandomDestination (areaCenter, areaRadius);
+				MoveHere (newPos);
 			}
 		} else {
-			Vector3 newPos = RandomDestination (areaCenter, areaRadius);
-			MoveHere (newPos);
+			isRandomWalking = true;
+			currentTargetPos = RandomDestination (areaCenter, areaRadius);
+			MoveHere (currentTargetPos);
 		}
 	}
 
 	Vector3 RandomDestination (Vector3 areaCenter, float areaRadius){
-		isRandomWalking = true;
-
 		Vector2 circleRand = new Vector2 (areaCenter.x, areaCenter.z) + (areaRadius * Random.insideUnitCircle);
 		Vector3 dest = new Vector3 (circleRand.x, areaCenter.y, circleRand.y);
 
