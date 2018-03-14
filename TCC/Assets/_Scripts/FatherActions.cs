@@ -2,10 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum FSM_WalkStates { SimpleWalk, FollowingPlayer, GuidingPlayer, Flying }
+public enum FSM_IdleStates { Inactive, LookingAtPlayer, RandomWalk, Gliding, Jumping }
+
+
 public class FatherActions : AgentFather {
 
 	protected HeightState currentState;
 	protected PlayerSongs currentSong;
+
+	[HideInInspector]
+	public float flySeconds, jumpHeight, timeToJumpApex;
+	[HideInInspector]
+	public bool allowFlySlowFall;
 
 	protected override void Start (){
 		base.Start ();
@@ -32,154 +41,179 @@ public class FatherActions : AgentFather {
 	protected override void Update (){
 		base.Update ();
 
-		#region ========== Temporary Code ==========
-		if (Input.GetMouseButton(0)) {
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
-			if (Physics.Raycast(ray, out hit, 200)) {
-				isMovingNavMesh = true;
-				isMovingRB = false;
-				currentTargetPos = hit.point;
-			}
-		}
-		if (Input.GetMouseButton(1)) {
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
-			if (Physics.Raycast(ray, out hit, 200)) {
-				isMovingRB = true;
-				isMovingNavMesh = false;
-				currentTargetPos = hit.point;
-			}
+//		#region ========== Temporary Code ==========
+//		if (Input.GetMouseButton(0)) {
+//			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+//			RaycastHit hit;
+//			if (Physics.Raycast(ray, out hit, 200)) {
+//				isMovingNavMesh = true;
+//				isMovingRB = false;
+//				currentTargetPos = hit.point;
+//			}
+//		}
+//		if (Input.GetMouseButton(1)) {
+//			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+//			RaycastHit hit;
+//			if (Physics.Raycast(ray, out hit, 200)) {
+//				isMovingRB = true;
+//				isMovingNavMesh = false;
+//				currentTargetPos = hit.point;
+//			}
+//		}
+//
+//		if (moveToPlayer || followPlayer){
+//			isMovingNavMesh = false;
+//			isMovingRB = false;
+//		}
+//
+//		if(isMovingNavMesh && !(jump || fly)){
+//			if(!guidePlayer)
+//				MoveHere (currentTargetPos);
+//			else
+//				GuidePlayerTo (currentTargetPos, 10f, 20f);
+//		} 
+//		else if (isMovingRB) {
+//			MoveHereWithRB (currentTargetPos);
+//			isMovingRB = !CheckArrivedOnDestination (true);
+//		}
+//
+//		if(randomWalk){
+//			if(CheckArrivedOnDestination()){
+//				currentTargetPos = RandomDestination (player.position, 15f);
+//				MoveHere (currentTargetPos);
+//			}
+//		}
+//
+//		if(moveToPlayer){
+//			MoveToPlayer ();
+//			moveToPlayer = !CheckArrivedOnDestination ();
+//		}
+//
+//		if(followPlayer){
+//			FollowPlayer(12f, 6f);
+//		}
+//
+//		if(jump){
+//			JumpAndFall ();
+//		}
+//		if (isJumping)
+//			jump = true;
+//
+//		if(fly){
+//			JumpAndHold (5f, true, 10, 0.8f);
+//		}
+//		if (isFlying)
+//			fly = true;
+//
+//		if(esticado){
+//			esticado = alturaDefault = abaixado = false;
+//			ChangeHeight(HeightState.High, 3f);
+//		} else if (alturaDefault) {
+//			esticado = alturaDefault = abaixado = false;
+//			ChangeHeight(HeightState.Default);
+//		} else if (abaixado) {
+//			esticado = alturaDefault = abaixado = false;
+//			ChangeHeight(HeightState.Low);
+//		}
+//
+//		if(singSingle){
+//			singSingle = false;
+//			Sing_SingleNote ();
+//		}
+//
+//		if (singSingleRepeat){
+//			singSingleRepeat = false;
+//			Sing_SingleNoteRepeat (3);
+//		}
+//		if(isRepeatingNote){
+//			singSingleRepeat = false;
+//		}
+//
+//		if (singSustainNote){
+//			Sing_SustainedNote (5f);
+//		}
+//		if(isSustainingNote){
+//			singSustainNote = true;
+//		}
+//
+//		if(singPartitura){
+//			singPartitura = false;
+//			PartituraInfo[] partituraTeste = new PartituraInfo[]
+//			{
+//				new PartituraInfo(HeightState.High, true, 0.5f, 2f),
+//				new PartituraInfo(HeightState.High),
+//				new PartituraInfo(HeightState.Low, false, 1.5f),
+//				new PartituraInfo(HeightState.Default, true, 2f, 1f),
+//				new PartituraInfo(HeightState.Low, false)
+//			};
+//			Sing_Partitura(partituraTeste);
+//		}
+//
+//		if(singEstorvo){
+//			singEstorvo = false;
+//			TocarMusicaSimples(FatherSongSimple.Estorvo);
+//		}
+//
+//		#endregion
+
+		if(isJumping){
+			JumpAndFall (jumpHeight, timeToJumpApex);
+		} else if (isFlying) {
+			JumpAndHold (flySeconds, allowFlySlowFall, jumpHeight, timeToJumpApex);
 		}
 
-		if (moveToPlayer || followPlayer){
-			isMovingNavMesh = false;
-			isMovingRB = false;
-		}
+//		if(isSustainingNote){
+//			Sing_SustainedNote ();
+//		}
 
-		if(isMovingNavMesh && !(jump || fly)){
-			if(!guidePlayer)
-				MoveHere (currentTargetPos);
-			else
-				GuidePlayerTo (currentTargetPos, 10f, 20f);
-		} 
-		else if (isMovingRB) {
-			MoveHereWithRB (currentTargetPos);
-			isMovingRB = !CheckArrivedOnDestination (true);
-		}
-
-		if(randomWalk){
-			if(CheckArrivedOnDestination()){
-				currentTargetPos = RandomDestination (player.position, 15f);
-				MoveHere (currentTargetPos);
-			}
-		}
-
-		if(moveToPlayer){
-			MoveToPlayer ();
-			moveToPlayer = !CheckArrivedOnDestination ();
-		}
-
-		if(followPlayer){
-			FollowPlayer(12f, 6f);
-		}
-
-		if(jump){
-			JumpAndFall ();
-		}
-		if (isJumping)
-			jump = true;
-
-		if(fly){
-			JumpAndHold (5f, true, 10, 0.8f);
-		}
-		if (isFlying)
-			fly = true;
-
-		if(esticado){
-			esticado = alturaDefault = abaixado = false;
-			ChangeHeight(HeightState.High, 3f);
-		} else if (alturaDefault) {
-			esticado = alturaDefault = abaixado = false;
-			ChangeHeight(HeightState.Default);
-		} else if (abaixado) {
-			esticado = alturaDefault = abaixado = false;
-			ChangeHeight(HeightState.Low);
-		}
-
-		if(singSingle){
-			singSingle = false;
-			Sing_SingleNote ();
-		}
-
-		if (singSingleRepeat){
-			singSingleRepeat = false;
-			Sing_SingleNoteRepeat (3);
-		}
-		if(isRepeatingNote){
-			singSingleRepeat = false;
-		}
-
-		if (singSustainNote){
-			Sing_SustainedNote (5f);
-		}
-		if(isSustainingNote){
-			singSustainNote = true;
-		}
-
-		if(singPartitura){
-			singPartitura = false;
-			PartituraInfo[] partituraTeste = new PartituraInfo[]
-			{
-				new PartituraInfo(HeightState.High, true, 0.5f, 2f),
-				new PartituraInfo(HeightState.High),
-				new PartituraInfo(HeightState.Low, false, 1.5f),
-				new PartituraInfo(HeightState.Default, true, 2f, 1f),
-				new PartituraInfo(HeightState.Low, false)
-			};
-			Sing_Partitura(partituraTeste);
-		}
-
-		if(singEstorvo){
-			singEstorvo = false;
-			TocarMusicaSimples(FatherSongSimple.Estorvo);
-		}
-
-		#endregion
 
 		UpdateHeightCollider (currentState);
 	}
 
 	#region --------------------------------- TRIGGERS ---------------------------------
-	bool stopHoldFly;
+	public bool stopHoldFly;
 	bool stopSustainNote;
 	bool stopRepeatingNote;
 
 	#endregion
 
 
-	#region ---------------------------------- ACTIONS ----------------------------------
-	void Stay (){
+	public void ClearActions (){
+		isWalking = isRandomWalking = isGuiding = isFollowingPlayer = false;
+		stopHoldFly = stopRepeatingNote = stopSustainNote = false;
+		nmAgent.isStopped = true;
+	}
 
+
+	#region ---------------------------------- ACTIONS ----------------------------------
+	public void Stay (){
+		isWalking = false;
+	}
+
+	//--- Esta função deve rodar todo frame ---
+	public void LookAtPlayer (){
+		agentTransform.rotation = Quaternion.Slerp(agentTransform.rotation, Quaternion.LookRotation((player.position - agentTransform.position), Vector3.up), Time.deltaTime * angularSpeed);
+		agentTransform.eulerAngles = new Vector3(0, agentTransform.eulerAngles.y, 0);
 	}
 
 	//Util para se movimentar no chao
-	protected void MoveHere (Vector3 pos){
+	public void MoveHere (Vector3 pos){
 		MoveAgentOnNavMesh (pos);
 	}
 
 	//Util quando estiver no ar
-	protected void MoveHereWithRB (Vector3 pos){
+	public void MoveHereWithRB (Vector3 pos){
 		MoveAgentWithRB (pos);
 	}
 
-	protected void MoveToPlayer (){
+	public void MoveToPlayer (){
 		MoveAgentOnNavMesh (player.position);
 	}
 
+	//--- Esta função deve rodar todo frame ---
 	//SE <player> estiver DENTRO do raio <startDistance>, COMECE a Andar até <pos>
 	//SE <player> estiver FORA do raio <stopDistance>, PARE de andar
-	protected void GuidePlayerTo (Vector3 pos, float startDistance = 6f, float stopDistance = 15f){
+	public void GuidePlayerTo (Vector3 pos, float startDistance = 6f, float stopDistance = 15f){
 		if (distToPlayer <= startDistance){
 			//Guide
 			isGuiding = true;
@@ -196,9 +230,10 @@ public class FatherActions : AgentFather {
 		}
 	}
 
+	//--- Esta função deve rodar todo frame ---
 	//SE <player> estiver FORA do raio <startDistance>, ANDE até o <player>
 	//SE <player> estiver DENTRO do raio <stopDistance>, PARE de andar
-	protected void FollowPlayer (float startDistance = 12f, float stopDistance = 6f){
+	public void FollowPlayer (float startDistance = 12f, float stopDistance = 6f){
 		if (distToPlayer >= startDistance){
 			//Follow
 			isFollowingPlayer = true;
@@ -215,7 +250,20 @@ public class FatherActions : AgentFather {
 		}
 	}
 
-	protected Vector3 RandomDestination (Vector3 areaCenter, float areaRadius){
+	public void StartRandomWalk(Vector3 areaCenter, float areaRadius){
+		if(isRandomWalking){
+			if (CheckArrivedOnDestination ()) {
+				currentTargetPos = RandomDestination (areaCenter, areaRadius);
+			}
+		} else {
+			Vector3 newPos = RandomDestination (areaCenter, areaRadius);
+			MoveHere (newPos);
+		}
+	}
+
+	Vector3 RandomDestination (Vector3 areaCenter, float areaRadius){
+		isRandomWalking = true;
+
 		Vector2 circleRand = new Vector2 (areaCenter.x, areaCenter.z) + (areaRadius * Random.insideUnitCircle);
 		Vector3 dest = new Vector3 (circleRand.x, areaCenter.y, circleRand.y);
 
@@ -227,7 +275,7 @@ public class FatherActions : AgentFather {
 	}
 
 	//--- Após ser chamada uma vez, enquanto isJumping for true, esta função deve rodar todo frame ---
-	protected void JumpAndFall (float jHeight = 5f, float timeToApex = 0.3f){
+	public void JumpAndFall (float jHeight = 5f, float timeToApex = 0.3f){
 		if (!isJumping) {
 			CalculateJump (out isJumping, jHeight, timeToApex);
 		} else if (agentTransform.position.y <= oldPosY){
@@ -241,7 +289,7 @@ public class FatherActions : AgentFather {
 	}
 
 	//--- Após ser chamada uma vez, enquanto isFlying for true, esta função deve rodar todo frame ---
-	protected void JumpAndHold (float seconds = 0f, bool allowSlowFalling = false, float jHeight = 5f, float timeToApex = 0.3f){
+	public void JumpAndHold (float seconds = 0f, bool allowSlowFalling = false, float jHeight = 5f, float timeToApex = 0.3f){
 		//Se eu acabei de começar o pulo
 		if (!isFlying) {
 			counter_Fly = 0f;
@@ -277,7 +325,7 @@ public class FatherActions : AgentFather {
 		}
 	}
 
-	protected void ChangeHeight (HeightState height, float seconds = 0f){
+	public void ChangeHeight (HeightState height, float seconds = 0f){
 		switch (height) {
 		case HeightState.High:
 			//TODO: Delete this. Apenas para teste
@@ -325,12 +373,12 @@ public class FatherActions : AgentFather {
 		animCtrl.SetFloat ("Height", 0f);
 	}
 
-	protected void Sing_SingleNote (){
+	public void Sing_SingleNote (){
 		sing.Play ();
 	}
 
-	//--- Após ser chamada uma vez, enquanto isRepeatingNote for true, esta função roda uma vez a cada <singleNoteMinimumDuration> segundos ---
-	protected void Sing_SingleNoteRepeat (int times = 0){
+	//--- Após ser chamada uma vez, enquanto isRepeatingNote for true, esta função roda ~automaticamente~ uma vez a cada <singleNoteMinimumDuration> segundos ---
+	public void Sing_SingleNoteRepeat (int times = 0){
 		isRepeatingNote = true;
 		StopCoroutine ("RepeatNote");
 
@@ -360,7 +408,7 @@ public class FatherActions : AgentFather {
 	}
 
 	//--- Após ser chamada uma vez, enquanto isSustainingNote for true, esta função deve rodar todo frame ---
-	protected void Sing_SustainedNote (float duration = 0f){
+	public void Sing_SustainedNote (float duration = 0f){
 		if(!isSustainingNote){ //Se ainda nao começou a cantar, cante.
 			isSustainingNote = true;
 			singSustain.Play ();
@@ -389,7 +437,7 @@ public class FatherActions : AgentFather {
 		}
 	}
 
-	protected void Sing_Partitura (PartituraInfo[] partitura){
+	public void Sing_Partitura (PartituraInfo[] partitura){
 		StopCoroutine("PlayPartitura");
 		StartCoroutine ("PlayPartitura", partitura);
 	}
@@ -404,9 +452,10 @@ public class FatherActions : AgentFather {
 				yield return new WaitForSeconds (partitura [i].WaitTimeBeforeNext);
 			}
 		}
+		ChangeHeight (HeightState.Default);
 	}
 
-	protected void TocarMusicaSimples (FatherSongSimple song) {
+	public void TocarMusicaSimples (FatherSongSimple song) {
 		switch (song) {
 		case FatherSongSimple.Alegria: //DISTRAIR
 			//TODO: Definir melodia especifica
@@ -431,7 +480,7 @@ public class FatherActions : AgentFather {
 		}
 	}
 
-	protected void TocarMusicaComSustain (FatherSongSustain song, float duration = 0f) {
+	public void TocarMusicaComSustain (FatherSongSustain song, float duration = 0f) {
 		switch (song) {
 		case FatherSongSustain.Amizade: //SEGUIR
 			ChangeHeight (HeightState.Default);

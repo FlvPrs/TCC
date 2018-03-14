@@ -12,6 +12,8 @@ public class AgentFather : MonoBehaviour {
 	protected Rigidbody rb;
 	protected Animator animCtrl;
 	protected BoxCollider coll;
+	[SerializeField]
+	GameObject l_wing, r_wing;
 
 	#region ========== Debug Variables ==========
 	public Transform targetReference;
@@ -39,6 +41,37 @@ public class AgentFather : MonoBehaviour {
 	protected virtual void Update (){
 		distToPlayer = Vector3.Distance (player.position, agentTransform.position);
 		targetReference.position = currentTargetPos;
+
+		if(!nmAgent.isActiveAndEnabled){
+			bool isOnAir = (isJumping || isFlying);
+			animCtrl.SetBool ("IsOnOffMeshLink", isOnAir);
+			if(isOnAir){
+				if (!IsInvoking ())
+					Invoke ("openWings", 0.02f);
+			}
+		} else {
+			if (nmAgent.isOnOffMeshLink) {
+				animCtrl.SetBool ("IsOnOffMeshLink", true);
+				animCtrl.SetBool ("isGrounded", false);
+				openWings ();
+			} else {
+				animCtrl.SetTrigger ("EnteredOffMeshLink");
+				animCtrl.SetBool ("IsOnOffMeshLink", false);
+				animCtrl.SetBool ("isGrounded", true);
+				openWings (false);
+			}
+		}
+			
+		animCtrl.SetBool ("isWalking", isWalking);
+	}
+
+	protected void openWings (bool open){
+		l_wing.SetActive (open);
+		r_wing.SetActive (open);
+	}
+	void openWings (){
+		l_wing.SetActive (true);
+		r_wing.SetActive (true);
 	}
 
 	// ---------------------------------------------------------------------
@@ -59,6 +92,8 @@ public class AgentFather : MonoBehaviour {
 	float distToTarget;
 	protected Vector3 currentTargetPos;
 	protected float distToPlayer;
+	protected bool isWalking;
+	protected bool isRandomWalking;
 	protected bool isGuiding;
 	protected bool isFollowingPlayer;
 	protected bool isJumping; 
@@ -80,6 +115,8 @@ public class AgentFather : MonoBehaviour {
 			rb.isKinematic = false;
 		}
 
+		isWalking = true;
+
 		currentTargetPos = target;
 
 		distToTarget = Vector3.Distance (target, agentTransform.position);
@@ -90,6 +127,8 @@ public class AgentFather : MonoBehaviour {
 
 		//rb.velocity = agentTransform.forward * moveSpeed;
 		rb.MovePosition(agentTransform.position + agentTransform.forward * Time.deltaTime * moveSpeed);
+
+		CheckArrivedOnDestination (true);
 	}
 
 	protected void MoveAgentOnNavMesh (Vector3 target){
@@ -98,11 +137,15 @@ public class AgentFather : MonoBehaviour {
 			rb.isKinematic = true;
 		}
 
+		isWalking = true;
+
 		currentTargetPos = target;
 
 		nmAgent.SetDestination(target);
 
 		distToTarget = Vector3.Distance (target, agentTransform.position);
+
+		CheckArrivedOnDestination ();
 	}
 
 	public bool CheckArrivedOnDestination (bool movingWithRB = false){
@@ -112,25 +155,39 @@ public class AgentFather : MonoBehaviour {
 				if (nmAgent.remainingDistance <= nmAgent.stoppingDistance){
 					if (!nmAgent.hasPath || nmAgent.velocity.sqrMagnitude == 0f){
 						// Done
+						isWalking = false;
 						return true;
 					}
 				}
 			}
+			isWalking = true;
 			return false;
 		}
 		//Se estiver andando com Rigidbody ------------------------------
 		else {
+			if(rb.isKinematic){
+				return true;
+			}
 			if (distToTarget <= minDistToTarget){
 				rb.velocity = Vector3.zero;
 				rb.isKinematic = true;
+				isWalking = false;
 				return true;
 			} else {
+				isWalking = true;
 				return false;
 			}
 		}
 	}
 
+	public float DistToPlayer (){
+		return Vector3.Distance (player.position, agentTransform.position);
+	}
+
 	protected void CalculateJump (out bool jumpOrFly, float jHeight = 5f, float timeToApex = 0.3f){
+		isWalking = false;
+		animCtrl.SetBool ("isGrounded", false);
+
 		gravity = -(2 * jHeight) / Mathf.Pow (timeToApex, 2);
 		float jumpVelocity = Mathf.Abs(gravity) * timeToApex;
 
