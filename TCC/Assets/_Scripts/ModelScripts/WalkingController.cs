@@ -15,8 +15,13 @@ public class WalkingController : MonoBehaviour {
 
 	public float wallSlideSpeedMax = 3;
 
+	//ErickHiga Variables
 	private float timerSecondJumpPower = 5.0f;
-	private float fruitJumpPower;
+	public float fruitJumpPower;
+	private bool startCDBonusJump;
+	private bool CDBonusJump = false;
+	[HideInInspector]
+	public bool hasBonusJump_2;///erick higa teste poder temporario
 
 	float gravity;
 	float maxJumpVelocity;
@@ -94,9 +99,6 @@ public class WalkingController : MonoBehaviour {
 	[HideInInspector]
 	public bool hasBonusJump;
 
-	[HideInInspector]
-	public bool hasBonusJump_2;///erick higa teste poder temporario 
-
 	private float SpeedMovementSlowTimer;
 	private bool VelocidadeDiminuidaNoVoo;
 
@@ -154,6 +156,8 @@ public class WalkingController : MonoBehaviour {
 		collisionAbove = false;
 		flyStamina = maxFlyStamina;
 		maxFallVelocity = -maxFallVelocity;
+		startCDBonusJump = false;
+		CDBonusJump = false;
 
 		hasBonusJump_2 = false;
 		fruitJumpPower = 0.9f;
@@ -179,28 +183,47 @@ public class WalkingController : MonoBehaviour {
 		TOCANDO = walkStates.TOCANDO_NOTAS;
 		SEGURANDO = walkStates.SEGURANDO_NOTA;
 
+		if (isGrounded) {
+			startCDBonusJump = false;
+			print ("estou no chao");
+		}
+
+		print (startCDBonusJump);
 		#region power up fruit limitado
 		if(hasBonusJump_2){
+			if (startCDBonusJump) {
+				CDBonusJump = true;
+			}
 			fruitJumpPower = 1.8f;
+			if(CDBonusJump){
 			timerSecondJumpPower -= 1 *Time.deltaTime;
+				print("comecou contagem regressiva");
+			}
 			if(timerSecondJumpPower <= 0){
 				timerSecondJumpPower = 5.0f;
 				hasBonusJump_2 = false;
 				fruitJumpPower = 0.9f;
+				CDBonusJump = false;
+				print("acabou contagem");
 			}
 		}
 		#endregion
 
 		#region Reduzindo Velocidade No Pulo
 		if(VelocidadeDiminuidaNoVoo){
-			moveSpeed = 20.0f;
+			if(secondJumpStrengthMultiplier > 0.2f){
+			moveSpeed = 15.0f;
 			SpeedMovementSlowTimer += 1*Time.deltaTime;
+			}else{
+				moveSpeed = 10.0f;
+			}
 			if(SpeedMovementSlowTimer >= 0.2f){
 				SpeedMovementSlowTimer=0;
 				moveSpeed = 10.0f;
 				VelocidadeDiminuidaNoVoo = false;
 			}
 		}
+		
 		#endregion
 
 		if(!holdVelocity)
@@ -340,6 +363,8 @@ public class WalkingController : MonoBehaviour {
 	}
 
 	public void OnJumpInputDown(){
+		
+		startCDBonusJump = true;
 
 		if(isGrounded)	//------ Se eu estou no chão ----------------------------------------------------------------------------------------------
 		{
@@ -356,6 +381,8 @@ public class WalkingController : MonoBehaviour {
 			secondJumpStrengthMultiplier = fruitJumpPower;
 			velocity.y = maxJumpVelocity;
 			jumpInertia = velocity;
+
+
 		} 
 		else if (canFly && !stopGravity && (flyStamina > 0 || hasBonusJump))	//------ Se eu estou no ar e consigo voar -------------------------
 		{
