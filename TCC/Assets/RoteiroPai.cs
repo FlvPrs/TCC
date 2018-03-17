@@ -11,6 +11,8 @@ public class RoteiroPai : MonoBehaviour {
 
 	public int currentState;
 
+	private RoteiroSongsList songsList;
+
 	void Start () {
 //		fatherActions.GuidePlayerTo (destinations [0]);
 //		fatherActions.MoveHere (destinations [1]);
@@ -46,6 +48,7 @@ public class RoteiroPai : MonoBehaviour {
 //		};
 //		fatherActions.Sing_Partitura(partitura);
 //		fatherActions.MoveHere (destinations [9]);
+		songsList = GetComponentInChildren<RoteiroSongsList>();
 
 		StartCoroutine ("UpdateRoteiro", 0);
 	}
@@ -54,11 +57,13 @@ public class RoteiroPai : MonoBehaviour {
 		for (int i = index; i < roteiro.Count; i++) {
 
 			currentState = i;
-			fatherFSM.currentState = roteiro[i].state;
+			fatherFSM.currentState = roteiro [i].state;
 
 			fatherFSM.SetStateChanger (roteiro [i].stateChanger, roteiro [i].triggerDetail);
 
 			fatherFSM.currentStateInfo = roteiro [i];
+
+			fatherFSM.ChangeHeight (roteiro[i].startingHeight);
 
 			switch (roteiro[i].state) {
 			case FatherStates.Inactive:
@@ -72,6 +77,20 @@ public class RoteiroPai : MonoBehaviour {
 				break;
 			case FatherStates.Flying:
 				fatherFSM.StartFly (roteiro [i].secondsFlying, roteiro [i].allowSlowFalling, roteiro [i].jumpHeight, roteiro [i].timeToJumpApex);
+				break;
+			default:
+				break;
+			}
+
+			switch (roteiro[i].songType) {
+			case FatherSongType.Partitura:
+				fatherFSM.StartPartitura (songsList.listaDePartituras [roteiro [i].songIndex].partitura);
+				break;
+			case FatherSongType.MusicaSimples:
+				fatherFSM.StartSimpleSong (roteiro [i].simpleSong);
+				break;
+			case FatherSongType.MusicaComSustain:
+				fatherFSM.StartSustainSong (roteiro [i].sustainSong, roteiro [i].duration);
 				break;
 			default:
 				break;
@@ -108,6 +127,21 @@ public class RoteiroPai : MonoBehaviour {
 		//RandomWalk
 		public Transform areaCenter;
 		public float areaRadius;
+
+		public FatherSongType songType;
+
+		//SongType Partitura
+		public int songIndex;
+
+		//SongType Simples
+		public FatherSongSimple simpleSong;
+
+		//SongType Sustain
+		public FatherSongSustain sustainSong;
+		public float duration;
+
+		[Tooltip("Will be overriden by any trigger or if singing")]
+		public HeightState startingHeight;
 
 		public StateChangers stateChanger;
 		[Tooltip("May be optional, depending on StateChanger")]

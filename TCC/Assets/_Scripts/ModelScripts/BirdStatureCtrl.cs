@@ -82,7 +82,7 @@ public class BirdStatureCtrl : MonoBehaviour {
 }
 
 public enum HeightState {
-	High,
 	Default,
+	High,
 	Low
 }

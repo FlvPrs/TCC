@@ -83,7 +83,7 @@ public class FatherRoteiroEditor : Editor {
 					EditorGUI.indentLevel--;
 				}
 
-				// ---------------------------- OPTIONAL VARIABLES ------------------------- \\
+				// ---------------------------- OPTIONAL STATE VARIABLES ------------------------- \\
 				if(element.FindPropertyRelative("state").enumValueIndex == 3 || element.FindPropertyRelative("state").enumValueIndex == 8){
 					EditorGUI.indentLevel++;
 					element.FindPropertyRelative("showAdvanced").boolValue = EditorGUI.Foldout(new Rect(rect.x, rect.y + (lineHeightSpace * i), rect.width, lineHeight), element.FindPropertyRelative("showAdvanced").boolValue, new GUIContent("Advanced"), new GUIStyle(EditorStyles.foldout));
@@ -116,7 +116,40 @@ public class FatherRoteiroEditor : Editor {
 					}
 					EditorGUI.indentLevel--;
 				}
-				// ------------------------------------------------------------------------- \\
+				// ------------------------------------------------------------------------------- \\
+
+
+				EditorGUI.PropertyField(new Rect(rect.x, rect.y + (lineHeightSpace * i), rect.width, lineHeight), element.FindPropertyRelative("songType"));
+				i++;
+
+				// ---------------------------- OPTIONAL SING VARIABLES ------------------------- \\
+				if(element.FindPropertyRelative("songType").enumValueIndex == 1){ //Partitura
+					EditorGUI.indentLevel++;
+					EditorGUI.PropertyField(new Rect(rect.x, rect.y + (lineHeightSpace * i), rect.width, lineHeight), element.FindPropertyRelative("songIndex"));
+					i++;
+					EditorGUI.indentLevel--;
+				}
+				else if (element.FindPropertyRelative("songType").enumValueIndex == 2) { //Musica Simples
+					EditorGUI.indentLevel++;
+					EditorGUI.PropertyField(new Rect(rect.x, rect.y + (lineHeightSpace * i), rect.width, lineHeight), element.FindPropertyRelative("simpleSong"));
+					i++;
+					EditorGUI.indentLevel--;
+				}
+				else if (element.FindPropertyRelative("songType").enumValueIndex == 3) { //Musica com Sustain
+					EditorGUI.indentLevel++;
+					EditorGUIUtility.labelWidth = 100;
+					EditorGUI.PropertyField(new Rect(rect.x, rect.y + (lineHeightSpace * i), rect.width - 100, lineHeight), element.FindPropertyRelative("sustainSong"));
+					EditorGUIUtility.labelWidth = 70;
+					EditorGUI.PropertyField(new Rect(rect.width - 70, rect.y + (lineHeightSpace * i), 100, lineHeight), element.FindPropertyRelative("duration"));
+					EditorGUIUtility.labelWidth = 0;
+					i++;
+					EditorGUI.indentLevel--;
+				}
+				// ------------------------------------------------------------------------------ \\
+
+				EditorGUI.PropertyField(new Rect(rect.x, rect.y + (lineHeightSpace * i), rect.width, lineHeight), element.FindPropertyRelative("startingHeight"));
+				i++;
+
 
 				EditorGUI.PropertyField(new Rect(rect.x, rect.y + (lineHeightSpace * i), rect.width, lineHeight), element.FindPropertyRelative("stateChanger"));
 				i++;
@@ -134,30 +167,34 @@ public class FatherRoteiroEditor : Editor {
 
 			var element = list.serializedProperty.GetArrayElementAtIndex(index);
 
-			float i = 4.5f;
+			float i = 6;
 
 			if(element.FindPropertyRelative("show").boolValue){
 				switch (element.FindPropertyRelative("state").enumValueIndex) {
 				case 2: //RandomWalk
-					i = 6;
+					i = 8;
 					break;
 				case 3: //Gliding
-					i = (element.FindPropertyRelative("showAdvanced").boolValue)? 8.5f : 5;
+					i = (element.FindPropertyRelative("showAdvanced").boolValue)? 10 : 7;
 					break;
 				case 4: //Jumping
-					i = (element.FindPropertyRelative("showAdvanced").boolValue)? 7 : 5;
+					i = (element.FindPropertyRelative("showAdvanced").boolValue)? 9 : 7;
 					break;
 				case 5: //SimpleWalk
-					i = 5;
+					i = 7;
 					break;
 				case 7: //GuidingPlayer
-					i = 5;
+					i = 7;
 					break;
 				case 8: //Flying
-					i = (element.FindPropertyRelative("showAdvanced").boolValue)? 9 : 6;
+					i = (element.FindPropertyRelative("showAdvanced").boolValue)? 11 : 8;
 					break;
 				default:
 				break;
+				}
+
+				if (element.FindPropertyRelative("songType").enumValueIndex != 0) {
+					i++;
 				}
 			}
 			else {

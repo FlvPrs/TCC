@@ -12,7 +12,7 @@ public class FatherActions : AgentFather {
 	protected PlayerSongs currentSong;
 
 	[HideInInspector]
-	public float flySeconds, jumpHeight, timeToJumpApex;
+	public float flySeconds, jumpHeight, timeToJumpApex, sustainDuration;
 	[HideInInspector]
 	public bool allowFlySlowFall;
 
@@ -162,9 +162,9 @@ public class FatherActions : AgentFather {
 			JumpAndHold (flySeconds, allowFlySlowFall, jumpHeight, timeToJumpApex);
 		}
 
-//		if(isSustainingNote){
-//			Sing_SustainedNote ();
-//		}
+		if(isSustainingNote){
+			Sing_SustainedNote (sustainDuration);
+		}
 
 
 		UpdateHeightCollider (currentState);
@@ -413,6 +413,7 @@ public class FatherActions : AgentFather {
 			isSustainingNote = true;
 			singSustain.Play ();
 			counter_SingSustain = 0f; //Inicia o counter.
+			sustainDuration = duration;
 		}
 
 		if(duration > 0f){ //Se foi definido um tempo limite...
@@ -456,6 +457,9 @@ public class FatherActions : AgentFather {
 	}
 
 	public void TocarMusicaSimples (FatherSongSimple song) {
+		sing.Stop ();
+		singSustain.Stop ();
+
 		switch (song) {
 		case FatherSongSimple.Alegria: //DISTRAIR
 			//TODO: Definir melodia especifica
@@ -470,10 +474,6 @@ public class FatherActions : AgentFather {
 		case FatherSongSimple.Ninar: //DORMIR
 			//TODO: Definir melodia especifica
 			break;
-		case FatherSongSimple.Empty:
-			//
-			break;
-
 		default:
 			Debug.LogWarning("BUG: O pai não conhece essa musica simples");
 			break;
@@ -481,6 +481,9 @@ public class FatherActions : AgentFather {
 	}
 
 	public void TocarMusicaComSustain (FatherSongSustain song, float duration = 0f) {
+		sing.Stop ();
+		singSustain.Stop ();
+
 		switch (song) {
 		case FatherSongSustain.Amizade: //SEGUIR
 			ChangeHeight (HeightState.Default);
@@ -494,9 +497,6 @@ public class FatherActions : AgentFather {
 			ChangeHeight (HeightState.Low);
 			Sing_SustainedNote (duration);
 			break;
-		case FatherSongSustain.Empty:
-			//
-			break;
 		default:
 			Debug.LogWarning("BUG: O pai não conhece essa musica com sustain");
 			break;
@@ -507,13 +507,21 @@ public class FatherActions : AgentFather {
 }
 
 
-public struct PartituraInfo
+[System.Serializable]
+public class PartituraInfo
 {
 	public HeightState Height;
 	public bool Sustain;
 
 	public float WaitTimeBeforeNext;
 	public float SustainTime;
+
+	public PartituraInfo (){
+		Height = HeightState.Default;
+		Sustain = false;
+		WaitTimeBeforeNext = 1f;
+		SustainTime = 2f;
+	}
 
 	public PartituraInfo (HeightState height, bool sustain = false, float waitTimeBeforeNext = 1f, float sustainTime = 2f){
 		Height = height;

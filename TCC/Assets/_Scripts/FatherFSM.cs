@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 						//		0			1				2		3		4			5				6			   7           8
 public enum FatherStates { Inactive, LookingAtPlayer, RandomWalk, Gliding, Jumping, SimpleWalk, FollowingPlayer, GuidingPlayer, Flying }
+public enum FatherSongType { None, Partitura, MusicaSimples, MusicaComSustain }
 public enum StateChangers { Arrived, Timer, DistanceToPlayer, ExternalTrigger }
 
 
@@ -153,5 +154,18 @@ public class FatherFSM : MonoBehaviour {
 		fatherActions.timeToJumpApex = timeToApex;
 
 		fatherActions.JumpAndHold (seconds, allowSlowFalling, jHeight, timeToApex);
+	}
+	public void StartSimpleSong(FatherSongSimple song){
+		fatherActions.TocarMusicaSimples (song);
+	}
+	public void StartSustainSong(FatherSongSustain song, float duration){
+		fatherActions.TocarMusicaComSustain (song, duration);
+	}
+	public void StartPartitura(PartituraInfo[] partitura){
+		fatherActions.Sing_Partitura (partitura);
+	}
+
+	public void ChangeHeight(HeightState height){
+		fatherActions.ChangeHeight (height);
 	}
 }

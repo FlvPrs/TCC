@@ -227,7 +227,6 @@ public class AgentFather : MonoBehaviour {
 }
 
 public enum FatherSongSimple {
-	Empty,
 	Estorvo,
 	Serenidade,
 	Ninar,
@@ -235,7 +234,6 @@ public enum FatherSongSimple {
 }
 
 public enum FatherSongSustain {
-	Empty,
 	Amizade,
 	Crescimento,
 	Encolhimento,
