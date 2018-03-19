@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlataformasCoopCtrl : MonoBehaviour, ISustainInteractable, IFatherInteractable {
+public class PlataformasCoopCtrl : MonoBehaviour, ISustainInteractable, IFatherSustainInteractable {
 
 	public Platforms[] plataformas;
 
 	public HeightState interactableState;
+
+	public GameObject fatherExternalTrigger;
 
 	private Vector3[] startingPos;
 	private Vector3[] originalPos;
@@ -37,6 +39,8 @@ public class PlataformasCoopCtrl : MonoBehaviour, ISustainInteractable, IFatherI
 			son_deltaY [i] = Vector3.zero;
 			dad_deltaY [i] = Vector3.zero;
 		}
+
+		fatherExternalTrigger.SetActive (false);
 	}
 
 	void Update(){
@@ -75,23 +79,18 @@ public class PlataformasCoopCtrl : MonoBehaviour, ISustainInteractable, IFatherI
 		}
 	}
 
-	public bool FatherInteraction(out bool stopSing){
-		if (dad_singTime <= 5f) {
+	public void FatherSustainInteraction(PlayerSongs song){
+		if (dad_singTime <= 3f) {
 			dad_singTime += Time.deltaTime;
 
 			if (dad_singTime >= 0) {
 				dadSing = true;
-				stopSing = false;
 			} else {
 				dadSing = false;
-				stopSing = true;
-				return false;
 			}
 		} else {
 			dadSing = false;
-			dad_singTime = -3f;
-			stopSing = true;
-			return false;
+			dad_singTime = -2f;
 		}
 
 		int chegou = 0;
@@ -109,13 +108,10 @@ public class PlataformasCoopCtrl : MonoBehaviour, ISustainInteractable, IFatherI
 			}
 		}
 
-
 		if (chegou >= plataformas.Length) {
+			fatherExternalTrigger.SetActive (true);
 			enabled = false;
-			return true;
 		}
-		else
-			return false;
 	}
 
 	IEnumerator InteractionStopped(){

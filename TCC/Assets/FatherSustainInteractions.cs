@@ -4,23 +4,19 @@ using UnityEngine;
 
 public class FatherSustainInteractions : MonoBehaviour {
 
-//	[HideInInspector]
-//	public HeightState currentHeight = HeightState.Default;
-	[HideInInspector]
-	public bool canAdvance = false;
-	[HideInInspector]
-	public bool stopSing = false;
+	FatherActions father;
+	PlayerSongs fatherSong;
 
-	void OnTriggerEnter(Collider col){
-
+	void Awake (){
+		father = GetComponentInParent<FatherActions> ();
 	}
 
-	void OnTriggerStay(Collider col){
+	void Update (){
+		fatherSong = father.currentSong;
+	}
+
+	void OnTriggerStay (Collider col){
 		if(col.CompareTag("PaiCanInteract"))
-			canAdvance = col.GetComponent<IFatherInteractable> ().FatherInteraction (out stopSing);
-	}
-
-	void OnTriggerExit(Collider col){
-
+			col.GetComponent<IFatherSustainInteractable> ().FatherSustainInteraction (fatherSong);
 	}
 }

@@ -9,7 +9,7 @@ public enum FSM_IdleStates { Inactive, LookingAtPlayer, RandomWalk, Gliding, Jum
 public class FatherActions : AgentFather {
 
 	protected HeightState currentState;
-	protected PlayerSongs currentSong;
+	public PlayerSongs currentSong;
 
 	[HideInInspector]
 	public float flySeconds, jumpHeight, timeToJumpApex, sustainDuration;
@@ -23,20 +23,20 @@ public class FatherActions : AgentFather {
 		currentSong = PlayerSongs.Empty;
 	}
 
-	#region ========== Debug Variables ==========
-	public bool jump;
-	public bool fly;
-	public bool randomWalk;
-	public bool moveToPlayer;
-	public bool guidePlayer;
-	public bool followPlayer;
-	public bool esticado, alturaDefault, abaixado;
-	public bool singSingle, singSingleRepeat, singSustainNote, singPartitura;
-	public bool singEstorvo;
-
-	bool isMovingNavMesh;
-	bool isMovingRB;
-	#endregion
+//	#region ========== Debug Variables ==========
+//	public bool jump;
+//	public bool fly;
+//	public bool randomWalk;
+//	public bool moveToPlayer;
+//	public bool guidePlayer;
+//	public bool followPlayer;
+//	public bool esticado, alturaDefault, abaixado;
+//	public bool singSingle, singSingleRepeat, singSustainNote, singPartitura;
+//	public bool singEstorvo;
+//
+//	bool isMovingNavMesh;
+//	bool isMovingRB;
+//	#endregion
 
 	protected override void Update (){
 		base.Update ();
@@ -165,6 +165,9 @@ public class FatherActions : AgentFather {
 		if(isSustainingNote){
 			Sing_SustainedNote (sustainDuration);
 		}
+//		else {
+//			sustainColl.SetActive (false);
+//		}
 
 
 		UpdateHeightCollider (currentState);
@@ -182,6 +185,9 @@ public class FatherActions : AgentFather {
 		isWalking = isRandomWalking = isGuiding = isFollowingPlayer = false;
 		stopHoldFly = stopRepeatingNote = stopSustainNote = false;
 		nmAgent.isStopped = true;
+		sustainColl.SetActive (false);
+		staccatoColl.SetActive (false);
+		currentSong = PlayerSongs.Empty;
 	}
 
 
@@ -214,6 +220,7 @@ public class FatherActions : AgentFather {
 	//SE <player> estiver DENTRO do raio <startDistance>, COMECE a Andar até <pos>
 	//SE <player> estiver FORA do raio <stopDistance>, PARE de andar
 	public void GuidePlayerTo (Vector3 pos, float startDistance = 6f, float stopDistance = 15f){
+		currentTargetPos = pos;
 		if (distToPlayer <= startDistance){
 			//Guide
 			isGuiding = true;
@@ -280,7 +287,7 @@ public class FatherActions : AgentFather {
 			CalculateJump (out isJumping, jHeight, timeToApex);
 		} else if (agentTransform.position.y <= oldPosY){
 			isJumping = false;
-			jump = false;
+			//jump = false;
 			nmAgent.enabled = true;
 			rb.isKinematic = true;
 		} else {
@@ -317,7 +324,7 @@ public class FatherActions : AgentFather {
 			//Se eu voltei para a altura original, retoma o funcionamento normal
 			if (agentTransform.position.y <= oldPosY){
 				isFlying = false;
-				fly = false;
+				//fly = false;
 				stopHoldFly = false;
 				nmAgent.enabled = true;
 				rb.isKinematic = true;
@@ -375,6 +382,14 @@ public class FatherActions : AgentFather {
 
 	public void Sing_SingleNote (){
 		sing.Play ();
+		staccatoColl.SetActive (true);
+		CancelInvoke("HideStaccatoColl");
+		Invoke ("HideStaccatoColl", 0.5f);
+	}
+
+	void HideStaccatoColl (){
+		staccatoColl.SetActive (false);
+		currentSong = PlayerSongs.Empty;
 	}
 
 	//--- Após ser chamada uma vez, enquanto isRepeatingNote for true, esta função roda ~automaticamente~ uma vez a cada <singleNoteMinimumDuration> segundos ---
@@ -414,14 +429,17 @@ public class FatherActions : AgentFather {
 			singSustain.Play ();
 			counter_SingSustain = 0f; //Inicia o counter.
 			sustainDuration = duration;
+			sustainColl.SetActive (true);
 		}
 
 		if(duration > 0f){ //Se foi definido um tempo limite...
 			if(counter_SingSustain >= duration){ //Se já cantou por <duration>s, pare.
 				isSustainingNote = false;
-				singSustainNote = false;
+				//singSustainNote = false;
 				counter_SingSustain = 0f;
 				singSustain.Stop ();
+				sustainColl.SetActive (false);
+				currentSong = PlayerSongs.Empty;
 			}
 			else { //Se ainda não alcançou <duration>s, aumente o counter.
 				counter_SingSustain += Time.deltaTime;
@@ -431,9 +449,11 @@ public class FatherActions : AgentFather {
 			if(stopSustainNote){
 				isSustainingNote = false;
 				stopSustainNote = false;
-				singSustainNote = false;
+				//singSustainNote = false;
 				counter_SingSustain = 0f;
 				singSustain.Stop ();
+				sustainColl.SetActive (false);
+				currentSong = PlayerSongs.Empty;
 			}
 		}
 	}
@@ -462,16 +482,20 @@ public class FatherActions : AgentFather {
 
 		switch (song) {
 		case FatherSongSimple.Alegria: //DISTRAIR
+			currentSong = PlayerSongs.Alegria;
 			//TODO: Definir melodia especifica
 			break;
 		case FatherSongSimple.Estorvo: //IRRITAR
+			currentSong = PlayerSongs.Estorvo;
 			ChangeHeight (HeightState.High, singleNoteMinimumDuration * 6f);
 			Sing_SingleNoteRepeat (5);
 			break;
 		case FatherSongSimple.Serenidade: //ACALMAR
+			currentSong = PlayerSongs.Serenidade;
 			//TODO: Definir melodia especifica
 			break;
 		case FatherSongSimple.Ninar: //DORMIR
+			currentSong = PlayerSongs.Ninar;
 			//TODO: Definir melodia especifica
 			break;
 		default:
@@ -486,14 +510,17 @@ public class FatherActions : AgentFather {
 
 		switch (song) {
 		case FatherSongSustain.Amizade: //SEGUIR
+			currentSong = PlayerSongs.Amizade;
 			ChangeHeight (HeightState.Default);
 			Sing_SustainedNote (duration);
 			break;
 		case FatherSongSustain.Crescimento: //CRESCER
+			currentSong = PlayerSongs.Crescimento;
 			ChangeHeight (HeightState.High);
 			Sing_SustainedNote (duration);
 			break;
 		case FatherSongSustain.Encolhimento: //ENCOLHER
+			currentSong = PlayerSongs.Encolhimento;
 			ChangeHeight (HeightState.Low);
 			Sing_SustainedNote (duration);
 			break;

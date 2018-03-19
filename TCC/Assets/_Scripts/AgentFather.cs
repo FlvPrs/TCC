@@ -12,6 +12,7 @@ public class AgentFather : MonoBehaviour {
 	protected Rigidbody rb;
 	protected Animator animCtrl;
 	protected BoxCollider coll;
+	public GameObject staccatoColl, sustainColl;
 	[SerializeField]
 	GameObject l_wing, r_wing;
 
@@ -32,6 +33,9 @@ public class AgentFather : MonoBehaviour {
 		rb = GetComponent<Rigidbody> ();
 		animCtrl = GetComponentInChildren<Animator> ();
 		coll = GetComponent<BoxCollider> ();
+
+		staccatoColl.SetActive (false);
+		sustainColl.SetActive (false);
 
 		#region ========== Temporary Code ==========
 		sing = GetComponent<AudioSource> ();
@@ -155,7 +159,7 @@ public class AgentFather : MonoBehaviour {
 	public bool CheckArrivedOnDestination (bool movingWithRB = false){
 		//Se estiver andando com NavMesh --------------------------------
 		if(!movingWithRB){
-			if (!nmAgent.pathPending){
+			if (!nmAgent.pathPending && !nmAgent.isStopped){
 				if (nmAgent.remainingDistance <= nmAgent.stoppingDistance){
 					if (!nmAgent.hasPath || nmAgent.velocity.sqrMagnitude == 0f){
 						// Done

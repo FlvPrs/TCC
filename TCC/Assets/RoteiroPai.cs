@@ -13,41 +13,21 @@ public class RoteiroPai : MonoBehaviour {
 
 	private RoteiroSongsList songsList;
 
+	public static RoteiroPai instance;
+	void Awake() 
+	{
+		if(instance == null)
+		{
+			instance = this;
+		}
+		else
+		{
+			if(this != instance)
+				Destroy(this.gameObject);
+		}
+	}
+
 	void Start () {
-//		fatherActions.GuidePlayerTo (destinations [0]);
-//		fatherActions.MoveHere (destinations [1]);
-//		fatherActions.LookAtPlayer ();
-//		//trigger
-//		fatherActions.MoveHere (destinations [2]);
-//		//if(fatherActions.DistToPlayer() < 5f)
-//		fatherActions.Sing_Partitura(new PartituraInfo[]{new PartituraInfo(HeightState.High, true, 0, 3f)});
-//		fatherActions.MoveHere (destinations [3]);
-//		//if(fatherActions.DistToPlayer() < 5f)
-//		fatherActions.MoveHere (destinations [4]);
-//		fatherActions.GuidePlayerTo (destinations [5]);
-//		//cooldown = 5f;
-//		//while(!plantaChegouNoTopo)
-//		//cooldown -= Time.deltaTime;
-//		//if(playerCtrl.walkStates.CURR_SONG == PlayerSongs.Crescimento || cooldown <= 0f)
-//		fatherActions.Sing_Partitura(new PartituraInfo[]{new PartituraInfo(HeightState.High, true, 0, 3f)});
-//		//endWhile
-//		fatherActions.MoveHere (destinations [6]);
-//		fatherActions.ChangeHeight (HeightState.High);
-//		//if(fatherActions.DistToPlayer() < 4f)
-//		fatherActions.ChangeHeight (HeightState.Default);
-//		fatherActions.MoveHere (destinations [7]);
-//		fatherActions.ChangeHeight (HeightState.Low);
-//		//if(fatherActions.DistToPlayer() < 3f)
-//		fatherActions.ChangeHeight (HeightState.Default);
-//		fatherActions.MoveHere (destinations [8]);
-//		PartituraInfo[] partitura = new PartituraInfo[]
-//		{
-//			new PartituraInfo(HeightState.Low),
-//			new PartituraInfo(HeightState.Default),
-//			new PartituraInfo(HeightState.High)
-//		};
-//		fatherActions.Sing_Partitura(partitura);
-//		fatherActions.MoveHere (destinations [9]);
 		songsList = GetComponentInChildren<RoteiroSongsList>();
 
 		StartCoroutine ("UpdateRoteiro", 0);
@@ -146,5 +126,23 @@ public class RoteiroPai : MonoBehaviour {
 		public StateChangers stateChanger;
 		[Tooltip("May be optional, depending on StateChanger")]
 		public float triggerDetail;
+	}
+
+
+	/// <summary>
+	/// Restarts the roteiro at currentState. Useful for repeating states while waiting for an external trigger.
+	/// </summary>
+	public static void RestartRoteiroAt (){
+		instance.StopAllCoroutines ();
+		instance.StartCoroutine ("UpdateRoteiro", instance.currentState);
+	}
+
+	/// <summary>
+	/// Restarts the roteiro at index.
+	/// </summary>
+	/// <param name="index">Index of the state.</param>
+	public static void RestartRoteiroAt (int index){
+		instance.StopAllCoroutines ();
+		instance.StartCoroutine ("UpdateRoteiro", index);
 	}
 }

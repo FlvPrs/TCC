@@ -4,7 +4,7 @@ using UnityEngine;
 						//		0			1				2		3		4			5				6			   7           8
 public enum FatherStates { Inactive, LookingAtPlayer, RandomWalk, Gliding, Jumping, SimpleWalk, FollowingPlayer, GuidingPlayer, Flying }
 public enum FatherSongType { None, Partitura, MusicaSimples, MusicaComSustain }
-public enum StateChangers { Arrived, Timer, DistanceToPlayer, ExternalTrigger }
+public enum StateChangers { Arrived, Timer, DistanceToPlayer, ExternalTrigger, TimerRestart_TriggerAdvance }
 
 
 public class FatherFSM : MonoBehaviour {
@@ -20,8 +20,7 @@ public class FatherFSM : MonoBehaviour {
 
 	StateChangers currentStateChanger;
 
-	public WalkingController playerCtrl;
-	public Vector3[] destinations;
+	//public Vector3[] destinations;
 
 	private FatherActions fatherActions;
 
@@ -62,6 +61,20 @@ public class FatherFSM : MonoBehaviour {
 			}
 			break;
 		case StateChangers.ExternalTrigger:
+			if(externalTriggerActivated){
+				changeState = true;
+				externalTriggerActivated = false;
+			}
+			break;
+		case StateChangers.TimerRestart_TriggerAdvance:
+			if (checkTimer > 0f){
+				checkTimer -= Time.deltaTime;
+			} else {
+				checkTimer = 0f;
+				RoteiroPai.RestartRoteiroAt ();
+				break;
+			}
+
 			if(externalTriggerActivated){
 				changeState = true;
 				externalTriggerActivated = false;
@@ -129,6 +142,11 @@ public class FatherFSM : MonoBehaviour {
 		case StateChangers.ExternalTrigger:
 			currentStateChanger = StateChangers.ExternalTrigger;
 			externalTriggerActivated = false;
+			break;
+		case StateChangers.TimerRestart_TriggerAdvance:
+			currentStateChanger = StateChangers.TimerRestart_TriggerAdvance;
+			externalTriggerActivated = false;
+			checkTimer = triggerDetail;
 			break;
 		default:
 			break;

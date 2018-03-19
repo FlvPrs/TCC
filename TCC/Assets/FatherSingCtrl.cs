@@ -38,21 +38,24 @@ public class FatherSingCtrl : MonoBehaviour {
 		heightCtrl = GetComponent<FatherHeightCtrl> ();
 	}
 
-	void Update(){
-		if (!sustainCollider.gameObject.activeInHierarchy)
-			return;
-
-		canAdvance = sustainCollider.canAdvance;
-
-		if (sustainCollider.stopSing && !waitToSing) {
-			waitToSing = true;
-			//sing.Stop ();
-		} else if (!sustainCollider.stopSing && waitToSing) {
-			waitToSing = false;
-			//sing.Play ();
-			audiochamaPai.start();
-		}
-	}
+//	void Update(){
+//		if (!sustainCollider.gameObject.activeInHierarchy) {
+//			//sustainCollider.canAdvance = false;
+//			//canAdvance = false;
+//			return;
+//		}
+//
+//		canAdvance = sustainCollider.canAdvance;
+//
+//		if (sustainCollider.stopSing && !waitToSing) {
+//			waitToSing = true;
+//			//sing.Stop ();
+//		} else if (!sustainCollider.stopSing && waitToSing) {
+//			waitToSing = false;
+//			//sing.Play ();
+//			audiochamaPai.start();
+//		}
+//	}
 
 //	public void StartClarinet_Staccato(){
 //		if(!sing.isPlaying)
