@@ -128,9 +128,9 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 			switch (feedbackBt.walkStates.CURR_HEIGHT_STATE) {
 
 			case HeightState.Default:				
-				//if (playing2 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing1 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing3 != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
-				filhoMelodyMedia2.start ();
-				//}
+				if (playing4 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing5 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing6 != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
+					filhoMelodyMedia2.start();
+				}
 
 				print ("tocando media2");
 				break;
