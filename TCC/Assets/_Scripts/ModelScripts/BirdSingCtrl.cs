@@ -3,9 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //LEGENDA
-//0 - Abaixado
-//1 - Normal
-//2 - Esticado
+//1 - Abaixado
+//2 - Normal
+//3 - Esticado
+
+[System.Serializable]
+public struct NoteParts
+{
+	public AudioClip attack;
+	public AudioClip loop;
+	public AudioClip release;
+}
 
 [RequireComponent(typeof(WalkingController))]
 public class BirdSingCtrl : MonoBehaviour {
@@ -13,6 +21,8 @@ public class BirdSingCtrl : MonoBehaviour {
 	public Gradient hpColor;
 	public SustainInteractionsCtrl sustainCollider;
 	public StaccatoInteractionsCtrl singleNoteCollider;
+
+	public NoteParts[] noteSounds; //0 Default, 1 High, 2 Low
 
 	private HeightState oldState;
 
@@ -24,9 +34,11 @@ public class BirdSingCtrl : MonoBehaviour {
 	private float cooldown = 0f;
 
 	//TODO: Confirmar com Uiris
-	private float singleNoteMinimumDuration = 0.5f;
+	private float singleNoteMinimumDuration = 0.29f;
 
-	private AudioSource clarinet;
+	private AudioSource audioSourceAttack;
+	private AudioSource audioSourceSustain;
+	private AudioSource audioSourceRelease;
 	public Material playerMat;
 	private float currentAir = 5f;
 	private float maxAir = 10f;
@@ -36,7 +48,11 @@ public class BirdSingCtrl : MonoBehaviour {
 		sustainCollider.gameObject.SetActive (false);
 		singleNoteCollider.gameObject.SetActive (false);
 
-		clarinet = GetComponent<AudioSource> ();
+		audioSourceAttack = GetComponent<AudioSource> ();
+		audioSourceSustain = GetComponentsInChildren<AudioSource> ()[1];
+		audioSourceSustain.loop = true;
+		audioSourceRelease = GetComponentsInChildren<AudioSource> ()[2];
+
 		playerCtrl = GetComponent<WalkingController> ();
 
 		partiturasPossiveis = new int[]{ 1, 10, 20, 30 };
@@ -52,7 +68,7 @@ public class BirdSingCtrl : MonoBehaviour {
 //		}
 
 		//TODO: Confirmar se mantem isso, entao Testar
-//		if(clarinet.isPlaying && cu	rrentAir > 0){
+//		if(clarinet.isPlaying && currentAir > 0){
 //			currentAir -= Time.deltaTime;
 //		} else if(!clarinet.isPlaying && currentAir < maxAir/2f) {
 //			currentAir += Time.deltaTime;
@@ -78,6 +94,8 @@ public class BirdSingCtrl : MonoBehaviour {
 	}
 
 	public void SingNote(){
+		StopCoroutine ("StopSingleNote");
+
 		oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
 
 		singleNoteCollider.currentHeight = oldState;
@@ -86,10 +104,9 @@ public class BirdSingCtrl : MonoBehaviour {
 		//intervalo minimo de ~0.05s que o collider fica inativo entre cada nota
 		singleNoteCollider.gameObject.SetActive (false);
 
-		StopCoroutine ("StopSingleNote");
-
-//		if(!clarinet.isPlaying)
-//			clarinet.Play ();
+		//if(!clarinet.isPlaying)
+		audioSourceAttack.clip = noteSounds [(int)oldState].attack;
+		audioSourceAttack.Play ();
 
 		if(!tocouPartitura)
 			UpdatePartituraAtual (oldState);
@@ -101,8 +118,11 @@ public class BirdSingCtrl : MonoBehaviour {
 		yield return new WaitForSeconds (0.05f);
 		singleNoteCollider.gameObject.SetActive (true);
 
-		yield return new WaitForSeconds (singleNoteMinimumDuration - 0.05f);
-		//clarinet.Stop ();
+		yield return new WaitForSeconds (singleNoteMinimumDuration - 0.1f);
+		//audioSourceStaccato.Stop ();
+		audioSourceRelease.clip = noteSounds [(int)oldState].release;
+		audioSourceRelease.Play ();
+
 		playerCtrl.walkStates.TOCANDO_NOTAS = false;
 		playerCtrl.canStartSing = true;
 		singleNoteCollider.gameObject.SetActive (false);
@@ -110,12 +130,16 @@ public class BirdSingCtrl : MonoBehaviour {
 
 	public void SustainNote(){
 		StopCoroutine ("StopSingleNote");
+		StopCoroutine ("StopSustain");
 
 		oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
 
 		sustainCollider.currentHeight = oldState;
 		sustainCollider.gameObject.SetActive (false);
-		//StopCoroutine ("StopSustain");
+
+		audioSourceAttack.Stop ();
+		audioSourceSustain.clip = noteSounds [(int)oldState].loop;
+		audioSourceSustain.Play ();
 
 		if(!tocouPartitura)
 			UpdatePartituraAtual (oldState, true);
@@ -131,6 +155,9 @@ public class BirdSingCtrl : MonoBehaviour {
 		while (playerCtrl.walkStates.SEGURANDO_NOTA) {
 			yield return new WaitForSeconds (0.05f);
 		}
+		audioSourceSustain.Stop ();
+		audioSourceRelease.clip = noteSounds [(int)oldState].release;
+		audioSourceRelease.Play ();
 
 		playerCtrl.walkStates.TOCANDO_NOTAS = false;
 		playerCtrl.canStartSing = true;
@@ -211,12 +238,12 @@ public class BirdSingCtrl : MonoBehaviour {
 }
 
 public enum PlayerSongs {
-	Empty,
-	Amizade,
-	Estorvo,
-	Serenidade,
-	Ninar,
-	Crescimento,
-	Encolhimento,
-	Alegria
+	Empty			= 0x00,
+	Amizade			= 1<<0,
+	Estorvo			= 1<<1,
+	Serenidade		= 1<<2,
+	Ninar			= 1<<3,
+	Crescimento		= 1<<4,
+	Encolhimento	= 1<<5,
+	Alegria			= 1<<6
 }

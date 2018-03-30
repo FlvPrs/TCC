@@ -10,7 +10,8 @@ public class StaccatoInteractionsCtrl : MonoBehaviour {
 	public HeightState currentHeight = HeightState.Default;
 
 	void OnTriggerEnter(Collider col){
-		col.GetComponent<IStaccatoInteractable> ().Interact (currentHeight);
+		if(col.GetComponent<IStaccatoInteractable> () != null)
+			col.GetComponent<IStaccatoInteractable> ().Interact (currentHeight);
 	}
 
 	void OnTriggerStay(Collider col){
