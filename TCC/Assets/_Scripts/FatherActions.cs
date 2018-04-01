@@ -357,7 +357,7 @@ public class FatherActions : AgentFather {
 		case FatherSongSimple.Estorvo: //IRRITAR
 			currentSong = PlayerSongs.Estorvo;
 			ChangeHeight (HeightState.High, singleNoteMinimumDuration * 6f);
-			Sing_SingleNoteRepeat (5);
+			Sing_SingleNoteRepeat (4);
 			break;
 		case FatherSongSimple.Serenidade: //ACALMAR
 			currentSong = PlayerSongs.Serenidade;

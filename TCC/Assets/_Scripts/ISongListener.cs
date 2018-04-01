@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface ISongListener {
 
-	void DetectSong (PlayerSongs song);
+	void DetectSong (PlayerSongs song, bool isFather = false);
 }

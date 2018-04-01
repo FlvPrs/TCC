@@ -6,102 +6,169 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class NPCBehaviour : MonoBehaviour, ISongListener {
 
-	// (0) Amizade	-	-	(Seguir)	-	UPDATE
-	// (1) Estorvo	-	-	(Irritar)	-	Start
-	// (2) Serenidade	-	(Acalmar)	-	Start
-	// (3) Ninar	-	-	(Dormir)	-	Start
-	// (4) Crescimento	-	(Crescer)	-	UPDATE
-	// (5) Encolhimento	-	(Encolher)	-	UPDATE
-	// (6) Alegria	-	-	(Distrair)	-	Start
-
-	protected NPC_CurrentState currentState;
+	NavMeshAgent nmAgent;
+	Transform player;
+	Transform father;
 
 	[BitMaskAttribute(typeof(PlayerSongs))]
-	public PlayerSongs acceptedSongs;
+	public PlayerSongs acceptedSongs; //Definir pelo inspector com quais melodias o NPC poderá interagir.
+	protected List<int> selectedSongs; //Armazena separadamente cada uma das melodias escolhidas em acceptedSongs. Ou seja, ela me permite saber quais melodias um NPC pode interagir.
 
-	protected List<int> selectedSongs;
+
+		// (0) Amizade	-	-	(Seguir)	-	UPDATE
+		// (1) Estorvo	-	-	(Irritar)	-	Start
+		// (2) Serenidade	-	(Acalmar)	-	Start
+		// (3) Ninar	-	-	(Dormir)	-	Start
+		// (4) Crescimento	-	(Crescer)	-	UPDATE
+		// (5) Encolhimento	-	(Encolher)	-	UPDATE
+		// (6) Alegria	-	-	(Distrair)	-	Start
+
+	[SerializeField]
 	protected PlayerSongs currentSong;
 
-	protected NavMeshAgent nmAgent;
+	[SerializeField]
+	protected NPC_CurrentState currentState;
+
+	protected Transform currentInteractionAgent; //Player ou Pai
 
 	void Start () {
 		selectedSongs = ReturnSelectedElements ();
 		nmAgent = GetComponent<NavMeshAgent> ();
+		player = GameObject.FindObjectOfType<WalkingController> ().transform;
+		father = GameObject.FindObjectOfType<FatherFSM> ().transform;
 
-		currentState = NPC_CurrentState.AcordadoPadrao;
+		currentSong = PlayerSongs.Empty;
+		currentState = NPC_CurrentState.DefaultState;
+		currentInteractionAgent = player;
 	}
 	
 	// Update is called once per frame
 	protected virtual void Update () {
-		
+		switch (currentSong) {
+		case PlayerSongs.Amizade:
+			if (selectedSongs.Contains (0))
+				Seguir ();
+			break;
+		case PlayerSongs.Estorvo:
+			if (selectedSongs.Contains (1))
+				Irritar ();
+			break;
+		case PlayerSongs.Serenidade:
+			if (!selectedSongs.Contains (2))
+				Acalmar ();
+			break;
+		case PlayerSongs.Ninar:
+			if (selectedSongs.Contains (3))
+				Dormir ();
+			break;
+		case PlayerSongs.Crescimento:
+			if (selectedSongs.Contains (4))
+				Crescer ();
+			break;
+		case PlayerSongs.Encolhimento:
+			if (selectedSongs.Contains (5))
+				Encolher ();
+			break;
+		case PlayerSongs.Alegria:
+			if (selectedSongs.Contains (6))
+				Distrair ();
+			break;
+		default: //PlayerSongs.Empty
+			DefaultState ();
+			break;
+		}
 	}
 
-	public void DetectSong (PlayerSongs song){
+	public void DetectSong (PlayerSongs song, bool isFather = false){
 		currentSong = song;
+
+		if (!isFather)
+			currentInteractionAgent = player;
+		else
+			currentInteractionAgent = father;
 	}
 
+	//======================================================================================================================
+	//=================------------------------- FUNÇÕES DE COMPORTAMENTO -------------------------=========================
+	//======================================================================================================================
+
+	protected virtual void DefaultState (){
+		currentState = NPC_CurrentState.DefaultState;
+
+	}
 
 	protected virtual void Seguir (){
-		if (!selectedSongs.Contains (0))
-			return;
-
-		//Faz Seguir
 		//TODO: Se pa colocar aqui condições que se aplicam a todos, como "Só Seguir se NÃO estiver Dormindo".
-		//TODO: No filho, adicionar condições especificas, como "Só Seguir se NÃO estiver Irritado".
+		//TODO: No 'filho', adicionar condições especificas, como "Só Seguir se NÃO estiver Irritado".
+
+		currentState = NPC_CurrentState.Seguindo;
+
+		nmAgent.SetDestination (currentInteractionAgent.position);
 	}
 	protected virtual void PararDeSeguir (){
-
+		if (currentState == NPC_CurrentState.DefaultState)
+			return; //Esta função só deve roda uma vez.
+		
+		currentState = NPC_CurrentState.DefaultState;
 	}
 
 	protected virtual void Irritar (){
-		if (!selectedSongs.Contains (1))
-			return;
-
+		if (currentState == NPC_CurrentState.Irritado)
+			return; //Esta função só deve roda uma vez.
+		
+		currentState = NPC_CurrentState.Irritado;
 		//Faz Irritar
 	}
 	protected virtual void Acalmar (){
-		if (!selectedSongs.Contains (2))
-			return;
+		if (currentState == NPC_CurrentState.Calmo)
+			return; //Esta função só deve roda uma vez.
 
+		currentState = NPC_CurrentState.Calmo;
 		//Faz Acalmar
 	}
 
 	protected virtual void Dormir (){
-		if (!selectedSongs.Contains (3))
-			return;
-
+		if (currentState == NPC_CurrentState.Dormindo)
+			return; //Esta função só deve roda uma vez.
+		
+		currentState = NPC_CurrentState.Dormindo;
 		//Faz Dormir
 	}
 	protected virtual void Acordar (){
-
+		if (currentState == NPC_CurrentState.DefaultState)
+			return; //Esta função só deve roda uma vez.
+		
+		currentState = NPC_CurrentState.DefaultState;
 	}
 
 	protected virtual void Crescer (){
-		if (!selectedSongs.Contains (4))
-			return;
-
+		currentState = NPC_CurrentState.Crescendo;
 		//Faz Crescer
 	}
 	protected virtual void Encolher (){
-		if (!selectedSongs.Contains (5))
-			return;
-
+		currentState = NPC_CurrentState.Encolhendo;
 		//Faz Encolher
 	}
 
 	protected virtual void ChamarAtencao (){
-
+		if (currentState == NPC_CurrentState.Atento)
+			return; //Esta função só deve roda uma vez.
+		
+		currentState = NPC_CurrentState.Atento;
 	}
 	protected virtual void Distrair (){
-		if (!selectedSongs.Contains (6))
-			return;
-
+		if (currentState == NPC_CurrentState.Distraido)
+			return; //Esta função só deve roda uma vez.
+		
+		currentState = NPC_CurrentState.Distraido;
 		//Faz Distrair
 	}
 
+	//======================================================================================================================
+	//======================================================================================================================
+	//======================================================================================================================
 
 
-	//=============================================================================
 	//Esta função me retorna todos os indices selecionados do Enum acceptedSongs
 	List<int> ReturnSelectedElements () {
 		List<int> selectedElements = new List<int>();
@@ -117,10 +184,11 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 		return selectedElements;
 	}
 
-	//=============================================================================
+	//======================================================================================================================
+
 	public enum NPC_CurrentState
 	{
-		AcordadoPadrao,
+		DefaultState,
 		Seguindo,
 		Irritado,
 		Calmo,
