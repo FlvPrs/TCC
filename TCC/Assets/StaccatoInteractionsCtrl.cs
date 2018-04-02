@@ -5,8 +5,6 @@ using UnityEngine;
 public class StaccatoInteractionsCtrl : MonoBehaviour {
 
 	[HideInInspector]
-	public int partitura = 000;
-	[HideInInspector]
 	public HeightState currentHeight = HeightState.Default;
 
 	void OnTriggerEnter(Collider col){

@@ -110,6 +110,8 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 			return; //Esta função só deve roda uma vez.
 		
 		currentState = NPC_CurrentState.DefaultState;
+
+		nmAgent.SetDestination (transform.position);
 	}
 
 	protected virtual void Irritar (){

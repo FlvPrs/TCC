@@ -20,7 +20,7 @@ public class BirdSingCtrl : MonoBehaviour {
 
 	public Gradient hpColor;
 //	public SustainInteractionsCtrl sustainCollider;
-//	public StaccatoInteractionsCtrl singleNoteCollider;
+	public StaccatoInteractionsCtrl singleNoteCollider;
 	public PlayerSongInteractionsCtrl partituraCollider;
 
 	public NoteParts[] noteSounds; //0 Default, 1 High, 2 Low
@@ -35,7 +35,7 @@ public class BirdSingCtrl : MonoBehaviour {
 	private float cooldown = 0f;
 
 	//TODO: Confirmar com Uiris
-	private float singleNoteMinimumDuration = 0.29f;
+	private float singleNoteMinimumDuration = 0.3f;
 
 	private AudioSource audioSourceAttack;
 	private AudioSource audioSourceSustain;
@@ -124,11 +124,11 @@ public class BirdSingCtrl : MonoBehaviour {
 
 		partituraCollider.isSingingSomething = true;
 
-//		singleNoteCollider.currentHeight = oldState;
+		singleNoteCollider.currentHeight = oldState;
 
 		//Quando o jogador tocar varias notas rapidamente, a seguinte linha deixa um
 		//intervalo minimo de ~0.05s que o collider fica inativo entre cada nota
-//		singleNoteCollider.gameObject.SetActive (false);
+		singleNoteCollider.gameObject.SetActive (false);
 
 		//if(!clarinet.isPlaying)
 		audioSourceAttack.clip = noteSounds [(int)oldState].attack;
@@ -144,10 +144,10 @@ public class BirdSingCtrl : MonoBehaviour {
 
 	IEnumerator StopSingleNote(){
 		yield return new WaitForSeconds (0.05f);
-//		singleNoteCollider.gameObject.SetActive (true);
+		singleNoteCollider.gameObject.SetActive (true);
 
 		yield return new WaitForSeconds (singleNoteMinimumDuration - 0.1f);
-		//audioSourceStaccato.Stop ();
+		audioSourceAttack.Stop ();
 		audioSourceRelease.clip = noteSounds [(int)oldState].release;
 		audioSourceRelease.Play ();
 
@@ -167,7 +167,7 @@ public class BirdSingCtrl : MonoBehaviour {
 //		sustainCollider.currentHeight = oldState;
 //		sustainCollider.gameObject.SetActive (false);
 
-		audioSourceAttack.Stop ();
+		//audioSourceAttack.Stop ();
 		audioSourceSustain.clip = noteSounds [(int)oldState].loop;
 		audioSourceSustain.Play ();
 
@@ -180,7 +180,7 @@ public class BirdSingCtrl : MonoBehaviour {
 	}
 
 	IEnumerator StopSustain(){
-		yield return new WaitForSeconds (0.05f);
+//		yield return new WaitForSeconds (0.05f);
 //		singleNoteCollider.gameObject.SetActive (false);
 //		sustainCollider.gameObject.SetActive (true);
 
