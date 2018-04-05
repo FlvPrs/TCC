@@ -64,7 +64,7 @@ public class WalkingController : MonoBehaviour {
 	int flyStamina;
 	float cameraRotation;
 	float jumpTriggerStrength;
-	public float singHoldTreshold = 0.3f;
+	public float singHoldTreshold = 0.25f;
 	public float singHoldTime;
 	bool stopGravity = false;
 

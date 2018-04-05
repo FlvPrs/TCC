@@ -16,7 +16,7 @@ public class FatherStaccatoInteractions : MonoBehaviour {
 	}
 
 	void OnTriggerEnter (Collider col){
-		if(col.CompareTag("PaiCanInteract"))
+		if(col.GetComponent<IFatherStaccatoInteractable> () != null)
 			col.GetComponent<IFatherStaccatoInteractable> ().FatherStaccatoInteraction (fatherSong);
 	}
 }

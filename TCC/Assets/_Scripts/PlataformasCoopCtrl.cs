@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlataformasCoopCtrl : MonoBehaviour, ISustainInteractable, IFatherSustainInteractable {
+public class PlataformasCoopCtrl : MonoBehaviour, ISongListener, IFatherSustainInteractable {
 
 	public Platforms[] plataformas;
 
@@ -64,20 +64,32 @@ public class PlataformasCoopCtrl : MonoBehaviour, ISustainInteractable, IFatherS
 		}
 	}
 
-	public void Interact(HeightState currentHeight){
-		if (currentHeight != interactableState) 
-			return;
+	public void DetectSong (PlayerSongs song, bool isFather = false){
+		if(song == PlayerSongs.Crescimento){
+			for (int i = 0; i < plataformas.Length; i++) {
+				Vector3 newPos = originalPos [i] + son_Distance [i] + dad_deltaY [i];
 
-		//StartCoroutine ("InteractionStopped");
-
-		for (int i = 0; i < plataformas.Length; i++) {
-			Vector3 newPos = originalPos [i] + son_Distance [i] + dad_deltaY [i];
-
-			Vector3 oldPos = plataformas [i].platform.localPosition;
-			plataformas [i].platform.localPosition = Vector3.MoveTowards (plataformas [i].platform.localPosition, newPos, 0.2f);
-			son_deltaY [i] += plataformas [i].platform.localPosition - oldPos;
+				Vector3 oldPos = plataformas [i].platform.localPosition;
+				plataformas [i].platform.localPosition = Vector3.MoveTowards (plataformas [i].platform.localPosition, newPos, 0.2f);
+				son_deltaY [i] += plataformas [i].platform.localPosition - oldPos;
+			}
 		}
 	}
+
+//	public void Interact(HeightState currentHeight){
+//		if (currentHeight != interactableState) 
+//			return;
+//
+//		//StartCoroutine ("InteractionStopped");
+//
+//		for (int i = 0; i < plataformas.Length; i++) {
+//			Vector3 newPos = originalPos [i] + son_Distance [i] + dad_deltaY [i];
+//
+//			Vector3 oldPos = plataformas [i].platform.localPosition;
+//			plataformas [i].platform.localPosition = Vector3.MoveTowards (plataformas [i].platform.localPosition, newPos, 0.2f);
+//			son_deltaY [i] += plataformas [i].platform.localPosition - oldPos;
+//		}
+//	}
 
 	public void FatherSustainInteraction(PlayerSongs song){
 		if (dad_singTime <= 3f) {
