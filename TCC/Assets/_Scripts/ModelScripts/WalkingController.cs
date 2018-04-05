@@ -53,6 +53,7 @@ public class WalkingController : MonoBehaviour {
 	BirdSingCtrl birdSingCtrl;
 	public Animator animCtrl;
 
+	//PlayerPrefs.SetInt "health",100;
 	//Movement information
 	bool startedFly;
 	bool isFlying;
@@ -160,7 +161,7 @@ public class WalkingController : MonoBehaviour {
 		CDBonusJump = false;
 
 		hasBonusJump_2 = false;
-		fruitJumpPower = 0.9f;
+		fruitJumpPower = 0.75f;
 
 		gravity = -(2 * maxJumpHeight) / Mathf.Pow (timeToJumpApex, 2);
 		maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
@@ -194,15 +195,15 @@ public class WalkingController : MonoBehaviour {
 			if (startCDBonusJump) {
 				CDBonusJump = true;
 			}
-			fruitJumpPower = 1.8f;
+			fruitJumpPower = 1.3f;
 			if(CDBonusJump){
-			timerSecondJumpPower -= 1 *Time.deltaTime;
+				timerSecondJumpPower -= 1 *Time.deltaTime;
 				print("comecou contagem regressiva");
 			}
 			if(timerSecondJumpPower <= 0){
 				timerSecondJumpPower = 5.0f;
 				hasBonusJump_2 = false;
-				fruitJumpPower = 0.9f;
+				fruitJumpPower = 0.75f;
 				CDBonusJump = false;
 				print("acabou contagem");
 			}
@@ -212,8 +213,8 @@ public class WalkingController : MonoBehaviour {
 		#region Reduzindo Velocidade No Pulo
 		if(VelocidadeDiminuidaNoVoo){
 			if(secondJumpStrengthMultiplier > 0.2f){
-			moveSpeed = 15.0f;
-			SpeedMovementSlowTimer += 1*Time.deltaTime;
+				moveSpeed = 15.0f;
+				SpeedMovementSlowTimer += 1*Time.deltaTime;
 			}else{
 				moveSpeed = 10.0f;
 			}
@@ -223,12 +224,12 @@ public class WalkingController : MonoBehaviour {
 				VelocidadeDiminuidaNoVoo = false;
 			}
 		}
-		
+
 		#endregion
 
 		if(!holdVelocity)
 			CalculateVelocity ();
-		
+
 		isGrounded = Grounded (out collisionAbove);
 
 		if (velocity.y <= 0 && isGrounded) {
@@ -288,7 +289,7 @@ public class WalkingController : MonoBehaviour {
 				secondJumpStrengthMultiplier = 0.0f;
 			}
 			//print (secondJumpStrengthMultiplier);
-			
+
 			#region Pulo Duplo limiter
 			if (timeOnAir >= 0.15f) { //Só permite pulo duplo após 0.15s no ar
 				canFly = true;
@@ -363,7 +364,7 @@ public class WalkingController : MonoBehaviour {
 	}
 
 	public void OnJumpInputDown(){
-		
+
 		startCDBonusJump = true;
 
 		if(isGrounded)	//------ Se eu estou no chão ----------------------------------------------------------------------------------------------
@@ -393,7 +394,7 @@ public class WalkingController : MonoBehaviour {
 			velocity.y = maxJumpVelocity * secondJumpStrengthMultiplier;
 			jumpInertia = velocity;
 			VelocidadeDiminuidaNoVoo = true;
-			
+
 			/* if (flyStamina > 0) {
 				flyStamina--;
 			} else {
@@ -427,7 +428,7 @@ public class WalkingController : MonoBehaviour {
 			return;
 
 		sanfonaStrength = strength;
-		
+
 		CalculateRaySpacing ();
 	}
 
@@ -439,11 +440,11 @@ public class WalkingController : MonoBehaviour {
 		walkStates.SEGURANDO_NOTA = true;
 		birdSingCtrl.SustainNote();
 	}
-//	public void OnSingInputUp(){
-//		walkStates.SEGURANDO_NOTA = false;
-//		//canStartSing = true;
-//		//birdSingCtrl.StopSing();
-//	}
+	//	public void OnSingInputUp(){
+	//		walkStates.SEGURANDO_NOTA = false;
+	//		//canStartSing = true;
+	//		//birdSingCtrl.StopSing();
+	//	}
 
 	public void SetCheatState(bool activateCheat){
 		maxFlyStamina = (activateCheat) ? 10 : 1;
@@ -462,10 +463,10 @@ public class WalkingController : MonoBehaviour {
 
 		if(directionalInput.x != 0 || directionalInput.z != 0){
 			walkStates.IS_WALKING = true;
-//			if(isGrounded)
-				anim.ChangeForward(directionalInput.normalized);
-//			else
-//				anim.ChangeForward ((myT.forward + rb.velocity).normalized);
+			//			if(isGrounded)
+			anim.ChangeForward(directionalInput.normalized);
+			//			else
+			//				anim.ChangeForward ((myT.forward + rb.velocity).normalized);
 			Vector3 clampedAnimSpeed = new Vector3 (directionalInput.x, 0, directionalInput.z);
 			clampedAnimSpeed = Vector3.ClampMagnitude (clampedAnimSpeed, 1f);
 			animCtrl.SetFloat ("WalkVelocity", clampedAnimSpeed.magnitude);
@@ -555,7 +556,7 @@ public class WalkingController : MonoBehaviour {
 			ResetFlyStamina ();
 		if (collAbove)
 			ResetGravity ();
-		
+
 		return collBelow;
 	}
 
@@ -615,7 +616,9 @@ public class WalkingController : MonoBehaviour {
 
 	public void AddExternalForce(Vector3 force, float duration){
 		externalForceAdded = true;
-		velocity = force;
+		//velocity = force;
+		SetVelocityTo(force, false);
+		secondJumpStrengthMultiplier = fruitJumpPower + 0.15f;
 	}
 
 	public void ChangeJumpHeight (float newMaxHeight, float newMinHeight) {
@@ -628,10 +631,14 @@ public class WalkingController : MonoBehaviour {
 	}
 
 	public void ChangeOrientationToCamera(Transform t, bool changedCam){
+		
+		Transform newT = t;
+		newT.eulerAngles = new Vector3 (0, newT.eulerAngles.y, 0);
+
 		if (changedCam && velocity != Vector3.zero && !automaticOrientation)
-			holdOrientation = t;
+			holdOrientation = newT;
 		else if(holdOrientation == orientation || automaticOrientation)
-			orientation = t;
+			orientation = newT;
 	}
 
 	public struct WalkingStates
