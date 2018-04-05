@@ -18,7 +18,6 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 
 
 	void Start () {
-		canStartSustain = canStartStaccato = true;
 		
 		FilhoAguda = "event:/Filho RB/Filho Nota Padrao Aguda";
 		FilhoMedia = "event:/Filho RB/Filho Nota Padrao Media";
@@ -39,8 +38,8 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		VerificaNota_Staccato ();
-		VerificaNota_Sustain ();
+		VerificaNota ();
+		VerificaNota2 ();
 
 		filhoMelodyMedia.set3DAttributes (FMODUnity.RuntimeUtils.To3DAttributes(gameObject, GetComponent<Rigidbody>()));
 		FMODUnity.RuntimeManager.AttachInstanceToGameObject(filhoMelodyMedia, transform, GetComponent<Rigidbody>());
@@ -62,110 +61,99 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 
 	}
 
-	public void VerificaNota_Staccato()
+	public void VerificaNota()
 	{
 		if (!feedbackBt.walkStates.TOCANDO_NOTAS) {
 			canStartStaccato = true;
 		} else if (feedbackBt.walkStates.TOCANDO_NOTAS && !feedbackBt.walkStates.SEGURANDO_NOTA && canStartStaccato) {
 			canStartStaccato = false;
-			TocaNotaStaccato ();
-		}
-	}
 
-	void TocaNotaStaccato (){
-		FMOD.Studio.PLAYBACK_STATE playing1;
-		filhoMelodyMedia.getPlaybackState (out playing1);
+			FMOD.Studio.PLAYBACK_STATE playing1;
+			filhoMelodyMedia.getPlaybackState (out playing1);
 
-		FMOD.Studio.PLAYBACK_STATE playing2;
-		filhoMelodyAguda.getPlaybackState (out playing2);
+			FMOD.Studio.PLAYBACK_STATE playing2;
+			filhoMelodyAguda.getPlaybackState (out playing2);
 
-		FMOD.Studio.PLAYBACK_STATE playing3;
-		filhoMelodyGrave.getPlaybackState (out playing3);
+			FMOD.Studio.PLAYBACK_STATE playing3;
+			filhoMelodyGrave.getPlaybackState (out playing3);
+			
+			switch (feedbackBt.walkStates.CURR_HEIGHT_STATE) {
 
-		switch (feedbackBt.walkStates.CURR_HEIGHT_STATE) {
+			case HeightState.Default:				
+				//if (playing2 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing1 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing3 != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
+					filhoMelodyMedia.start ();
+				//}
 
-		case HeightState.Default:				
-			//if (playing2 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing1 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing3 != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
-			filhoMelodyMedia.start ();
-			//}
-
-			//print ("tocando media");
-			break;
-		case HeightState.High:				
+				//print ("tocando media");
+				break;
+			case HeightState.High:				
 
 			//	if (playing2 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing1 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing3 != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
-			filhoMelodyAguda.start ();
+					filhoMelodyAguda.start ();
 			//	}
 
-			//print ("tocando aguda");
+				//print ("tocando aguda");
 
-			break;
-		case HeightState.Low:
-
-			//if (playing2 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing1 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing3 != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
-			filhoMelodyGrave.start ();
-			//}
-			//print ("tocando grave");
-			break;
-		default:
-			print ("fez mierda");
-			break;
+				break;
+			case HeightState.Low:
+				
+				//if (playing2 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing1 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing3 != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
+					filhoMelodyGrave.start ();
+				//}
+				//print ("tocando grave");
+				break;
+			default:
+				print ("fez mierda");
+				break;
+			}
 		}
 	}
 
 
-	public void VerificaNota_Sustain()	{
+	public void VerificaNota2()	{
 		if (!feedbackBt.walkStates.SEGURANDO_NOTA) {
-			if(!canStartSustain){
-				//Significa que eu acabei de soltar o botão.
-				//TODO: Criar uma função apenas com os sons de fim de nota e chama-la aqui no lugar de TocaNotaStaccato.
-				TocaNotaStaccato ();
-			}
 			canStartSustain = true;
 		} else if (feedbackBt.walkStates.SEGURANDO_NOTA && canStartSustain) {
 			canStartSustain = false;
-			TocaNotaSustain ();
-		}
-	}
 
-	void TocaNotaSustain (){
-		FMOD.Studio.PLAYBACK_STATE playing4;
-		filhoMelodyMedia2.getPlaybackState (out playing4);
+			FMOD.Studio.PLAYBACK_STATE playing4;
+			filhoMelodyMedia2.getPlaybackState (out playing4);
 
-		FMOD.Studio.PLAYBACK_STATE playing5;
-		filhoMelodyAguda2.getPlaybackState (out playing5);
+			FMOD.Studio.PLAYBACK_STATE playing5;
+			filhoMelodyAguda2.getPlaybackState (out playing5);
 
-		FMOD.Studio.PLAYBACK_STATE playing6;
-		filhoMelodyGrave2.getPlaybackState (out playing6);
+			FMOD.Studio.PLAYBACK_STATE playing6;
+			filhoMelodyGrave2.getPlaybackState (out playing6);
 
-		switch (feedbackBt.walkStates.CURR_HEIGHT_STATE) {
+			switch (feedbackBt.walkStates.CURR_HEIGHT_STATE) {
 
-		case HeightState.Default:				
-			if (playing4 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing5 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing6 != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
-				filhoMelodyMedia2.start();
+			case HeightState.Default:				
+				if (playing4 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing5 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing6 != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
+					filhoMelodyMedia2.start();
+				}
+
+				print ("tocando media2");
+				break;
+			case HeightState.High:				
+
+				//	if (playing2 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing1 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing3 != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
+				filhoMelodyAguda2.start ();
+				//	}
+
+				print ("tocando aguda2");
+
+				break;
+			case HeightState.Low:
+
+				//if (playing2 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing1 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing3 != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
+				filhoMelodyGrave2.start ();
+				//}
+				print ("tocando grave2");
+				break;
+			default:
+				print ("fez mierda2");
+				break;
 			}
-
-			print ("tocando media2");
-			break;
-		case HeightState.High:				
-
-			//	if (playing2 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing1 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing3 != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
-			filhoMelodyAguda2.start ();
-			//	}
-
-			print ("tocando aguda2");
-
-			break;
-		case HeightState.Low:
-
-			//if (playing2 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing1 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing3 != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
-			filhoMelodyGrave2.start ();
-			//}
-			print ("tocando grave2");
-			break;
-		default:
-			print ("fez mierda2");
-			break;
 		}
 	}
 

@@ -3,27 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //LEGENDA
-//1 - Abaixado
-//2 - Normal
-//3 - Esticado
-
-[System.Serializable]
-public struct NoteParts
-{
-	public AudioClip attack;
-	public AudioClip loop;
-	public AudioClip release;
-}
+//0 - Abaixado
+//1 - Normal
+//2 - Esticado
 
 [RequireComponent(typeof(WalkingController))]
 public class BirdSingCtrl : MonoBehaviour {
 
 	public Gradient hpColor;
-//	public SustainInteractionsCtrl sustainCollider;
+	public SustainInteractionsCtrl sustainCollider;
 	public StaccatoInteractionsCtrl singleNoteCollider;
-	public PlayerSongInteractionsCtrl partituraCollider;
-
-	public NoteParts[] noteSounds; //0 Default, 1 High, 2 Low
 
 	private HeightState oldState;
 
@@ -31,53 +20,26 @@ public class BirdSingCtrl : MonoBehaviour {
 
 	private int[] partiturasPossiveis;
 	private string partituraAtual = "";
-	private float delayBetweenNotes = 1f;
+	private float delayBetweenNotes = 2f;
 	private float cooldown = 0f;
 
 	//TODO: Confirmar com Uiris
-	private float singleNoteMinimumDuration = 0.3f;
+	private float singleNoteMinimumDuration = 0.5f;
 
-	private AudioSource audioSourceAttack;
-	private AudioSource audioSourceSustain;
-	private AudioSource audioSourceRelease;
+	private AudioSource clarinet;
 	public Material playerMat;
 	private float currentAir = 5f;
 	private float maxAir = 10f;
 	private bool tocouPartitura;
 
-	private bool partituraIsSustain = false;
-
 	void Awake () {
-//		sustainCollider.gameObject.SetActive (false);
-//		singleNoteCollider.gameObject.SetActive (false);
+		sustainCollider.gameObject.SetActive (false);
+		singleNoteCollider.gameObject.SetActive (false);
 
-		partituraCollider.gameObject.SetActive (true);
-
-		audioSourceAttack = GetComponent<AudioSource> ();
-		audioSourceSustain = GetComponentsInChildren<AudioSource> ()[1];
-		audioSourceSustain.loop = true;
-		audioSourceRelease = GetComponentsInChildren<AudioSource> ()[2];
-
+		clarinet = GetComponent<AudioSource> ();
 		playerCtrl = GetComponent<WalkingController> ();
 
-
-		// Amizade	-	-	(Seguir)	-	UPDATE
-		// Estorvo	-	-	(Irritar)	-	Start
-		// Serenidade	-	(Acalmar)	-	Start
-		// Ninar	-	-	(Dormir)	-	Start
-		// Crescimento	-	(Crescer)	-	UPDATE
-		// Encolhimento	-	(Encolher)	-	UPDATE
-		// Alegria	-	-	(Distrair)	-	Start
-
-		partiturasPossiveis = new int[]{ 
-			4, 		//Encolhimento
-			5, 		//Amizade
-			6, 		//Crescimento
-			1111,  	//Estorvo
-			0000,	//Serenidade
-			0000,	//Ninar
-			0000	//Alegria
-		};
+		partiturasPossiveis = new int[]{ 1, 10, 20, 30 };
 	}
 
 
@@ -90,7 +52,7 @@ public class BirdSingCtrl : MonoBehaviour {
 //		}
 
 		//TODO: Confirmar se mantem isso, entao Testar
-//		if(clarinet.isPlaying && currentAir > 0){
+//		if(clarinet.isPlaying && cu	rrentAir > 0){
 //			currentAir -= Time.deltaTime;
 //		} else if(!clarinet.isPlaying && currentAir < maxAir/2f) {
 //			currentAir += Time.deltaTime;
@@ -103,13 +65,11 @@ public class BirdSingCtrl : MonoBehaviour {
 //			playerCtrl.canStartSing = true;
 //		}
 
-		if (!tocouPartitura) {
-			if (cooldown > 0f) {
-				cooldown -= Time.deltaTime;
-			} else {
-				cooldown = 0;
-				CancelaPartitura ();
-			}
+		if (cooldown > 0f) {
+			cooldown -= Time.deltaTime;
+		}else {
+			cooldown = 0;
+			CancelaPartitura ();
 		}
 
 		UpdateColor ();
@@ -118,11 +78,7 @@ public class BirdSingCtrl : MonoBehaviour {
 	}
 
 	public void SingNote(){
-		StopCoroutine ("StopSingleNote");
-
 		oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
-
-		partituraCollider.isSingingSomething = true;
 
 		singleNoteCollider.currentHeight = oldState;
 
@@ -130,14 +86,13 @@ public class BirdSingCtrl : MonoBehaviour {
 		//intervalo minimo de ~0.05s que o collider fica inativo entre cada nota
 		singleNoteCollider.gameObject.SetActive (false);
 
-		//if(!clarinet.isPlaying)
-		audioSourceAttack.clip = noteSounds [(int)oldState].attack;
-		audioSourceAttack.Play ();
+		StopCoroutine ("StopSingleNote");
 
-		if (tocouPartitura)
-			CancelaPartitura ();
-		
-		UpdatePartituraAtual (oldState);
+//		if(!clarinet.isPlaying)
+//			clarinet.Play ();
+
+		if(!tocouPartitura)
+			UpdatePartituraAtual (oldState);
 		
 		StartCoroutine("StopSingleNote");
 	}
@@ -146,58 +101,40 @@ public class BirdSingCtrl : MonoBehaviour {
 		yield return new WaitForSeconds (0.05f);
 		singleNoteCollider.gameObject.SetActive (true);
 
-		yield return new WaitForSeconds (singleNoteMinimumDuration - 0.1f);
-		audioSourceAttack.Stop ();
-		audioSourceRelease.clip = noteSounds [(int)oldState].release;
-		audioSourceRelease.Play ();
-
+		yield return new WaitForSeconds (singleNoteMinimumDuration - 0.05f);
+		//clarinet.Stop ();
 		playerCtrl.walkStates.TOCANDO_NOTAS = false;
 		playerCtrl.canStartSing = true;
-		partituraCollider.isSingingSomething = false;
+		singleNoteCollider.gameObject.SetActive (false);
 	}
 
 	public void SustainNote(){
 		StopCoroutine ("StopSingleNote");
-		StopCoroutine ("StopSustain");
 
 		oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
 
-		partituraCollider.isSingingSomething = true;
+		sustainCollider.currentHeight = oldState;
+		sustainCollider.gameObject.SetActive (false);
+		//StopCoroutine ("StopSustain");
 
-//		sustainCollider.currentHeight = oldState;
-//		sustainCollider.gameObject.SetActive (false);
-
-		//audioSourceAttack.Stop ();
-		audioSourceSustain.clip = noteSounds [(int)oldState].loop;
-		audioSourceSustain.Play ();
-
-		if (tocouPartitura)
-			CancelaPartitura ();
-		
-		UpdatePartituraAtual (oldState, true);
+		if(!tocouPartitura)
+			UpdatePartituraAtual (oldState, true);
 
 		StartCoroutine("StopSustain");
 	}
 
 	IEnumerator StopSustain(){
-//		yield return new WaitForSeconds (0.05f);
-//		singleNoteCollider.gameObject.SetActive (false);
-//		sustainCollider.gameObject.SetActive (true);
+		yield return new WaitForSeconds (0.05f);
+		singleNoteCollider.gameObject.SetActive (false);
+		sustainCollider.gameObject.SetActive (true);
 
 		while (playerCtrl.walkStates.SEGURANDO_NOTA) {
 			yield return new WaitForSeconds (0.05f);
 		}
-		audioSourceSustain.Stop ();
-		audioSourceRelease.clip = noteSounds [(int)oldState].release;
-		audioSourceRelease.Play ();
 
 		playerCtrl.walkStates.TOCANDO_NOTAS = false;
 		playerCtrl.canStartSing = true;
-
-		partituraCollider.isSingingSomething = false;
-
-		if(tocouPartitura && partituraIsSustain)
-			CancelaPartitura ();
+		sustainCollider.gameObject.SetActive (false);
 	}
 
 	public void UpdateColor(){
@@ -209,28 +146,23 @@ public class BirdSingCtrl : MonoBehaviour {
 		cooldown = delayBetweenNotes;
 
 		if(holding){
-			//Se a nota anterior for staccato, desconsidere-a
-			if(partituraAtual.Length > 0 && (string.Equals(partituraAtual[partituraAtual.Length - 1].ToString(), "1") || string.Equals(partituraAtual[partituraAtual.Length - 1].ToString(), "2") || string.Equals(partituraAtual[partituraAtual.Length - 1].ToString(), "3")))
-				partituraAtual = partituraAtual.Remove (partituraAtual.Length - 1, 1);
-
-//			//Se eu quiser desconsiderar todas as notas caso esta não seja a ultima nota da partitura...
-//			if (partituraAtual.Length > 0 && partituraAtual.Length < 3)
-//				partituraAtual = "";
-
 			switch (state) {
 			case HeightState.Low:
-				partituraAtual += "4";
+				partituraAtual = "1";
 				break;
 			case HeightState.Default:
-				partituraAtual += "5";
+				partituraAtual = "2";
 				break;
 			case HeightState.High:
-				partituraAtual += "6";
+				partituraAtual = "3";
 				break;
 
 			default:
 				break;
 			}
+
+			partituraAtual += "0";
+
 		} else {
 			switch (state) {
 			case HeightState.Low:
@@ -248,13 +180,15 @@ public class BirdSingCtrl : MonoBehaviour {
 			}
 		}
 
-		if (partituraAtual.Length > 4)
+		if (partituraAtual.Length > 3)
 			partituraAtual = partituraAtual.Remove (0, 1);
 
 		int num = int.Parse(partituraAtual);
 		for (int i = 0; i < partiturasPossiveis.Length; i++) {
 			if(num == partiturasPossiveis[i]){
-				TocarPartitura (num);
+				//if (partiturasConhecidas [i] == true) {
+					TocarPartitura (num);
+				//}
 				break;
 			}
 		}
@@ -264,61 +198,25 @@ public class BirdSingCtrl : MonoBehaviour {
 	void TocarPartitura(int partitura){
 		tocouPartitura = true;
 		print ("YAYYY " + partitura);
-
-		switch (partitura) {
-
-		//Se a partitura for de sustain, espera parar de tocar para cancelar partitura.
-		case 4:	//Encolhimento
-			partituraCollider.currentSong = PlayerSongs.Encolhimento;
-			partituraIsSustain = true;
-			return;
-		case 5:	//Amizade
-			partituraCollider.currentSong = PlayerSongs.Amizade;
-			partituraIsSustain = true;
-			return;
-		case 6:	//Crescimento
-			partituraCollider.currentSong = PlayerSongs.Crescimento;
-			partituraIsSustain = true;
-			return;
-
-		//Se a partitura for só de staccato, cancela a partitura depois de 0.5s.
-		case 1111:	//Estorvo
-			partituraCollider.currentSong = PlayerSongs.Estorvo;
-			break;
-		case 0000:	//Serenidade
-			partituraCollider.currentSong = PlayerSongs.Serenidade;
-			break;
-		case 8888:	//Ninar
-			partituraCollider.currentSong = PlayerSongs.Ninar;
-			break;
-		case 9999:	//Alegria
-			partituraCollider.currentSong = PlayerSongs.Alegria;
-			break;
-		default:
-			break;
-		}
-
+		singleNoteCollider.partitura = partitura;
+		singleNoteCollider.gameObject.SetActive (true);
 		Invoke ("CancelaPartitura", 0.5f);
 	}
 
 	void CancelaPartitura (){
 		partituraAtual = "";
 		tocouPartitura = false;
-		partituraIsSustain = false;
-		partituraCollider.currentSong = PlayerSongs.Empty;
-
+		singleNoteCollider.gameObject.SetActive (false);
 	}
-
-
 }
 
 public enum PlayerSongs {
-	Empty			= 0x00,
-	Amizade			= 1<<0,
-	Estorvo			= 1<<1,
-	Serenidade		= 1<<2,
-	Ninar			= 1<<3,
-	Crescimento		= 1<<4,
-	Encolhimento	= 1<<5,
-	Alegria			= 1<<6
+	Empty,
+	Amizade,
+	Estorvo,
+	Serenidade,
+	Ninar,
+	Crescimento,
+	Encolhimento,
+	Alegria
 }

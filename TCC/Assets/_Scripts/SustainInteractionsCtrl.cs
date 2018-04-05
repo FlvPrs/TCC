@@ -12,8 +12,7 @@ public class SustainInteractionsCtrl : MonoBehaviour {
 	}
 
 	void OnTriggerStay(Collider col){
-		if(col.GetComponent<ISustainInteractable> () != null)
-			col.GetComponent<ISustainInteractable> ().Interact (currentHeight);
+		col.GetComponent<ISustainInteractable> ().Interact (currentHeight);
 	}
 
 	void OnTriggerExit(Collider col){

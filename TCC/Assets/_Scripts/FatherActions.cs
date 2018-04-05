@@ -23,8 +23,138 @@ public class FatherActions : AgentFather {
 		currentSong = PlayerSongs.Empty;
 	}
 
+//	#region ========== Debug Variables ==========
+//	public bool jump;
+//	public bool fly;
+//	public bool randomWalk;
+//	public bool moveToPlayer;
+//	public bool guidePlayer;
+//	public bool followPlayer;
+//	public bool esticado, alturaDefault, abaixado;
+//	public bool singSingle, singSingleRepeat, singSustainNote, singPartitura;
+//	public bool singEstorvo;
+//
+//	bool isMovingNavMesh;
+//	bool isMovingRB;
+//	#endregion
+
 	protected override void Update (){
 		base.Update ();
+
+//		#region ========== Temporary Code ==========
+//		if (Input.GetMouseButton(0)) {
+//			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+//			RaycastHit hit;
+//			if (Physics.Raycast(ray, out hit, 200)) {
+//				isMovingNavMesh = true;
+//				isMovingRB = false;
+//				currentTargetPos = hit.point;
+//			}
+//		}
+//		if (Input.GetMouseButton(1)) {
+//			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+//			RaycastHit hit;
+//			if (Physics.Raycast(ray, out hit, 200)) {
+//				isMovingRB = true;
+//				isMovingNavMesh = false;
+//				currentTargetPos = hit.point;
+//			}
+//		}
+//
+//		if (moveToPlayer || followPlayer){
+//			isMovingNavMesh = false;
+//			isMovingRB = false;
+//		}
+//
+//		if(isMovingNavMesh && !(jump || fly)){
+//			if(!guidePlayer)
+//				MoveHere (currentTargetPos);
+//			else
+//				GuidePlayerTo (currentTargetPos, 10f, 20f);
+//		} 
+//		else if (isMovingRB) {
+//			MoveHereWithRB (currentTargetPos);
+//			isMovingRB = !CheckArrivedOnDestination (true);
+//		}
+//
+//		if(randomWalk){
+//			if(CheckArrivedOnDestination()){
+//				currentTargetPos = RandomDestination (player.position, 15f);
+//				MoveHere (currentTargetPos);
+//			}
+//		}
+//
+//		if(moveToPlayer){
+//			MoveToPlayer ();
+//			moveToPlayer = !CheckArrivedOnDestination ();
+//		}
+//
+//		if(followPlayer){
+//			FollowPlayer(12f, 6f);
+//		}
+//
+//		if(jump){
+//			JumpAndFall ();
+//		}
+//		if (isJumping)
+//			jump = true;
+//
+//		if(fly){
+//			JumpAndHold (5f, true, 10, 0.8f);
+//		}
+//		if (isFlying)
+//			fly = true;
+//
+//		if(esticado){
+//			esticado = alturaDefault = abaixado = false;
+//			ChangeHeight(HeightState.High, 3f);
+//		} else if (alturaDefault) {
+//			esticado = alturaDefault = abaixado = false;
+//			ChangeHeight(HeightState.Default);
+//		} else if (abaixado) {
+//			esticado = alturaDefault = abaixado = false;
+//			ChangeHeight(HeightState.Low);
+//		}
+//
+//		if(singSingle){
+//			singSingle = false;
+//			Sing_SingleNote ();
+//		}
+//
+//		if (singSingleRepeat){
+//			singSingleRepeat = false;
+//			Sing_SingleNoteRepeat (3);
+//		}
+//		if(isRepeatingNote){
+//			singSingleRepeat = false;
+//		}
+//
+//		if (singSustainNote){
+//			Sing_SustainedNote (5f);
+//		}
+//		if(isSustainingNote){
+//			singSustainNote = true;
+//		}
+//
+//		if(singPartitura){
+//			singPartitura = false;
+//			PartituraInfo[] partituraTeste = new PartituraInfo[]
+//			{
+//				new PartituraInfo(HeightState.High, true, 0.5f, 2f),
+//				new PartituraInfo(HeightState.High),
+//				new PartituraInfo(HeightState.Low, false, 1.5f),
+//				new PartituraInfo(HeightState.Default, true, 2f, 1f),
+//				new PartituraInfo(HeightState.Low, false)
+//			};
+//			Sing_Partitura(partituraTeste);
+//		}
+//
+//		if(singEstorvo){
+//			singEstorvo = false;
+//			TocarMusicaSimples(FatherSongSimple.Estorvo);
+//		}
+//
+//		#endregion
 
 		if(isJumping){
 			JumpAndFall (jumpHeight, timeToJumpApex);
@@ -38,6 +168,7 @@ public class FatherActions : AgentFather {
 //		else {
 //			sustainColl.SetActive (false);
 //		}
+
 
 		UpdateHeightCollider (currentState);
 	}
@@ -357,7 +488,7 @@ public class FatherActions : AgentFather {
 		case FatherSongSimple.Estorvo: //IRRITAR
 			currentSong = PlayerSongs.Estorvo;
 			ChangeHeight (HeightState.High, singleNoteMinimumDuration * 6f);
-			Sing_SingleNoteRepeat (4);
+			Sing_SingleNoteRepeat (5);
 			break;
 		case FatherSongSimple.Serenidade: //ACALMAR
 			currentSong = PlayerSongs.Serenidade;

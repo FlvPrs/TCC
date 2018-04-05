@@ -2,7 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ISongListener {
+public class ISongListener : MonoBehaviour {
 
-	void DetectSong (PlayerSongs song, bool isFather = false);
+	// Use this for initialization
+	void Start () {
+		
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		
+	}
 }
