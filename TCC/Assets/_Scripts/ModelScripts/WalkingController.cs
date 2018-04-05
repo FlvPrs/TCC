@@ -53,7 +53,6 @@ public class WalkingController : MonoBehaviour {
 	BirdSingCtrl birdSingCtrl;
 	public Animator animCtrl;
 
-	//PlayerPrefs.SetInt "health",100;
 	//Movement information
 	bool startedFly;
 	bool isFlying;
@@ -64,7 +63,7 @@ public class WalkingController : MonoBehaviour {
 	int flyStamina;
 	float cameraRotation;
 	float jumpTriggerStrength;
-	public float singHoldTreshold = 0.3f;
+	public float singHoldTreshold = 0.25f;
 	public float singHoldTime;
 	bool stopGravity = false;
 
@@ -161,7 +160,7 @@ public class WalkingController : MonoBehaviour {
 		CDBonusJump = false;
 
 		hasBonusJump_2 = false;
-		fruitJumpPower = 0.75f;
+		fruitJumpPower = 0.9f;
 
 		gravity = -(2 * maxJumpHeight) / Mathf.Pow (timeToJumpApex, 2);
 		maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
@@ -195,7 +194,7 @@ public class WalkingController : MonoBehaviour {
 			if (startCDBonusJump) {
 				CDBonusJump = true;
 			}
-			fruitJumpPower = 1.3f;
+			fruitJumpPower = 1.8f;
 			if(CDBonusJump){
 			timerSecondJumpPower -= 1 *Time.deltaTime;
 				print("comecou contagem regressiva");
@@ -203,7 +202,7 @@ public class WalkingController : MonoBehaviour {
 			if(timerSecondJumpPower <= 0){
 				timerSecondJumpPower = 5.0f;
 				hasBonusJump_2 = false;
-				fruitJumpPower = 0.75f;
+				fruitJumpPower = 0.9f;
 				CDBonusJump = false;
 				print("acabou contagem");
 			}
@@ -616,9 +615,7 @@ public class WalkingController : MonoBehaviour {
 
 	public void AddExternalForce(Vector3 force, float duration){
 		externalForceAdded = true;
-		//velocity = force;
-		SetVelocityTo(force, false);
-		secondJumpStrengthMultiplier = fruitJumpPower + 0.15f;
+		velocity = force;
 	}
 
 	public void ChangeJumpHeight (float newMaxHeight, float newMinHeight) {
@@ -631,8 +628,6 @@ public class WalkingController : MonoBehaviour {
 	}
 
 	public void ChangeOrientationToCamera(Transform t, bool changedCam){
-		Transform newT = t;
-		newT.eulerAngles = new Vector3 (0, newT.eulerAngles.y, 0);
 		if (changedCam && velocity != Vector3.zero && !automaticOrientation)
 			holdOrientation = t;
 		else if(holdOrientation == orientation || automaticOrientation)

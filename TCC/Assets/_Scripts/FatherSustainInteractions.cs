@@ -16,7 +16,7 @@ public class FatherSustainInteractions : MonoBehaviour {
 	}
 
 	void OnTriggerStay (Collider col){
-		if(col.CompareTag("PaiCanInteract"))
+		if(col.GetComponent<IFatherSustainInteractable> () != null)
 			col.GetComponent<IFatherSustainInteractable> ().FatherSustainInteraction (fatherSong);
 	}
 }
