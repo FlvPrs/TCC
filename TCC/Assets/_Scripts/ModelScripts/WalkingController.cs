@@ -53,6 +53,7 @@ public class WalkingController : MonoBehaviour {
 	BirdSingCtrl birdSingCtrl;
 	public Animator animCtrl;
 
+	//PlayerPrefs.SetInt "health",100;
 	//Movement information
 	bool startedFly;
 	bool isFlying;
@@ -160,7 +161,7 @@ public class WalkingController : MonoBehaviour {
 		CDBonusJump = false;
 
 		hasBonusJump_2 = false;
-		fruitJumpPower = 0.9f;
+		fruitJumpPower = 0.75f;
 
 		gravity = -(2 * maxJumpHeight) / Mathf.Pow (timeToJumpApex, 2);
 		maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
@@ -194,7 +195,7 @@ public class WalkingController : MonoBehaviour {
 			if (startCDBonusJump) {
 				CDBonusJump = true;
 			}
-			fruitJumpPower = 1.8f;
+			fruitJumpPower = 1.3f;
 			if(CDBonusJump){
 			timerSecondJumpPower -= 1 *Time.deltaTime;
 				print("comecou contagem regressiva");
@@ -202,7 +203,7 @@ public class WalkingController : MonoBehaviour {
 			if(timerSecondJumpPower <= 0){
 				timerSecondJumpPower = 5.0f;
 				hasBonusJump_2 = false;
-				fruitJumpPower = 0.9f;
+				fruitJumpPower = 0.75f;
 				CDBonusJump = false;
 				print("acabou contagem");
 			}
@@ -615,7 +616,9 @@ public class WalkingController : MonoBehaviour {
 
 	public void AddExternalForce(Vector3 force, float duration){
 		externalForceAdded = true;
-		velocity = force;
+		//velocity = force;
+		SetVelocityTo(force, false);
+		secondJumpStrengthMultiplier = fruitJumpPower + 0.15f;
 	}
 
 	public void ChangeJumpHeight (float newMaxHeight, float newMinHeight) {
@@ -628,6 +631,8 @@ public class WalkingController : MonoBehaviour {
 	}
 
 	public void ChangeOrientationToCamera(Transform t, bool changedCam){
+		Transform newT = t;
+		newT.eulerAngles = new Vector3 (0, newT.eulerAngles.y, 0);
 		if (changedCam && velocity != Vector3.zero && !automaticOrientation)
 			holdOrientation = t;
 		else if(holdOrientation == orientation || automaticOrientation)

@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 33657290593591616}
   - component: {fileID: 23885401418494116}
   - component: {fileID: 64268045780668384}
-  m_Layer: 16
+  m_Layer: 2
   m_Name: polySurface2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54,14 +54,14 @@ GameObject:
   m_Component:
   - component: {fileID: 4238587931567192}
   - component: {fileID: 64500942135478112}
-  - component: {fileID: 114728705121485268}
+  - component: {fileID: 114650161363227586}
   m_Layer: 2
   m_Name: MeshCollider
   m_TagString: Cogumelo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1972363641847924
 GameObject:
   m_ObjectHideFlags: 0
@@ -113,7 +113,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1646461487862562}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -28, y: 0.6, z: 35.4}
+  m_LocalPosition: {x: 1.33, y: -28.208637, z: -120.13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4129055648226944}
@@ -272,7 +272,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114728705121485268
+--- !u!114 &114650161363227586
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
