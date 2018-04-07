@@ -115,6 +115,24 @@ public class BirdSingCtrl : MonoBehaviour {
 		UpdateColor ();
 
 		//print (partituraAtual);
+
+		#region Debug_SingPartitura
+		if (Input.GetKey(KeyCode.Alpha4)) {
+			Debug_TocaPartitura(4);
+		} else if (Input.GetKey(KeyCode.Alpha5)) {
+			Debug_TocaPartitura(5);
+		} else if (Input.GetKey(KeyCode.Alpha6)) {
+			Debug_TocaPartitura(6);
+		} else if (Input.GetKey(KeyCode.Alpha7)) {
+			Debug_TocaPartitura(7);
+		} else if (Input.GetKey(KeyCode.Alpha8)) {
+			Debug_TocaPartitura(8);
+		} else if (Input.GetKey(KeyCode.Alpha9)) {
+			Debug_TocaPartitura(9);
+		} else if (Input.GetKey(KeyCode.Alpha0)) {
+			Debug_TocaPartitura(0);
+		}
+		#endregion
 	}
 
 	public void SingNote(){
@@ -292,6 +310,47 @@ public class BirdSingCtrl : MonoBehaviour {
 			partituraCollider.currentSong = PlayerSongs.Ninar;
 			break;
 		case 9999:	//Alegria
+			partituraCollider.currentSong = PlayerSongs.Alegria;
+			break;
+		default:
+			break;
+		}
+
+		Invoke ("CancelaPartitura", 0.5f);
+	}
+
+	void Debug_TocaPartitura(int partitura){
+		CancelInvoke ("CancelaPartitura");
+
+		tocouPartitura = true;
+
+		switch (partitura) {
+
+		//Se a partitura for de sustain, espera parar de tocar para cancelar partitura.
+		case 9:	//Encolhimento
+			partituraCollider.currentSong = PlayerSongs.Encolhimento;
+			partituraIsSustain = true;
+			return;
+		case 4:	//Amizade
+			partituraCollider.currentSong = PlayerSongs.Amizade;
+			partituraIsSustain = true;
+			return;
+		case 8:	//Crescimento
+			partituraCollider.currentSong = PlayerSongs.Crescimento;
+			partituraIsSustain = true;
+			return;
+
+			//Se a partitura for só de staccato, cancela a partitura depois de 0.5s.
+		case 5:	//Estorvo
+			partituraCollider.currentSong = PlayerSongs.Estorvo;
+			break;
+		case 6:	//Serenidade
+			partituraCollider.currentSong = PlayerSongs.Serenidade;
+			break;
+		case 7:	//Ninar
+			partituraCollider.currentSong = PlayerSongs.Ninar;
+			break;
+		case 0:	//Alegria
 			partituraCollider.currentSong = PlayerSongs.Alegria;
 			break;
 		default:

@@ -359,8 +359,22 @@ public class WalkingController : MonoBehaviour {
 	#region Input Control
 
 	public void SetDirectionalInput(Vector3 input){
-		//rawInput = input;
-		directionalInput = orientation.TransformVector(input);
+		//directionalInput = orientation.TransformVector(input);
+
+		Vector3 orientationForward;
+		float dot = Mathf.Abs(Vector3.Dot(Camera.main.transform.forward, Vector3.down));
+		if (dot != 0f)
+			orientationForward = (dot > 0.7f) ? Camera.main.transform.forward : Camera.main.transform.up;
+		else
+			orientationForward = Vector3.forward;
+		orientationForward = new Vector3 (orientationForward.x, 0, orientationForward.z);
+		orientationForward = (orientationForward).normalized * input.z;
+
+		Vector3 orientationRight = Camera.main.transform.right;
+		orientationRight = new Vector3 (orientationRight.x, 0, orientationRight.z);
+		orientationRight = (orientationRight).normalized * input.x;
+
+		directionalInput = (orientationForward + orientationRight).normalized;
 	}
 
 	public void OnJumpInputDown(){
