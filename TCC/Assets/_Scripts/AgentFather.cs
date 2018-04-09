@@ -15,6 +15,11 @@ public class AgentFather : MonoBehaviour {
 	public GameObject staccatoColl, sustainColl;
 	[SerializeField]
 	GameObject l_wing, r_wing;
+	[HideInInspector]
+	public float timeMoving;
+	[Range(1f, 300f)]
+	public float maxStamina;
+	public float currentStamina;
 
 	#region ========== Debug Variables ==========
 	public Transform targetReference;
@@ -36,6 +41,10 @@ public class AgentFather : MonoBehaviour {
 
 		staccatoColl.SetActive (false);
 		sustainColl.SetActive (false);
+
+		timeMoving = 0f;
+
+		currentStamina = maxStamina;
 
 		#region ========== Temporary Code ==========
 		sing = GetComponent<AudioSource> ();

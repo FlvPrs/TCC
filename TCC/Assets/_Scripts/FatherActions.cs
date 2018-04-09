@@ -40,6 +40,8 @@ public class FatherActions : AgentFather {
 //		}
 
 		UpdateHeightCollider (currentState);
+
+		currentStamina = maxStamina - timeMoving;
 	}
 
 	#region --------------------------------- TRIGGERS ---------------------------------
@@ -74,15 +76,18 @@ public class FatherActions : AgentFather {
 	//Util para se movimentar no chao
 	public void MoveHere (Vector3 pos){
 		MoveAgentOnNavMesh (pos);
+		timeMoving += Time.deltaTime;
 	}
 
 	//Util quando estiver no ar
 	public void MoveHereWithRB (Vector3 pos){
 		MoveAgentWithRB (pos);
+		timeMoving += Time.deltaTime;
 	}
 
 	public void MoveToPlayer (){
 		MoveAgentOnNavMesh (player.position);
+		timeMoving += Time.deltaTime;
 	}
 
 	//--- Esta função deve rodar todo frame ---
@@ -101,6 +106,7 @@ public class FatherActions : AgentFather {
 		if (isGuiding /*|| nmAgent.isOnOffMeshLink*/) {
 			nmAgent.isStopped = false;
 			MoveAgentOnNavMesh(pos);
+			timeMoving += Time.deltaTime;
 		} else {
 			nmAgent.isStopped = true;
 		}
@@ -121,12 +127,15 @@ public class FatherActions : AgentFather {
 		if(isFollowingPlayer){
 			nmAgent.isStopped = false;
 			MoveToPlayer ();
+			timeMoving += Time.deltaTime;
 		} else {
 			nmAgent.isStopped = true;
 		}
 	}
 
 	public void StartRandomWalk(Vector3 areaCenter, float areaRadius){
+		timeMoving += Time.deltaTime;
+
 		if(isRandomWalking){
 			if (CheckArrivedOnDestination ()) {
 				Vector3 newPos = RandomDestination (areaCenter, areaRadius);
@@ -152,6 +161,8 @@ public class FatherActions : AgentFather {
 
 	//--- Após ser chamada uma vez, enquanto isJumping for true, esta função deve rodar todo frame ---
 	public void JumpAndFall (float jHeight = 5f, float timeToApex = 0.3f){
+		timeMoving += Time.deltaTime;
+
 		if (!isJumping) {
 			CalculateJump (out isJumping, jHeight, timeToApex);
 		} else if (agentTransform.position.y <= oldPosY){
@@ -166,6 +177,8 @@ public class FatherActions : AgentFather {
 
 	//--- Após ser chamada uma vez, enquanto isFlying for true, esta função deve rodar todo frame ---
 	public void JumpAndHold (float seconds = 0f, bool allowSlowFalling = false, float jHeight = 5f, float timeToApex = 0.3f){
+		timeMoving += Time.deltaTime;
+
 		//Se eu acabei de começar o pulo
 		if (!isFlying) {
 			counter_Fly = 0f;
