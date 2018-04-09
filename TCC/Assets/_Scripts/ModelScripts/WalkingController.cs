@@ -64,7 +64,7 @@ public class WalkingController : MonoBehaviour {
 	int flyStamina;
 	float cameraRotation;
 	float jumpTriggerStrength;
-	public float singHoldTreshold = 0.25f;
+	public float singHoldTreshold = 0.24f;
 	public float singHoldTime;
 	bool stopGravity = false;
 
@@ -186,10 +186,10 @@ public class WalkingController : MonoBehaviour {
 
 		if (isGrounded) {
 			startCDBonusJump = false;
-			print ("estou no chao");
+			//print ("estou no chao");
 		}
 
-		print (startCDBonusJump);
+		//print (startCDBonusJump);
 		#region power up fruit limitado
 		if(hasBonusJump_2){
 			if (startCDBonusJump) {
@@ -198,14 +198,14 @@ public class WalkingController : MonoBehaviour {
 			fruitJumpPower = 1.3f;
 			if(CDBonusJump){
 				timerSecondJumpPower -= 1 *Time.deltaTime;
-				print("comecou contagem regressiva");
+				//print("comecou contagem regressiva");
 			}
 			if(timerSecondJumpPower <= 0){
 				timerSecondJumpPower = 5.0f;
 				hasBonusJump_2 = false;
 				fruitJumpPower = 0.75f;
 				CDBonusJump = false;
-				print("acabou contagem");
+				//print("acabou contagem");
 			}
 		}
 		#endregion

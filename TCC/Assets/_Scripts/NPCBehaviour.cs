@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(NavMeshAgent))]
 public class NPCBehaviour : MonoBehaviour, ISongListener {
 
 	NavMeshAgent nmAgent;
-	Transform player;
-	Transform father;
+	protected Transform npcTransform;
+	protected Transform player;
+	protected Transform father;
 
 	[BitMaskAttribute(typeof(PlayerSongs))]
 	public PlayerSongs acceptedSongs; //Definir pelo inspector com quais melodias o NPC poderá interagir.
@@ -31,19 +33,34 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 
 	protected Transform currentInteractionAgent; //Player ou Pai
 
-	void Start () {
+	public float timer = 0f;
+
+	protected virtual void Start () {
 		selectedSongs = ReturnSelectedElements ();
 		nmAgent = GetComponent<NavMeshAgent> ();
+		npcTransform = GetComponent<Transform> ();
 		player = GameObject.FindObjectOfType<WalkingController> ().transform;
 		father = GameObject.FindObjectOfType<FatherFSM> ().transform;
 
 		currentSong = PlayerSongs.Empty;
 		currentState = NPC_CurrentState.DefaultState;
 		currentInteractionAgent = player;
+
+		GetComponent<Rigidbody> ().isKinematic = true;
+
 	}
 	
 	// Update is called once per frame
 	protected virtual void Update () {
+		if (timer >= 1f) {
+			timer = 1f;
+			currentSong = PlayerSongs.Empty;
+			if (currentState == NPC_CurrentState.Seguindo)
+				currentState = NPC_CurrentState.DefaultState;
+		} else {
+			timer += Time.deltaTime;
+		}
+
 		switch (currentSong) {
 		case PlayerSongs.Amizade:
 			if (selectedSongs.Contains (0))
@@ -74,12 +91,17 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 				Distrair ();
 			break;
 		default: //PlayerSongs.Empty
-			DefaultState ();
+			if (currentState == NPC_CurrentState.Seguindo) {
+				Seguir ();
+			} else {
+				DefaultState ();
+			}
 			break;
 		}
 	}
 
 	public void DetectSong (PlayerSongs song, bool isFather = false){
+		timer = 0f;
 		currentSong = song;
 
 		if (!isFather)
