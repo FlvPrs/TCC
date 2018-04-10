@@ -33,7 +33,7 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 
 	protected Transform currentInteractionAgent; //Player ou Pai
 
-	float timer = 0f;
+	public float timer = 0f;
 
 	protected virtual void Start () {
 		selectedSongs = ReturnSelectedElements ();
@@ -47,11 +47,12 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 		currentInteractionAgent = player;
 
 		GetComponent<Rigidbody> ().isKinematic = true;
+
 	}
 	
 	// Update is called once per frame
 	protected virtual void Update () {
-		if(timer >= 1f){
+		if (timer >= 1f) {
 			timer = 1f;
 			currentSong = PlayerSongs.Empty;
 			if (currentState == NPC_CurrentState.Seguindo)

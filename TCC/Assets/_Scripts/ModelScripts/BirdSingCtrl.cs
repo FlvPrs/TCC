@@ -115,7 +115,6 @@ public class BirdSingCtrl : MonoBehaviour {
 		UpdateColor ();
 
 		//print (partituraAtual);
-
 		#region Debug_SingPartitura
 		if (Input.GetKey(KeyCode.Alpha4)) {
 			Debug_TocaPartitura(4);
@@ -327,30 +326,30 @@ public class BirdSingCtrl : MonoBehaviour {
 		switch (partitura) {
 
 		//Se a partitura for de sustain, espera parar de tocar para cancelar partitura.
-		case 9:	//Encolhimento
+		case 9:    //Encolhimento
 			partituraCollider.currentSong = PlayerSongs.Encolhimento;
 			partituraIsSustain = true;
 			return;
-		case 4:	//Amizade
+		case 4:    //Amizade
 			partituraCollider.currentSong = PlayerSongs.Amizade;
 			partituraIsSustain = true;
 			return;
-		case 8:	//Crescimento
+		case 8:    //Crescimento
 			partituraCollider.currentSong = PlayerSongs.Crescimento;
 			partituraIsSustain = true;
 			return;
 
 			//Se a partitura for só de staccato, cancela a partitura depois de 0.5s.
-		case 5:	//Estorvo
+		case 5:    //Estorvo
 			partituraCollider.currentSong = PlayerSongs.Estorvo;
 			break;
-		case 6:	//Serenidade
+		case 6:    //Serenidade
 			partituraCollider.currentSong = PlayerSongs.Serenidade;
 			break;
-		case 7:	//Ninar
+		case 7:    //Ninar
 			partituraCollider.currentSong = PlayerSongs.Ninar;
 			break;
-		case 0:	//Alegria
+		case 0:    //Alegria
 			partituraCollider.currentSong = PlayerSongs.Alegria;
 			break;
 		default:
