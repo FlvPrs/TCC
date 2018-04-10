@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class MyFirstNPC : NPCBehaviour {
 
-	protected override void Crescer ()
-	{
-		base.Crescer ();
-
-
+	// Use this for initialization
+	void Start () {
+		
 	}
-
+	
+	// Update is called once per frame
+	protected override void Update () {//se eu quiser colocar uma funcao no update que sobreponha a que esta no npcBehaviour
+		
+	}
 }
