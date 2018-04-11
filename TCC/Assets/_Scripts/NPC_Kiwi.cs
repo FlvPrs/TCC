@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class NPC_Kiwi : NPCBehaviour {
 
+	float defaultStopDist;
+
 	float distToPlayer;
 	float timer_StartPatrulha = 0;
 	float timer_Distraido = 0;
 	float timer_PegarObjeto = 0;
 	Vector3 patrulhaStartPos;
-	bool fugindo, patrulhando, podePegarObj;
+	bool fugindo, patrulhando, isOnArbusto, podePegarObj;
 
 	List<Transform> collObjects = new List<Transform> ();
 	Transform objetoCarregado;
+
+	protected override void Awake ()
+	{
+		base.Awake ();
+
+		defaultStopDist = nmAgent.stoppingDistance;
+	}
 
 	protected override void Update ()
 	{
@@ -41,54 +50,57 @@ public class NPC_Kiwi : NPCBehaviour {
 
 		base.DefaultState ();
 
-		//Normalmente, Foge do player quando este se aproxima.
-		if(distToPlayer < 7f){
-			patrulhando = false;
-			timer_StartPatrulha = 0;
-			currentSong = PlayerSongs.Empty;
+		if (!isOnArbusto) {
+			nmAgent.stoppingDistance = defaultStopDist;
 
-			if (objetoCarregado != null)
-				SoltarObjeto ();
+			//Normalmente, Foge do player quando este se aproxima.
+			if (distToPlayer < 7f) {
+				patrulhando = false;
+				timer_StartPatrulha = 0;
+				currentSong = PlayerSongs.Empty;
 
-			if(!fugindo){
-				fugindo = true;
-				FleeFromPlayer ();
-			}
-			else {
-				if (!nmAgent.pathPending && !nmAgent.isStopped){
-					if (nmAgent.remainingDistance <= nmAgent.stoppingDistance){
-						if (!nmAgent.hasPath || nmAgent.velocity.sqrMagnitude == 0f){
-							FleeFromPlayer ();
+				if (objetoCarregado != null)
+					SoltarObjeto ();
+
+				if (!fugindo) {
+					fugindo = true;
+					FleeFromPlayer ();
+				} else {
+					if (!nmAgent.pathPending && !nmAgent.isStopped) {
+						if (nmAgent.remainingDistance <= nmAgent.stoppingDistance) {
+							if (!nmAgent.hasPath || nmAgent.velocity.sqrMagnitude == 0f) {
+								FleeFromPlayer ();
+							}
 						}
 					}
 				}
+
+			} else {
+				fugindo = false;
 			}
 
-		} else {
-			fugindo = false;
-		}
+			//Se ficar 10s parado, anda pra um lugar aleatorio perto de onde está
+			if (timer_StartPatrulha >= 10f) {
 
-		//Se ficar 10s parado, anda pra um lugar aleatorio perto de onde está
-		if (timer_StartPatrulha >= 10f) {
+				if (!patrulhando) {
+					patrulhando = true;
+					patrulhaStartPos = npcTransform.position;
+				}
 
-			if(!patrulhando){
-				patrulhando = true;
-				patrulhaStartPos = npcTransform.position;
-			}
-
-			if (!nmAgent.pathPending && !nmAgent.isStopped){
-				if (nmAgent.remainingDistance <= nmAgent.stoppingDistance){
-					if (!nmAgent.hasPath || nmAgent.velocity.sqrMagnitude == 0f){
-						if (timer_StartPatrulha < 20f) {
-							Vector2 circleRand = new Vector2 (patrulhaStartPos.x, patrulhaStartPos.z) + (20f * Random.insideUnitCircle);
-							Vector3 dest = new Vector3 (circleRand.x, npcTransform.position.y, circleRand.y);
-							nmAgent.SetDestination (dest);
-						} else {
-							nmAgent.SetDestination (patrulhaStartPos);
-							if (!nmAgent.pathPending && !nmAgent.isStopped) {
-								if (nmAgent.remainingDistance <= nmAgent.stoppingDistance) {
-									if (!nmAgent.hasPath || nmAgent.velocity.sqrMagnitude == 0f) {
-										timer_StartPatrulha = 0f;
+				if (!nmAgent.pathPending && !nmAgent.isStopped) {
+					if (nmAgent.remainingDistance <= nmAgent.stoppingDistance) {
+						if (!nmAgent.hasPath || nmAgent.velocity.sqrMagnitude == 0f) {
+							if (timer_StartPatrulha < 20f) {
+								Vector2 circleRand = new Vector2 (patrulhaStartPos.x, patrulhaStartPos.z) + (20f * Random.insideUnitCircle);
+								Vector3 dest = new Vector3 (circleRand.x, npcTransform.position.y, circleRand.y);
+								nmAgent.SetDestination (dest);
+							} else {
+								nmAgent.SetDestination (patrulhaStartPos);
+								if (!nmAgent.pathPending && !nmAgent.isStopped) {
+									if (nmAgent.remainingDistance <= nmAgent.stoppingDistance) {
+										if (!nmAgent.hasPath || nmAgent.velocity.sqrMagnitude == 0f) {
+											timer_StartPatrulha = 0f;
+										}
 									}
 								}
 							}
@@ -96,9 +108,12 @@ public class NPC_Kiwi : NPCBehaviour {
 					}
 				}
 			}
+			timer_StartPatrulha += Time.deltaTime;
+		} 
+		else { //Se ele estiver dentro de um Arbusto...
+			nmAgent.stoppingDistance = 0f;
+			timer_StartPatrulha = 0f;
 		}
-
-		timer_StartPatrulha += Time.deltaTime;
 	}
 
 	void FleeFromPlayer (){
@@ -111,6 +126,7 @@ public class NPC_Kiwi : NPCBehaviour {
 	void ResetDefaultBehaviour (){
 		patrulhando = fugindo = false;
 		timer_StartPatrulha = 0;
+		isOnArbusto = false;
 	}
 
 	protected override void Seguir ()
@@ -203,12 +219,23 @@ public class NPC_Kiwi : NPCBehaviour {
 				}
 			}
 		}
+
+		if(col.CompareTag("Arbusto")){
+			if(currentState == NPC_CurrentState.DefaultState && !isOnArbusto){
+				nmAgent.SetDestination (col.transform.position);
+				isOnArbusto = true;
+			}
+		}
 	}
 	void OnTriggerExit (Collider col){
 		if(col.CompareTag("Fruta") || col.CompareTag("Semente") || col.CompareTag("PaiDebilitado")){
 			if(collObjects.Contains(col.transform)){
 				collObjects.Remove (col.transform);
 			}
+		}
+
+		if(col.CompareTag("Arbusto")){
+			isOnArbusto = false;
 		}
 	}
 }

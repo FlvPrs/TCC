@@ -35,12 +35,12 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 
 	public float timer = 0f;
 
-	protected virtual void Start () {
+	protected virtual void Awake () {
 		selectedSongs = ReturnSelectedElements ();
 		nmAgent = GetComponent<NavMeshAgent> ();
 		npcTransform = GetComponent<Transform> ();
 		player = GameObject.FindObjectOfType<WalkingController> ().transform;
-		father = GameObject.FindObjectOfType<FatherFSM> ().transform;
+		//father = GameObject.FindObjectOfType<FatherFSM> ().transform;
 
 		currentSong = PlayerSongs.Empty;
 		currentState = NPC_CurrentState.DefaultState;
@@ -65,30 +65,44 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 		case PlayerSongs.Amizade:
 			if (selectedSongs.Contains (0))
 				Seguir ();
+			else
+				DefaultState ();
 			break;
 		case PlayerSongs.Estorvo:
 			if (selectedSongs.Contains (1))
 				Irritar ();
+			else
+				DefaultState ();
 			break;
 		case PlayerSongs.Serenidade:
 			if (!selectedSongs.Contains (2))
 				Acalmar ();
+			else
+				DefaultState ();
 			break;
 		case PlayerSongs.Ninar:
 			if (selectedSongs.Contains (3))
 				Dormir ();
+			else
+				DefaultState ();
 			break;
 		case PlayerSongs.Crescimento:
 			if (selectedSongs.Contains (4))
 				Crescer ();
+			else
+				DefaultState ();
 			break;
 		case PlayerSongs.Encolhimento:
 			if (selectedSongs.Contains (5))
 				Encolher ();
+			else
+				DefaultState ();
 			break;
 		case PlayerSongs.Alegria:
 			if (selectedSongs.Contains (6))
 				Distrair ();
+			else
+				DefaultState ();
 			break;
 		default: //PlayerSongs.Empty
 			if (currentState == NPC_CurrentState.Seguindo) {
