@@ -5,8 +5,9 @@ using UnityEngine;
 public class MenuControllerInGame : MonoBehaviour {
 
 	public WalkingController player;
-	private int opcaoMenu1, opcaoMenu2, opcaoMenu3, opcaoMenuPause, opcaoMenuMorte, volumeMusica, volumeEfeitos;
-	private bool onMenu1, onMenu2, onMenu3, onMenu4, onMenuDeath,onPause, controlandoVolume, musicaEfeito;
+	public int opcaoMenu1, opcaoMenu2, opcaoMenu3, opcaoMenuPause, opcaoMenuMorte, volumeMusica, volumeEfeitos;
+	private float tempo;
+	private bool onMenu1, onMenu2, onMenu3, onMenu4, onMenuDeath,onPause, controlandoVolume, musicaEfeito, inGame;
 	public GameObject menu1, menu2, menu3, menu4, menuPause, menuMorte, telaFundo, seta;
 	public GameObject VM1, VM2, VM3, VM4, VM5, VM6, VM7, VM8;
 	public GameObject VE1, VE2, VE3, VE4, VE5, VE6, VE7, VE8;
@@ -18,11 +19,14 @@ public class MenuControllerInGame : MonoBehaviour {
 		TrocaMenus (1);
 		opcaoMenu1 = 1;
 		onPause = false;
+
+		tempo = Time.fixedDeltaTime;
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.Escape) && !onMenu1) {
+		if (Input.GetKeyDown (KeyCode.Escape) && inGame) {
 			onPause = !onPause;
 			chamaPause ();
 		}
@@ -60,6 +64,7 @@ public class MenuControllerInGame : MonoBehaviour {
 					if (SaveInformations.saveSlot1 == 0) {
 						SaveInformations.SaveSlot (1, 1);
 						TrocaMenus (6);
+						print("acionei");
 					}
 				} else if (opcaoMenu2 == 2) {
 					if (SaveInformations.saveSlot2 == 0) {
@@ -231,10 +236,12 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenu3 = false;
 			onMenu4 = false;
 			onMenuDeath = false;
+			inGame = true;
 
 			opcaoMenuPause = 1;
 			player.playerCanMove = false;
-			Time.fixedDeltaTime = 0f;
+			//Time.fixedDeltaTime = 0f;
+			Time.timeScale = 0f;
 			break;
 
 		case 1://menuInicial
@@ -253,6 +260,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenu3 = false;
 			onMenu4 = false;
 			onMenuDeath = false;
+			inGame = false;
 
 			opcaoMenu1 = 1;
 			player.playerCanMove = false;
@@ -274,6 +282,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenu3 = false;
 			onMenu4 = false;
 			onMenuDeath = false;
+			inGame = false;
 
 			opcaoMenu2 = 1;
 			player.playerCanMove = false;
@@ -295,6 +304,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenu3 = true;
 			onMenu4 = false;
 			onMenuDeath = false;
+			inGame = false;
 
 			opcaoMenu3 = 1;
 			player.playerCanMove = false;
@@ -318,6 +328,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenu3 = false;
 			onMenu4 = true;
 			onMenuDeath = false;
+			inGame = false;
 
 			player.playerCanMove = false;
 			break;
@@ -338,6 +349,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenu3 = false;
 			onMenu4 = false;
 			onMenuDeath = true;
+			inGame = false;
 
 			opcaoMenuMorte = 1;
 			player.playerCanMove = false;
@@ -359,9 +371,11 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenu3 = false;
 			onMenu4 = false;
 			onMenuDeath = false;
+			inGame = true;
 
 			player.playerCanMove = true;
-			Time.fixedDeltaTime = 1f;
+			//Time.fixedDeltaTime = tempo;
+			Time.timeScale = 1f;
 			break;
 
 		}
