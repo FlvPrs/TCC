@@ -24,7 +24,8 @@ public class FatherFSM : MonoBehaviour {
 
 	private FatherActions fatherActions;
 
-
+	private bool playerIsRespawning;
+	private bool isReturningFromRespawn;
 
 	//Trigger variables
 	public bool externalTriggerActivated;
@@ -35,6 +36,16 @@ public class FatherFSM : MonoBehaviour {
 	}
 
 	void Update () {
+		if (playerIsRespawning) {
+			if (isReturningFromRespawn) {
+				if(fatherActions.CheckArrivedOnDestination ()){
+					isReturningFromRespawn = false;
+					Invoke ("EndRespawnBehaviour", 1f);
+				}
+			}
+			return;
+		}
+
 		changeState = false;
 
 		switch (currentStateChanger) {
@@ -185,5 +196,23 @@ public class FatherFSM : MonoBehaviour {
 
 	public void ChangeHeight(HeightState height){
 		fatherActions.ChangeHeight (height);
+	}
+
+	//=-----------------------------------------------------------------=
+
+	public void StartRespawn (){
+		playerIsRespawning = true;
+		fatherActions.stopUpdate = true;
+	}
+
+	public void ReturnToPosAfterRespawn (Vector3 pos){
+		isReturningFromRespawn = true;
+		fatherActions.stopUpdate = false;
+		fatherActions.MoveHere (pos);
+	}
+
+	void EndRespawnBehaviour (){
+		RoteiroPai.RestartRoteiroAt ();
+		playerIsRespawning = false;
 	}
 }

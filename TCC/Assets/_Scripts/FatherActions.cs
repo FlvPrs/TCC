@@ -16,6 +16,9 @@ public class FatherActions : AgentFather {
 	[HideInInspector]
 	public bool allowFlySlowFall;
 
+	[HideInInspector]
+	public bool stopUpdate;
+
 	protected override void Start (){
 		base.Start ();
 
@@ -24,6 +27,9 @@ public class FatherActions : AgentFather {
 	}
 
 	protected override void Update (){
+		if (stopUpdate)
+			return;
+
 		base.Update ();
 
 		if(isJumping){

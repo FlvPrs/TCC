@@ -11,6 +11,7 @@ public class PlayerRespawnCtrl : MonoBehaviour {
 
 	public Transform actualPai;
 	public Transform paiRespawnPoint;
+	private Vector3 fatherOldPos;
 
 	private bool isReturning;
 	private bool goUp;
@@ -42,8 +43,11 @@ public class PlayerRespawnCtrl : MonoBehaviour {
 
 	public IEnumerator ReturnToSpawn(Vector3 pos){
 		player.GetComponent<WalkingController> ().SetVelocityTo (Vector3.zero, true);
+		fatherOldPos = actualPai.position;
 		actualPai.position = paiRespawnPoint.position;
 		paiCanShow = false;
+		actualPai.GetComponent<UnityEngine.AI.NavMeshAgent> ().enabled = false;
+		actualPai.GetComponent<FatherFSM> ().StartRespawn ();
 		isReturning = true;
 		flyingPai.SetActive (true);
 		player.SetParent (transform);
@@ -55,9 +59,11 @@ public class PlayerRespawnCtrl : MonoBehaviour {
 		goDown = false;
 		goUp = true;
 		isReturning = false;
+		actualPai.GetComponent<UnityEngine.AI.NavMeshAgent> ().enabled = true;
 		player.GetComponent<WalkingController> ().SetVelocityTo (Vector3.zero, false);
 		yield return new WaitForSeconds (1f);
 		paiCanShow = true;
+		actualPai.GetComponent<FatherFSM> ().ReturnToPosAfterRespawn (fatherOldPos);
 		yield return new WaitForSeconds (3f);
 		flyingPai.SetActive (false);
 		goUp = false;

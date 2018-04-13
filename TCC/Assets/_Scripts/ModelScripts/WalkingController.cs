@@ -354,6 +354,8 @@ public class WalkingController : MonoBehaviour {
 		} else{
 			bonusJumpParticle.SetActive (false);
 		}
+
+		print (Mathf.Abs(Vector3.Dot(Camera.main.transform.forward, Vector3.down)));
 	}
 
 	#region Input Control
@@ -362,9 +364,9 @@ public class WalkingController : MonoBehaviour {
 		//directionalInput = orientation.TransformVector(input);
 
 		Vector3 orientationForward;
-		float dot = Mathf.Abs(Vector3.Dot(Camera.main.transform.forward, Vector3.down));
+		float dot = Vector3.Dot(Camera.main.transform.forward, Vector3.down);
 		if (dot != 0f)
-			orientationForward = (dot > 0.7f) ? Camera.main.transform.forward : Camera.main.transform.up;
+			orientationForward = (Mathf.Abs (dot) <= 0.7f) ? Camera.main.transform.forward : (dot > 0f) ? Camera.main.transform.up : -Camera.main.transform.up;
 		else
 			orientationForward = Vector3.forward;
 		orientationForward = new Vector3 (orientationForward.x, 0, orientationForward.z);
