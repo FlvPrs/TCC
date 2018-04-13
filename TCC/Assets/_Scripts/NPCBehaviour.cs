@@ -35,12 +35,12 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 
 	public float timer = 0f;
 
-	protected virtual void Awake () {
+	protected virtual void Start () {
 		selectedSongs = ReturnSelectedElements ();
 		nmAgent = GetComponent<NavMeshAgent> ();
 		npcTransform = GetComponent<Transform> ();
 		player = GameObject.FindObjectOfType<WalkingController> ().transform;
-		//father = GameObject.FindObjectOfType<FatherFSM> ().transform;
+		father = GameObject.FindObjectOfType<FatherFSM> ().transform;
 
 		currentSong = PlayerSongs.Empty;
 		currentState = NPC_CurrentState.DefaultState;

@@ -13,8 +13,8 @@ public class Npc_BeijaFlor : NPCBehaviour {
 	List<Transform> collObjects = new List<Transform>();
 	Transform objetoCarregado;
 
-	protected override void Awake(){
-		base.Awake ();
+	protected override void Start(){
+		base.Start ();
 		estado = EstadosBeijaFro.Idle;
 		dentroVeneno = false;
 	}

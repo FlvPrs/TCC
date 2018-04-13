@@ -133,7 +133,7 @@ public class IntroCamController : MonoBehaviour {
 				camTrack.m_PathPosition = Mathf.SmoothStep (camTrack.m_PathPosition, 0f, t);
 		}
 
-//		if(!playerCtrl.playerInputStartGame && Input.anyKeyDown)
-//			playerCtrl.playerInputStartGame = true;
+		if(!playerCtrl.playerInputStartGame && Input.anyKeyDown)
+			playerCtrl.playerInputStartGame = true;
 	}
 }
