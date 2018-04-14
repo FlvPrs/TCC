@@ -354,8 +354,6 @@ public class WalkingController : MonoBehaviour {
 		} else{
 			bonusJumpParticle.SetActive (false);
 		}
-
-		print (Mathf.Abs(Vector3.Dot(Camera.main.transform.forward, Vector3.down)));
 	}
 
 	#region Input Control

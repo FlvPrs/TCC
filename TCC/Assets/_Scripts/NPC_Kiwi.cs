@@ -39,6 +39,10 @@ public class NPC_Kiwi : NPCBehaviour {
 			timer_PegarObjeto = 0f;
 			podePegarObj = true;
 		}
+
+		if(!isOnArbusto){
+			nmAgent.stoppingDistance = defaultStopDist;
+		}
 	}
 
 	protected override void DefaultState ()
@@ -51,8 +55,6 @@ public class NPC_Kiwi : NPCBehaviour {
 		base.DefaultState ();
 
 		if (!isOnArbusto) {
-			nmAgent.stoppingDistance = defaultStopDist;
-
 			//Normalmente, Foge do player quando este se aproxima.
 			if (distToPlayer < 7f) {
 				patrulhando = false;
@@ -80,7 +82,7 @@ public class NPC_Kiwi : NPCBehaviour {
 			}
 
 			//Se ficar 10s parado, anda pra um lugar aleatorio perto de onde está
-			if (timer_StartPatrulha >= 10f) {
+			if (timer_StartPatrulha >= 7f) {
 
 				if (!patrulhando) {
 					patrulhando = true;
@@ -90,20 +92,20 @@ public class NPC_Kiwi : NPCBehaviour {
 				if (!nmAgent.pathPending && !nmAgent.isStopped) {
 					if (nmAgent.remainingDistance <= nmAgent.stoppingDistance) {
 						if (!nmAgent.hasPath || nmAgent.velocity.sqrMagnitude == 0f) {
-							if (timer_StartPatrulha < 20f) {
-								Vector2 circleRand = new Vector2 (patrulhaStartPos.x, patrulhaStartPos.z) + (20f * Random.insideUnitCircle);
-								Vector3 dest = new Vector3 (circleRand.x, npcTransform.position.y, circleRand.y);
-								nmAgent.SetDestination (dest);
-							} else {
-								nmAgent.SetDestination (patrulhaStartPos);
-								if (!nmAgent.pathPending && !nmAgent.isStopped) {
-									if (nmAgent.remainingDistance <= nmAgent.stoppingDistance) {
-										if (!nmAgent.hasPath || nmAgent.velocity.sqrMagnitude == 0f) {
-											timer_StartPatrulha = 0f;
-										}
-									}
-								}
-							}
+//							if (timer_StartPatrulha < 20f) {
+							Vector2 circleRand = new Vector2 (patrulhaStartPos.x, patrulhaStartPos.z) + (20f * Random.insideUnitCircle);
+							Vector3 dest = new Vector3 (circleRand.x, npcTransform.position.y, circleRand.y);
+							nmAgent.SetDestination (dest);
+//							} else {
+//								nmAgent.SetDestination (patrulhaStartPos);
+//								if (!nmAgent.pathPending && !nmAgent.isStopped) {
+//									if (nmAgent.remainingDistance <= nmAgent.stoppingDistance) {
+//										if (!nmAgent.hasPath || nmAgent.velocity.sqrMagnitude == 0f) {
+//											timer_StartPatrulha = 0f;
+//										}
+//									}
+//								}
+//							}
 						}
 					}
 				}
@@ -193,7 +195,8 @@ public class NPC_Kiwi : NPCBehaviour {
 			}
 		}
 
-		CarregarObjeto (collObjects[index]);
+		if(index < collObjects.Count)
+			CarregarObjeto (collObjects[index]);
 	}
 
 	void CarregarObjeto (Transform obj){

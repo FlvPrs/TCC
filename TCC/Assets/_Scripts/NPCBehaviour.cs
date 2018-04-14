@@ -75,7 +75,7 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 				DefaultState ();
 			break;
 		case PlayerSongs.Serenidade:
-			if (!selectedSongs.Contains (2))
+			if (selectedSongs.Contains (2))
 				Acalmar ();
 			else
 				DefaultState ();
