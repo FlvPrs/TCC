@@ -46,7 +46,7 @@ public class WalkingController : MonoBehaviour {
 	Transform myT;
 	Rigidbody rb;
 	[SerializeField]
-	BoxCollider coll;
+	BoxCollider coll; //O VALOR É ATRIBUÍDO NO INSPECTOR
 	HUDScript hudScript;
 	Transform playerT;
 	BirdStatureCtrl birdHeightCtrl;
@@ -509,8 +509,8 @@ public class WalkingController : MonoBehaviour {
 		collAbove = false;
 
 		float lowestAngle = 360f;
-		bool climbingSlope = false;
-		bool canStopGravity = false;
+//		bool climbingSlope = false;
+//		bool canStopGravity = false;
 		Vector3 normalDir = Vector3.zero;
 
 		float directionY = Mathf.Sign (velocity.y);

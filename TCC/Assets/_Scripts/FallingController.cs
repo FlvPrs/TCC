@@ -9,7 +9,7 @@ public class FallingController : MonoBehaviour {
 	public CamPriorityController camCtrl;
 	public WalkingController playerCtrl;
 
-	bool isFalling;
+//	bool isFalling;
 
 	// Use this for initialization
 	void Start () {
@@ -26,7 +26,7 @@ public class FallingController : MonoBehaviour {
 
 	void OnTriggerEnter(Collider col){
 		if(col.CompareTag("Player")){
-			isFalling = true;
+//			isFalling = true;
 			camCtrl.ChangeCameraTo (cam1_Index);
 			playerCtrl.isFallingToDeath = true;
 			playerCtrl.glideStrength = 0f;

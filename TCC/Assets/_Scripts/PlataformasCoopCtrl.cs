@@ -64,7 +64,7 @@ public class PlataformasCoopCtrl : MonoBehaviour, ISongListener, IFatherSustainI
 		}
 	}
 
-	public void DetectSong (PlayerSongs song, bool isFather = false){
+	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false){
 		if(song == PlayerSongs.Crescimento){
 			for (int i = 0; i < plataformas.Length; i++) {
 				Vector3 newPos = originalPos [i] + son_Distance [i] + dad_deltaY [i];

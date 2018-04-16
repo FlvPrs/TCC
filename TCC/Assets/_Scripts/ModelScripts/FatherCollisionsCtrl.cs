@@ -11,7 +11,7 @@ public class FatherCollisionsCtrl : MonoBehaviour {
 
 	private Animator anim;
 
-	private float waitToChangeWP = 0f;
+//	private float waitToChangeWP = 0f;
 
 	void Awake(){
 		linkMover = GetComponent<AgentLinkMover> ();

@@ -28,6 +28,8 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 	[SerializeField]
 	protected PlayerSongs currentSong;
 
+	protected bool playerIsMakingNoise;
+
 	[SerializeField]
 	protected NPC_CurrentState currentState;
 
@@ -112,11 +114,16 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 			}
 			break;
 		}
+
+		if(playerIsMakingNoise){
+			ChamarAtencao ();
+		}
 	}
 
-	public void DetectSong (PlayerSongs song, bool isFather = false){
+	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false){
 		timer = 0f;
 		currentSong = song;
+		playerIsMakingNoise = isSingingSomething;
 
 		if (!isFather)
 			currentInteractionAgent = player;
@@ -189,10 +196,14 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 	}
 
 	protected virtual void ChamarAtencao (){
-		if (currentState == NPC_CurrentState.Atento)
-			return; //Esta função só deve roda uma vez.
-		
-		currentState = NPC_CurrentState.Atento;
+		playerIsMakingNoise = false;
+//		if (currentState == NPC_CurrentState.Atento)
+//			return; //Esta função só deve roda uma vez.
+//		
+//		currentState = NPC_CurrentState.Atento;
+		if(currentState == NPC_CurrentState.Dormindo){
+			Acordar ();
+		}
 	}
 	protected virtual void Distrair (){
 		if (currentState == NPC_CurrentState.Distraido)
@@ -233,7 +244,7 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 		Dormindo,
 		Crescendo,
 		Encolhendo,
-		Atento,
+//		Atento,
 		Distraido
 	}
 }

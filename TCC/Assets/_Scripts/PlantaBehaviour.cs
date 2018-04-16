@@ -25,6 +25,8 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 	[SerializeField]
 	protected PlayerSongs currentSong;
 
+	protected bool playerIsMakingNoise;
+
 	[SerializeField]
 	protected Planta_CurrentState currentState;
 
@@ -145,8 +147,12 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 					}
 					break;
 				}
-			} 
-			else { //Se a planta estiver Murcha...
+
+				if(playerIsMakingNoise){
+					ChamarAtencao ();
+				}
+
+			} else { //Se a planta estiver Murcha...
 				MurchaState ();
 			}
 		} else { //Se a planta for um broto...
@@ -156,9 +162,10 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 		}
 	}
 
-	public void DetectSong (PlayerSongs song, bool isFather = false){
+	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false){
 		timer = 0f;
 		currentSong = song;
+		playerIsMakingNoise = isSingingSomething;
 
 		if (!isFather)
 			currentInteractionAgent = player;
@@ -265,10 +272,14 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 	}
 
 	protected virtual void ChamarAtencao (){
-		if (currentState == Planta_CurrentState.Atento)
-			return; //Esta função só deve roda uma vez.
-
-		currentState = Planta_CurrentState.Atento;
+		playerIsMakingNoise = false;
+//		if (currentState == Planta_CurrentState.Atento)
+//			return; //Esta função só deve roda uma vez.
+//
+//		currentState = Planta_CurrentState.Atento;
+		if(currentState == Planta_CurrentState.Dormindo){
+			Acordar ();
+		}
 	}
 	protected virtual void Distrair (){
 		if (currentState == Planta_CurrentState.Distraido)
@@ -322,7 +333,7 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 		Dormindo,
 		Crescendo,
 		Encolhendo,
-		Atento,
+//		Atento,
 		Distraido,
 		Murcho
 	}

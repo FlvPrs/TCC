@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Planta_Carnivora : PlantaBehaviour {
 
-	Transform comidaContainer_Pos, comidaContainer_Neg;
+	//Transform comidaContainer_Pos, comidaContainer_Neg;
 	SphereCollider coll;
 
 	enum DirectionReference {Up, Forward, Right}
@@ -17,6 +17,8 @@ public class Planta_Carnivora : PlantaBehaviour {
 	float attackRange_irritado;
 
 	bool fechada;
+	float foodDir = 0f;
+	Transform foodContainer;
 
 	#region DELETAR
 	GameObject indicadorDeSono;
@@ -26,8 +28,9 @@ public class Planta_Carnivora : PlantaBehaviour {
 	{
 		base.Awake ();
 
-		comidaContainer_Pos = plantaTransform.Find("ComidaContainer_Pos");
-		comidaContainer_Neg = plantaTransform.Find("ComidaContainer_Neg");
+		foodContainer = plantaTransform.Find ("FoodContainer");
+//		comidaContainer_Pos = plantaTransform.Find("ComidaContainer_Pos");
+//		comidaContainer_Neg = plantaTransform.Find("ComidaContainer_Neg");
 	}
 
 	void Start (){
@@ -62,10 +65,6 @@ public class Planta_Carnivora : PlantaBehaviour {
 			
 		}
 
-		if(currentState != Planta_CurrentState.Irritado){
-			
-		}
-
 		#region DELETAR
 		if(currentState != Planta_CurrentState.Dormindo){
 			indicadorDeSono.SetActive (false);
@@ -75,11 +74,31 @@ public class Planta_Carnivora : PlantaBehaviour {
 		#endregion
 	}
 
-	void Attack (GameObject food){
+	void Attack (Transform food){
 		fechada = true;
-		Vector3 dir = food.transform.position - plantaTransform.position;
-		float dirY = Mathf.Sign (Vector3.Dot (dir, facingDirection));
+		//Vector3 dirToFood = (food.transform.position - plantaTransform.position);
+		foodDir = Mathf.Sign (Vector3.Dot ((food.position - plantaTransform.position), facingDirection));
+		foodContainer.localPosition = foodDir * facingDirection;
 		//TODO: Mandar fechar pro lado certo. Prender comida.
+
+//		switch (type) {
+//		case FoodType.Player:
+//
+//			break;
+//		case FoodType.NPC:
+//
+//			break;
+//		case FoodType.Planta:
+//
+//			break;
+//		case FoodType.Pai:
+//
+//			break;
+//		default:
+//			break;
+//		}
+
+
 	}
 
 
@@ -138,14 +157,14 @@ public class Planta_Carnivora : PlantaBehaviour {
 		base.Irritar ();
 		//currentState = Planta_CurrentState.Irritado;
 
-		comidaContainer_Pos.localScale = comidaContainer_Neg.localScale = Vector3.one * attackRange_irritado;
+		//comidaContainer_Pos.localScale = comidaContainer_Neg.localScale = Vector3.one * attackRange_irritado;
 		coll.radius = attackRange_irritado;
 	}
 	protected override void Acalmar ()
 	{
 		base.Acalmar ();
 
-		comidaContainer_Pos.localScale = comidaContainer_Neg.localScale = Vector3.one * attackRange_default;
+		//comidaContainer_Pos.localScale = comidaContainer_Neg.localScale = Vector3.one * attackRange_default;
 		coll.radius = attackRange_default;
 
 	}
@@ -155,9 +174,28 @@ public class Planta_Carnivora : PlantaBehaviour {
 		base.OnTriggerStay (col);
 
 		if (!fechada && (currentState == Planta_CurrentState.DefaultState || currentState == Planta_CurrentState.Irritado)) {
-			if (col.GetComponent<NPCBehaviour> () != null || col.GetComponent<PlantaBehaviour> () != null || col.CompareTag("Player") || col.CompareTag("NPC_Pai")) {
-				Attack (col.gameObject);
+//			if (col.CompareTag("Player")) {
+//				Attack (FoodType.Player, col.gameObject);
+//			} else if (col.GetComponent<NPCBehaviour> () != null) {
+//				Attack (FoodType.NPC, col.gameObject);
+//			} else if (col.GetComponent<PlantaBehaviour> () != null) {
+//				Attack (FoodType.Planta, col.gameObject);
+//			} else if (col.CompareTag("NPC_Pai")) {
+//				Attack (FoodType.Pai, col.gameObject);
+//			}
+
+			if (col.GetComponent<ICarnivoraEdible> () != null) {
+				col.GetComponent<ICarnivoraEdible> ().Carnivora_GetReadyToBeEaten ();
+				Attack (col.transform);
 			}
 		}
 	}
+
+//	enum FoodType
+//	{
+//		NPC,
+//		Planta,
+//		Player,
+//		Pai
+//	}
 }
