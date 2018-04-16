@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,8 +7,9 @@ public class MenuControllerInGame : MonoBehaviour {
 
 	public WalkingController player;
 	public int opcaoMenu1, opcaoMenu2, opcaoMenu3, opcaoMenuPause, opcaoMenuMorte, volumeMusica, volumeEfeitos;
-	private float tempo;
+	private float tempo, timeToEnter;
 	private bool onMenu1, onMenu2, onMenu3, onMenu4, onMenuDeath,onPause, controlandoVolume, musicaEfeito, inGame;
+	private bool podeEnter, jogando;
 	public GameObject menu1, menu2, menu3, menu4, menuPause, menuMorte, telaFundo, seta;
 	public GameObject VM1, VM2, VM3, VM4, VM5, VM6, VM7, VM8;
 	public GameObject VE1, VE2, VE3, VE4, VE5, VE6, VE7, VE8;
@@ -15,109 +17,125 @@ public class MenuControllerInGame : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		onMenu1 = true;
 		TrocaMenus (1);
-		opcaoMenu1 = 1;
 		onPause = false;
-
+		inGame = false;
 		tempo = Time.fixedDeltaTime;
-
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.Escape) && inGame) {
-			onPause = !onPause;
-			chamaPause ();
+		timeToEnter += Time.deltaTime * 1f;
+		if (timeToEnter >= 0.3f) {
+			podeEnter = true;
+		} else {
+			podeEnter = false;
 		}
-		#region controleMenuInicial
-		if (onMenu1) {//menuInicial
-			if (Input.GetKeyDown (KeyCode.DownArrow) && opcaoMenu1 < 4) {
-				opcaoMenu1++;
-			}
-			if (Input.GetKeyDown (KeyCode.UpArrow) && opcaoMenu1 > 1) {
-				opcaoMenu1--;
-			}
-			if (Input.GetKeyDown (KeyCode.KeypadEnter)) {
-				if (opcaoMenu1 == 1) {
-					TrocaMenus (2);
-				} else if (opcaoMenu1 == 2) {
-					TrocaMenus (3);
-				} else if (opcaoMenu1 == 3) {
-					TrocaMenus (4);
-				} else if (opcaoMenu1 == 4) {
-					Application.Quit ();
+		if (Input.GetKeyDown (KeyCode.Return)||Input.GetKeyDown(KeyCode.JoystickButton0)) {
+			timeToEnter = 0.0f;
+			if (podeEnter) {
+				if (onMenu1) {
+					if (opcaoMenu1 == 1) {
+						TrocaMenus (2);
+					} else if (opcaoMenu1 == 2) {
+						TrocaMenus (3);
+					} else if (opcaoMenu1 == 3) {
+						TrocaMenus (4);
+					} else if (opcaoMenu1 == 4) {
+						Application.Quit ();
+					}
+				}
+				else if (onMenu2) {
+					if (opcaoMenu2 == 1) {
+						if (SaveInformations.saveSlot1 == 0) {
+							SaveInformations.SaveSlot (1, 1);
+							TrocaMenus (6);
+							inGame = true;
+							print("acionei");
+						}
+					} else if (opcaoMenu2 == 2) {
+						if (SaveInformations.saveSlot2 == 0) {
+							SaveInformations.SaveSlot (1, 2);
+							TrocaMenus (6);
+						}
+					} else if (opcaoMenu2 == 3) {
+						if (SaveInformations.saveSlot3 == 0) {
+							SaveInformations.SaveSlot (1, 3);
+							TrocaMenus (6);
+						}
+					}
+				}
+				else if (onMenu3) {
+					if (opcaoMenu3 == 1) {
+						controlandoVolume = true;
+					}
+				}
+				else if (onPause) {
+					if (opcaoMenuPause == 1) {
+						TrocaMenus (6);
+					} else if (opcaoMenuPause == 2) {
+						TrocaMenus (3);
+					}else if (opcaoMenuPause == 3) {
+						TrocaMenus (4);
+					}else if (opcaoMenuPause == 4) {
+						TrocaMenus (1);
+						inGame = false;
+					}else if (opcaoMenuPause == 5) {
+						Application.Quit ();
+					}
 				}
 			}
 		}
-		#endregion
-		#region MenuSlots
-		if (onMenu2) {//EscolheSave
-			if (Input.GetKeyDown (KeyCode.LeftArrow) && opcaoMenu2 > 1) {
-				opcaoMenu2--;
-			}
-			if (Input.GetKeyDown (KeyCode.RightArrow) && opcaoMenu2 < 3) {
-				opcaoMenu2++;
-			}
-			if (Input.GetKeyDown (KeyCode.KeypadEnter)) {
-				if (opcaoMenu2 == 1) {
-					if (SaveInformations.saveSlot1 == 0) {
-						SaveInformations.SaveSlot (1, 1);
-						TrocaMenus (6);
-						print("acionei");
-					}
-				} else if (opcaoMenu2 == 2) {
-					if (SaveInformations.saveSlot2 == 0) {
-						SaveInformations.SaveSlot (1, 2);
-						TrocaMenus (6);
-					}
-				} else if (opcaoMenu2 == 3) {
-					if (SaveInformations.saveSlot3 == 0) {
-						SaveInformations.SaveSlot (1, 3);
-						TrocaMenus (6);
-					}
+		if(Input.GetKeyDown(KeyCode.UpArrow)){
+			if (onMenu1) {
+				if (opcaoMenu1 > 1) {
+					opcaoMenu1--;
 				}
 			}
-			if (Input.GetKeyDown (KeyCode.Escape)) {
-				TrocaMenus (1);
-			}
-		}
-		#endregion
-		#region MenuVolume
-		if (onMenu3) {
-			if (Input.GetKeyDown (KeyCode.UpArrow) && opcaoMenu3 > 1) {
+			else if (onMenu3) {
 				if (!controlandoVolume) {
-					opcaoMenu3--;
+					if (opcaoMenu3 > 1) {
+						opcaoMenu3--;
+					} 
+				}else if (controlandoVolume) {
+					musicaEfeito = !musicaEfeito;
 				}
 			}
-			if (Input.GetKeyDown (KeyCode.UpArrow) && opcaoMenu3 < 2) {
+			else if (onPause) {
+				if (opcaoMenuPause > 1) {
+					opcaoMenuPause--;
+				}
+			}
+		}
+		if (Input.GetKeyDown (KeyCode.DownArrow)) {
+			if (onMenu1) {
+				if (opcaoMenu1 < 4) {
+					opcaoMenu1++;
+				}
+			}
+			else if (onMenu3) {
 				if (!controlandoVolume) {
-					opcaoMenu3++;
+					if (opcaoMenu3 < 2) {
+						opcaoMenu3++;
+					}
+				} else if (controlandoVolume) {
+					musicaEfeito = !musicaEfeito;
 				}
 			}
-			if (Input.GetKeyDown (KeyCode.KeypadEnter)) {
-				if (opcaoMenu3 == 1) {
-					controlandoVolume = true;
+			else if (onPause) {
+				if (opcaoMenuPause < 5) {
+					opcaoMenuPause++;
 				}
 			}
-			if (Input.GetKeyDown (KeyCode.Escape)) {
+		}
+		if(Input.GetKeyDown(KeyCode.LeftArrow)){
+			if (onMenu2) {
+				if (opcaoMenu2 > 1) {
+					opcaoMenu2--;
+				}
+			}
+			else if (onMenu3) {
 				if (controlandoVolume) {
-					controlandoVolume = false;
-					SaveInformations.SaveVolume (volumeMusica, volumeEfeitos);
-				} else {
-					TrocaMenus (1);
-				}
-			}
-			if (controlandoVolume) {
-				if (Input.GetKeyDown (KeyCode.RightArrow))
-				if (musicaEfeito && volumeMusica <8) {
-					volumeMusica++;
-					imagensVolume ();
-				} else if (!musicaEfeito && volumeEfeitos <8) {
-					volumeEfeitos++;
-					imagensVolume ();
-				}
-				if (Input.GetKeyDown (KeyCode.LeftArrow)) {
 					if (musicaEfeito && volumeMusica >1) {
 						volumeMusica--;
 						imagensVolume ();
@@ -126,30 +144,60 @@ public class MenuControllerInGame : MonoBehaviour {
 						imagensVolume ();
 					}
 				}
-				if (Input.GetKeyDown (KeyCode.UpArrow) || Input.GetKeyDown (KeyCode.DownArrow)) {
-					musicaEfeito = !musicaEfeito;
-				}
-
 			}
 		}
-		#endregion
-	
-//		if (onMenu1) {
-//			player.playerCanMove = false;
-//		} else {
-//			player.playerCanMove = true;
-//		}
+		if (Input.GetKeyDown (KeyCode.RightArrow)) {
+			if (onMenu2) {
+				if (opcaoMenu2 < 3) {
+					opcaoMenu2++;
+				}
+			}
+			else if (onMenu3) {
+				if (controlandoVolume) {
+					if (musicaEfeito && volumeMusica <8) {
+						volumeMusica++;
+						imagensVolume ();
+					} else if (!musicaEfeito && volumeEfeitos <8) {
+						volumeEfeitos++;
+						imagensVolume ();
+					}
+				}
+			}
+		}
+		if (Input.GetKeyDown (KeyCode.Escape)||Input.GetKeyDown(KeyCode.JoystickButton1)) {
+			if(onMenu2){
+				TrocaMenus (1);
 
-//		if (onPause) {
-//			Time.fixedDeltaTime = 0f;
-//		} else {
-//			player.playerCanMove = true;
-//			Time.fixedDeltaTime = 1f;
-//		}
-
-		if (Input.GetKeyDown (KeyCode.T)) {
-			onMenu1 = false;
-			TrocaMenus (6);
+			}
+			else if (onMenu3) {
+				if (controlandoVolume) {
+					controlandoVolume = false;
+					SaveInformations.SaveVolume (volumeMusica, volumeEfeitos);
+				} else if (!inGame) {
+					TrocaMenus (1);
+				} else if (inGame) {
+					TrocaMenus (0);
+				}
+			}
+			else if (onMenu4) {
+				if (inGame) {
+					TrocaMenus (0);
+				} else if (!inGame) {
+					TrocaMenus (1);
+				}
+			}
+		}
+		if (Input.GetKeyDown (KeyCode.JoystickButton7)) {
+			if (inGame) {
+				if (onPause) {
+					TrocaMenus (6);
+					print ("jogando");
+				}
+				else if (jogando) {
+					TrocaMenus (0);
+					print ("pause");
+				}
+			}
 		}
 	}
 
@@ -209,15 +257,6 @@ public class MenuControllerInGame : MonoBehaviour {
 
 	}
 
-	void chamaPause(){
-		if (onPause == true) {
-			TrocaMenus (0);
-		} else if (onPause == false) {
-			TrocaMenus (6);
-		}
-	}
-
-
 	public void TrocaMenus(int numeroMenu){
 		switch (numeroMenu) {
 		case 0:// menuPausa
@@ -236,7 +275,8 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenu3 = false;
 			onMenu4 = false;
 			onMenuDeath = false;
-			inGame = true;
+			jogando = false;
+			//inGame = true;
 
 			opcaoMenuPause = 1;
 			player.playerCanMove = false;
@@ -260,7 +300,8 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenu3 = false;
 			onMenu4 = false;
 			onMenuDeath = false;
-			inGame = false;
+			jogando = false;
+			//inGame = false;
 
 			opcaoMenu1 = 1;
 			player.playerCanMove = false;
@@ -282,7 +323,8 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenu3 = false;
 			onMenu4 = false;
 			onMenuDeath = false;
-			inGame = false;
+			jogando = false;
+			//inGame = false;
 
 			opcaoMenu2 = 1;
 			player.playerCanMove = false;
@@ -304,7 +346,8 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenu3 = true;
 			onMenu4 = false;
 			onMenuDeath = false;
-			inGame = false;
+			jogando = false;
+			//inGame = false;
 
 			opcaoMenu3 = 1;
 			player.playerCanMove = false;
@@ -328,7 +371,8 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenu3 = false;
 			onMenu4 = true;
 			onMenuDeath = false;
-			inGame = false;
+			jogando = false;
+			//inGame = false;
 
 			player.playerCanMove = false;
 			break;
@@ -349,7 +393,8 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenu3 = false;
 			onMenu4 = false;
 			onMenuDeath = true;
-			inGame = false;
+			jogando = false;
+			//inGame = false;
 
 			opcaoMenuMorte = 1;
 			player.playerCanMove = false;
@@ -371,7 +416,8 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenu3 = false;
 			onMenu4 = false;
 			onMenuDeath = false;
-			inGame = true;
+			jogando = true;
+			//inGame = true;
 
 			player.playerCanMove = true;
 			//Time.fixedDeltaTime = tempo;
