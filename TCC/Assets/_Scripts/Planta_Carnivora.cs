@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Planta_Carnivora : PlantaBehaviour {
 
-	//Transform comidaContainer_Pos, comidaContainer_Neg;
 	SphereCollider coll;
 
 	enum DirectionReference {Up, Forward, Right}
@@ -16,9 +15,14 @@ public class Planta_Carnivora : PlantaBehaviour {
 	float attackRange_default = 3f;
 	float attackRange_irritado;
 
-	bool fechada;
+	[SerializeField]
+	bool fechada, comendo;
 	float foodDir = 0f;
 	Transform foodContainer;
+	ICarnivoraEdible currentFood;
+
+	public LayerMask foodMask;
+	public float shootingStrength = 30f;
 
 	#region DELETAR
 	GameObject indicadorDeSono;
@@ -29,8 +33,6 @@ public class Planta_Carnivora : PlantaBehaviour {
 		base.Awake ();
 
 		foodContainer = plantaTransform.Find ("FoodContainer");
-//		comidaContainer_Pos = plantaTransform.Find("ComidaContainer_Pos");
-//		comidaContainer_Neg = plantaTransform.Find("ComidaContainer_Neg");
 	}
 
 	void Start (){
@@ -65,40 +67,59 @@ public class Planta_Carnivora : PlantaBehaviour {
 			
 		}
 
+		//Debug.DrawRay (transform.position, plantaTransform.up * 10f);
+
 		#region DELETAR
 		if(currentState != Planta_CurrentState.Dormindo){
 			indicadorDeSono.SetActive (false);
 		} else {
 			indicadorDeSono.SetActive (true);
 		}
+
+		if (comendo) {
+			if(Input.GetKeyDown(KeyCode.Keypad0)){
+				ReleaseFood ();
+			} else if (Input.GetKeyDown(KeyCode.Keypad1)) {
+				ShootFood ();
+			}
+		}
 		#endregion
 	}
 
 	void Attack (Transform food){
-		fechada = true;
-		//Vector3 dirToFood = (food.transform.position - plantaTransform.position);
+		fechada = comendo = true;
+
+		coll.radius = attackRange_default;
+		currentState = Planta_CurrentState.DefaultState;
+
 		foodDir = Mathf.Sign (Vector3.Dot ((food.position - plantaTransform.position), facingDirection));
-		foodContainer.localPosition = foodDir * facingDirection;
-		//TODO: Mandar fechar pro lado certo. Prender comida.
+		switch (facingRef) {
+		case DirectionReference.Up:
+			foodContainer.localPosition = Vector3.up * foodDir;
+			break;
+		case DirectionReference.Forward:
+			foodContainer.localPosition = Vector3.forward * foodDir;
+			break;
+		case DirectionReference.Right:
+			foodContainer.localPosition = Vector3.right * foodDir;
+			break;
+		default:
+			break;
+		}
+		
+		food.position = foodContainer.position;
+	}
 
-//		switch (type) {
-//		case FoodType.Player:
-//
-//			break;
-//		case FoodType.NPC:
-//
-//			break;
-//		case FoodType.Planta:
-//
-//			break;
-//		case FoodType.Pai:
-//
-//			break;
-//		default:
-//			break;
-//		}
+	void ReleaseFood (){
+		fechada = comendo = false;
+		currentFood.Carnivora_Release ();
+		currentFood = null;
+	}
 
-
+	void ShootFood (){
+		fechada = comendo = false;
+		currentFood.Carnivora_Shoot (foodDir * facingDirection * shootingStrength);
+		currentFood = null;
 	}
 
 
@@ -106,25 +127,33 @@ public class Planta_Carnivora : PlantaBehaviour {
 	{
 		if(currentState == Planta_CurrentState.Irritado){
 			return;
+		} else if(currentState == Planta_CurrentState.Dormindo){
+			Acordar ();
 		}
 
 		base.DefaultState ();
-
-		//CheckForFood ();
 	}
 
 	protected override void Crescer ()
 	{
-		if(currentState == Planta_CurrentState.Irritado){
+		if(currentState == Planta_CurrentState.Irritado || fechada){
 			return;
 		}
 
 		base.Crescer ();
 	}
+	protected override void Encolher ()
+	{
+		if(currentState == Planta_CurrentState.Irritado || fechada){
+			return;
+		}
+
+		base.Encolher ();
+	}
 
 	protected override void Distrair ()
 	{
-		if(currentState == Planta_CurrentState.Irritado){
+		if(currentState == Planta_CurrentState.Irritado || fechada){
 			return;
 		}
 
@@ -133,61 +162,83 @@ public class Planta_Carnivora : PlantaBehaviour {
 
 	protected override void Dormir ()
 	{
-		if(currentState == Planta_CurrentState.Irritado){
+		if(currentState == Planta_CurrentState.Irritado || fechada){
 			return;
 		}
+
+		fechada = true;
 
 		base.Dormir ();
 	}
 	protected override void Acordar ()
 	{
-		if(currentState == Planta_CurrentState.Irritado){
-			return;
-		}
+		//Se eu estou aqui é pq eu ja sei que (currentState == Dormindo).
+
+		fechada = false;
 
 		base.Acordar ();
 	}
 
 	protected override void Irritar ()
 	{
-//		if(currentState == Planta_CurrentState.Irritado){
-//			CheckForFood ();
-//			return;
-//		}
-		base.Irritar ();
-		//currentState = Planta_CurrentState.Irritado;
+		if(currentState == Planta_CurrentState.Dormindo){
+			Acordar ();
+		}
 
-		//comidaContainer_Pos.localScale = comidaContainer_Neg.localScale = Vector3.one * attackRange_irritado;
+		base.Irritar (); //Tudo depois desta linha só roda uma vez.
+
 		coll.radius = attackRange_irritado;
+
+		if(comendo){
+			ShootFood ();
+		}
 	}
 	protected override void Acalmar ()
 	{
+		if(currentState == Planta_CurrentState.Dormindo){
+			Acordar ();
+		}
+		
 		base.Acalmar ();
 
 		//comidaContainer_Pos.localScale = comidaContainer_Neg.localScale = Vector3.one * attackRange_default;
 		coll.radius = attackRange_default;
 
+		if(comendo){
+			ReleaseFood ();
+		}
+	}
+
+
+	protected override void OnTriggerEnter (Collider col)
+	{
+		base.OnTriggerEnter (col);
+
+		//Este IF checa se a layer de 'col' é uma das layer contidas na layer mask fornecida e, se não for, return.
+		if((foodMask.value & 1<<col.gameObject.layer) == 0){ //TODO: Descobrir o que diabos cada coisa dessa linha significa.
+			return;
+		}
+
+		if (!fechada && (currentState == Planta_CurrentState.DefaultState || currentState == Planta_CurrentState.Irritado)) {
+			if (col.GetComponent<ICarnivoraEdible> () != null) {
+				currentFood = col.GetComponent<ICarnivoraEdible> ();
+				currentFood.Carnivora_GetReadyToBeEaten ();
+				Attack (col.transform);
+			} else if (col.GetComponentInParent<ICarnivoraEdible> () != null) {
+				currentFood = col.GetComponentInParent<ICarnivoraEdible> ();
+				currentFood.Carnivora_GetReadyToBeEaten ();
+				Attack (col.transform.parent);
+			}
+		}
 	}
 
 	protected override void OnTriggerStay (Collider col)
 	{
 		base.OnTriggerStay (col);
 
-		if (!fechada && (currentState == Planta_CurrentState.DefaultState || currentState == Planta_CurrentState.Irritado)) {
-//			if (col.CompareTag("Player")) {
-//				Attack (FoodType.Player, col.gameObject);
-//			} else if (col.GetComponent<NPCBehaviour> () != null) {
-//				Attack (FoodType.NPC, col.gameObject);
-//			} else if (col.GetComponent<PlantaBehaviour> () != null) {
-//				Attack (FoodType.Planta, col.gameObject);
-//			} else if (col.CompareTag("NPC_Pai")) {
-//				Attack (FoodType.Pai, col.gameObject);
-//			}
-
-			if (col.GetComponent<ICarnivoraEdible> () != null) {
-				col.GetComponent<ICarnivoraEdible> ().Carnivora_GetReadyToBeEaten ();
-				Attack (col.transform);
-			}
+		//Este IF checa se a layer de 'col' é uma das layer contidas na layer mask fornecida e, se não for, return.
+		if((foodMask.value & 1<<col.gameObject.layer) == 0){ //TODO: Descobrir o que diabos cada coisa dessa linha significa.
+			return;
 		}
 	}
 

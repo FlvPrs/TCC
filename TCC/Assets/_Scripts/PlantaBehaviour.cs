@@ -68,6 +68,7 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 		currentInteractionAgent = player;
 
 		GetComponent<Rigidbody> ().isKinematic = true;
+		GetComponent<Rigidbody> ().useGravity = false;
 	}
 
 

@@ -19,7 +19,7 @@ public class CogumeloJumpCtrl : MonoBehaviour {
 			//player.externalForceAdded = true;
 			//col.GetComponentInParent<AudioSource> ().Play ();
 			Vector3 dir = col.transform.up * jumpForce;
-			player.AddExternalForce (dir, 0.5f);
+			player.AddExternalForce (dir, 0.01f);
 			mushAnimCtrl.SetTrigger ("boing");
 		}
 	}

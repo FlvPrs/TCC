@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //[RequireComponent (typeof(PlayerWalkInput))]
-public class WalkingController : MonoBehaviour {
+public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 
 	public float maxJumpHeight = 4;
 	public float minJumpHeight = 1;
@@ -54,12 +54,12 @@ public class WalkingController : MonoBehaviour {
 	public Animator animCtrl;
 
 	//PlayerPrefs.SetInt "health",100;
+
 	//Movement information
 	bool startedFly;
 	bool isFlying;
 	bool isOnLedge;
-	[HideInInspector]
-	public bool externalForceAdded;
+	bool externalForceAdded;
 	Vector3 externalForce;
 	int flyStamina;
 	float cameraRotation;
@@ -278,7 +278,10 @@ public class WalkingController : MonoBehaviour {
 		} 
 		else {		//--------------Se eu não estou no chão---------------------		
 			jumpInertia += new Vector3(velocity.x * aerialCtrl, 0, velocity.z * aerialCtrl);
-			jumpInertia = Vector3.ClampMagnitude (jumpInertia, moveSpeed);
+			if(!externalForceAdded)
+				jumpInertia = Vector3.ClampMagnitude (jumpInertia, moveSpeed);
+			else
+				jumpInertia = Vector3.ClampMagnitude (jumpInertia, externalForce.magnitude);
 			rb.velocity = new Vector3 (jumpInertia.x, velocity.y, jumpInertia.z);
 
 			//Debug.DrawRay (myT.position, rb.velocity.normalized * 5, Color.magenta);
@@ -379,6 +382,9 @@ public class WalkingController : MonoBehaviour {
 
 	public void OnJumpInputDown(){
 
+		if(externalForceAdded)
+			ResetExternalForce ();
+
 		startCDBonusJump = true;
 
 		if(isGrounded)	//------ Se eu estou no chão ----------------------------------------------------------------------------------------------
@@ -467,10 +473,12 @@ public class WalkingController : MonoBehaviour {
 	#endregion
 
 	void CalculateVelocity () {
-		float targetVelocityX = directionalInput.x * moveSpeed;
-		float targetVelocityZ = directionalInput.z * moveSpeed;
-		velocity.x = Mathf.SmoothDamp (velocity.x, targetVelocityX, ref velocityXSmoothing, (isGrounded) ? accelerationTimeGrounded : accelerationTimeAirborne);
-		velocity.z = Mathf.SmoothDamp (velocity.z, targetVelocityZ, ref velocityZSmoothing, (isGrounded) ? accelerationTimeGrounded : accelerationTimeAirborne);
+		if (!externalForceAdded) {
+			float targetVelocityX = directionalInput.x * moveSpeed;
+			float targetVelocityZ = directionalInput.z * moveSpeed;
+			velocity.x = Mathf.SmoothDamp (velocity.x, targetVelocityX, ref velocityXSmoothing, (isGrounded) ? accelerationTimeGrounded : accelerationTimeAirborne);
+			velocity.z = Mathf.SmoothDamp (velocity.z, targetVelocityZ, ref velocityZSmoothing, (isGrounded) ? accelerationTimeGrounded : accelerationTimeAirborne);
+		}
 
 		if (!stopGravity)
 			velocity.y += gravity * Time.deltaTime;
@@ -505,6 +513,11 @@ public class WalkingController : MonoBehaviour {
 
 
 	bool Grounded(out bool collAbove){
+		if(eatenByCarnivora){
+			collAbove = false;
+			return false;
+		}
+
 		bool collBelow = false;
 		collAbove = false;
 
@@ -571,6 +584,9 @@ public class WalkingController : MonoBehaviour {
 		if (collAbove)
 			ResetGravity ();
 
+		if (collBelow && externalForceAdded)
+			ResetExternalForce ();
+
 		return collBelow;
 	}
 
@@ -628,12 +644,20 @@ public class WalkingController : MonoBehaviour {
 		}
 	}
 
-	public void AddExternalForce(Vector3 force, float duration){
+	public void AddExternalForce(Vector3 force, float duration, bool waitTillGroundedOrJump = false){
 		externalForceAdded = true;
+		externalForce = force;
 		//velocity = force;
 		SetVelocityTo(force, false);
 		secondJumpStrengthMultiplier = fruitJumpPower + 0.15f;
+
+		if (!waitTillGroundedOrJump)
+			Invoke ("ResetExternalForce", duration);
 	}
+	void ResetExternalForce (){
+		externalForceAdded = false;
+	}
+
 
 	public void ChangeJumpHeight (float newMaxHeight, float newMinHeight) {
 		maxJumpHeight = newMaxHeight;
@@ -655,6 +679,34 @@ public class WalkingController : MonoBehaviour {
 			orientation = newT;
 	}
 
+
+	#region Carnivora Interface
+	[HideInInspector]
+	public bool eatenByCarnivora = false;
+
+	public void Carnivora_GetReadyToBeEaten (){
+		print ("EATEN");
+		eatenByCarnivora = true;
+		SetVelocityTo (Vector3.zero, true);
+		//BypassGravity (true);
+		walkStates.IS_WALKING = false;
+	}
+	public void Carnivora_Release (){
+		print ("released");
+		eatenByCarnivora = false;
+		SetVelocityTo (Vector3.zero, false);
+		//BypassGravity (false);
+	}
+
+	public void Carnivora_Shoot (Vector3 dir){
+		print ("SHOOT!");
+		eatenByCarnivora = false;
+		SetVelocityTo (Vector3.zero, true);
+		AddExternalForce (dir, 1f, true);
+	}
+	#endregion
+
+
 	public struct WalkingStates
 	{
 		public bool IS_WALKING;
@@ -662,7 +714,7 @@ public class WalkingController : MonoBehaviour {
 		public bool IS_GLIDING;
 		public bool IS_FALLING_MAX;
 		public HeightState CURR_HEIGHT_STATE;
-		public bool TOCANDO_NOTAS; //Fica true apenas no frame que começou a tocar
+		public bool TOCANDO_NOTAS;
 		public bool SEGURANDO_NOTA;
 		public PlayerSongs CURR_SONG;
 	}
