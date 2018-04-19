@@ -13,16 +13,16 @@ public class DevCheat : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		if(Input.GetKeyDown(KeyCode.Alpha1)){
-			slowDown_a1 = !slowDown_a1;
-		}
-
-
-		if(slowDown_a1){
-			Time.timeScale = 0.2f;
-		} else {
-			Time.timeScale = originalTimeScale;
-		}
-	}
+//	void Update () {
+//		if(Input.GetKeyDown(KeyCode.Alpha1)){
+//			slowDown_a1 = !slowDown_a1;
+//		}
+//
+//
+//		if(slowDown_a1){
+//			Time.timeScale = 0.2f;
+//		} else {
+//			Time.timeScale = originalTimeScale;
+//		}
+//	}
 }

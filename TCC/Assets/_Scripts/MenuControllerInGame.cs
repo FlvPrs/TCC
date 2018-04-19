@@ -9,7 +9,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	public int opcaoMenu1, opcaoMenu2, opcaoMenu3, opcaoMenuPause, opcaoMenuMorte, volumeMusica, volumeEfeitos;
 	private float tempo, timeToEnter;
 	private bool onMenu1, onMenu2, onMenu3, onMenu4, onMenuDeath,onPause, controlandoVolume, musicaEfeito, inGame;
-	private bool podeEnter, jogando;
+	public bool podeEnter, jogando, controleOpcaoEixo;
 	public GameObject menu1, menu2, menu3, menu4, menuPause, menuMorte, telaFundo, seta;
 	public GameObject VM1, VM2, VM3, VM4, VM5, VM6, VM7, VM8;
 	public GameObject VE1, VE2, VE3, VE4, VE5, VE6, VE7, VE8;
@@ -21,18 +21,14 @@ public class MenuControllerInGame : MonoBehaviour {
 		onPause = false;
 		inGame = false;
 		tempo = Time.fixedDeltaTime;
+		podeEnter = true;
+		controleOpcaoEixo = true;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		timeToEnter += Time.deltaTime * 1f;
-		if (timeToEnter >= 0.3f) {
-			podeEnter = true;
-		} else {
-			podeEnter = false;
-		}
 		if (Input.GetKeyDown (KeyCode.Return)||Input.GetKeyDown(KeyCode.JoystickButton0)) {
-			timeToEnter = 0.0f;
 			if (podeEnter) {
 				if (onMenu1) {
 					if (opcaoMenu1 == 1) {
@@ -51,6 +47,7 @@ public class MenuControllerInGame : MonoBehaviour {
 							SaveInformations.SaveSlot (1, 1);
 							TrocaMenus (6);
 							inGame = true;
+							player.playerInputStartGame = true;
 							print("acionei");
 						}
 					} else if (opcaoMenu2 == 2) {
@@ -85,86 +82,103 @@ public class MenuControllerInGame : MonoBehaviour {
 					}
 				}
 			}
+			StartCoroutine ("EnterAvailable");
 		}
-		if(Input.GetKeyDown(KeyCode.UpArrow)){
-			if (onMenu1) {
-				if (opcaoMenu1 > 1) {
-					opcaoMenu1--;
-				}
-			}
-			else if (onMenu3) {
-				if (!controlandoVolume) {
-					if (opcaoMenu3 > 1) {
-						opcaoMenu3--;
-					} 
-				}else if (controlandoVolume) {
-					musicaEfeito = !musicaEfeito;
-				}
-			}
-			else if (onPause) {
-				if (opcaoMenuPause > 1) {
-					opcaoMenuPause--;
-				}
-			}
-		}
-		if (Input.GetKeyDown (KeyCode.DownArrow)) {
-			if (onMenu1) {
-				if (opcaoMenu1 < 4) {
-					opcaoMenu1++;
-				}
-			}
-			else if (onMenu3) {
-				if (!controlandoVolume) {
-					if (opcaoMenu3 < 2) {
-						opcaoMenu3++;
+		if (Input.GetKeyDown (KeyCode.UpArrow) || Input.GetAxisRaw ("L_Joystick_Y") > 0.2f) {
+			if (controleOpcaoEixo) {
+				if (onMenu1) {
+					if (opcaoMenu1 > 1) {
+						opcaoMenu1--;
 					}
-				} else if (controlandoVolume) {
-					musicaEfeito = !musicaEfeito;
-				}
-			}
-			else if (onPause) {
-				if (opcaoMenuPause < 5) {
-					opcaoMenuPause++;
-				}
-			}
-		}
-		if(Input.GetKeyDown(KeyCode.LeftArrow)){
-			if (onMenu2) {
-				if (opcaoMenu2 > 1) {
-					opcaoMenu2--;
-				}
-			}
-			else if (onMenu3) {
-				if (controlandoVolume) {
-					if (musicaEfeito && volumeMusica >1) {
-						volumeMusica--;
-						imagensVolume ();
-					} else if (!musicaEfeito && volumeEfeitos >1) {
-						volumeEfeitos--;
-						imagensVolume ();
+				} else if (onMenu3) {
+					if (!controlandoVolume) {
+						if (opcaoMenu3 > 1) {
+							opcaoMenu3--;
+						} 
+					} else if (controlandoVolume) {
+						musicaEfeito = !musicaEfeito;
+					}
+				} else if (onPause) {
+					if (opcaoMenuPause > 1) {
+						opcaoMenuPause--;
 					}
 				}
 			}
+			StartCoroutine ("TrocaOpcaoEixo");
 		}
-		if (Input.GetKeyDown (KeyCode.RightArrow)) {
-			if (onMenu2) {
-				if (opcaoMenu2 < 3) {
-					opcaoMenu2++;
-				}
-			}
-			else if (onMenu3) {
-				if (controlandoVolume) {
-					if (musicaEfeito && volumeMusica <8) {
-						volumeMusica++;
-						imagensVolume ();
-					} else if (!musicaEfeito && volumeEfeitos <8) {
-						volumeEfeitos++;
-						imagensVolume ();
+		if (Input.GetKeyDown (KeyCode.DownArrow) || Input.GetAxisRaw ("L_Joystick_Y") < -0.2f) {
+			if (controleOpcaoEixo) {
+				if (onMenu1) {
+					if (opcaoMenu1 < 4) {
+						opcaoMenu1++;
+					}
+				} else if (onMenu3) {
+					if (!controlandoVolume) {
+						if (opcaoMenu3 < 2) {
+							opcaoMenu3++;
+						}
+					} else if (controlandoVolume) {
+						musicaEfeito = !musicaEfeito;
+					}
+				} else if (onPause) {
+					if (opcaoMenuPause < 5) {
+						opcaoMenuPause++;
 					}
 				}
 			}
+			StartCoroutine ("TrocaOpcaoEixo");
+		}
+		if (Input.GetKeyDown (KeyCode.LeftArrow) || Input.GetAxisRaw ("L_Joystick_X") < -0.2f) {
+			if (controleOpcaoEixo) {
+				if (onMenu2) {
+					if (opcaoMenu2 > 1) {
+						opcaoMenu2--;
+					}
+				} else if (onMenu3) {
+					if (controlandoVolume) {
+						if (musicaEfeito && volumeMusica > 1) {
+							volumeMusica--;
+							imagensVolume ();
+						} else if (!musicaEfeito && volumeEfeitos > 1) {
+							volumeEfeitos--;
+							imagensVolume ();
+						}
+					}
+				}
+			}
+			StartCoroutine ("TrocaOpcaoEixo");
+		}
+		if (Input.GetKeyDown (KeyCode.RightArrow) || Input.GetAxisRaw ("L_Joystick_X") > 0.2f) {
+			if (controleOpcaoEixo) {
+				if (onMenu2) {
+					if (opcaoMenu2 < 3) {
+						opcaoMenu2++;
+					}
+				} else if (onMenu3) {
+					if (controlandoVolume) {
+						if (musicaEfeito && volumeMusica < 8) {
+							volumeMusica++;
+							imagensVolume ();
+						} else if (!musicaEfeito && volumeEfeitos < 8) {
+							volumeEfeitos++;
+							imagensVolume ();
+						}
+					}
+				}
+			}
+			StartCoroutine ("TrocaOpcaoEixo");
 		}
 		if (Input.GetKeyDown (KeyCode.Escape)||Input.GetKeyDown(KeyCode.JoystickButton1)) {
+			if (inGame) {
+				if (onPause) {
+					TrocaMenus (6);
+					print ("jogando");
+				}
+				else if (jogando) {
+					TrocaMenus (0);
+					print ("pause");
+				}
+			}
 			if(onMenu2){
 				TrocaMenus (1);
 
@@ -199,6 +213,19 @@ public class MenuControllerInGame : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	IEnumerator EnterAvailable(){
+		podeEnter = false;
+		yield return new WaitForSecondsRealtime (0.1f);
+		podeEnter = true;
+	}
+
+	IEnumerator TrocaOpcaoEixo(){
+		print ("negativo");
+		controleOpcaoEixo = false;
+		yield return new WaitForSecondsRealtime (0.2f);
+		controleOpcaoEixo = true;
 	}
 
 
