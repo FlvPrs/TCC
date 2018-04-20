@@ -39,7 +39,7 @@ public class Npc_BeijaFlor : NPCBehaviour {
 			podePegarObj = true;
 		}
 
-		print (estado);
+		//print (estado);
 	}
 
 	public enum EstadosBeijaFro{

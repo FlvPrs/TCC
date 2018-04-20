@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SaveInformations : MonoBehaviour {
 	public static SaveInformations instance;
-	public static int saveSlot1, saveSlot2, saveSlot3, volumeMusica, volumeEfeitos;
+	public static int saveSlot1, saveSlot2, saveSlot3, volumeMusicaS, volumeEfeitosS, volumeAlterado;
 	// Use this for initialization
 	void Awake() 
 	{
@@ -22,7 +22,7 @@ public class SaveInformations : MonoBehaviour {
 		}
 	}
 
-	public static void SaveSlot(int fase, int slot) {
+	public static void SaveSlot(int slot, int fase ) {
 		if (slot == 1) {
 			PlayerPrefs.SetInt ("saveSlot1", fase);
 		} else if (slot == 2) {
@@ -33,8 +33,12 @@ public class SaveInformations : MonoBehaviour {
 		PlayerPrefs.Save ();
 	}
 	public static void SaveVolume(int musica, int efeito){
-		PlayerPrefs.SetInt ("volumeMusica", musica);
-		PlayerPrefs.SetInt ("volumeEfeito", efeito);
+		PlayerPrefs.SetInt ("volumeMusicaS", musica);
+		PlayerPrefs.SetInt ("volumeEfeitoS", efeito);
 		PlayerPrefs.Save ();
+	}
+
+	public static void VolumeAlteradoF(){
+		PlayerPrefs.SetInt ("volumeAlterado", 2);
 	}
 }
