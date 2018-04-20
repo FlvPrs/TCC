@@ -27,7 +27,7 @@ public class IntroCamController : MonoBehaviour {
 
 	private bool startGame;
 
-	public GameObject pressButtonTxt;
+	//public GameObject pressButtonTxt;
 
 	[HideInInspector]
 	public static bool playerRegainedCtrl;
@@ -44,10 +44,10 @@ public class IntroCamController : MonoBehaviour {
 
 		playerRegainedCtrl = false;
 
-		if(activateStartCam)
-			pressButtonTxt.SetActive (true);
-		else
-			pressButtonTxt.SetActive (false);
+//		if(activateStartCam)
+//			pressButtonTxt.SetActive (true);
+//		else
+//			pressButtonTxt.SetActive (false);
 
 		camTrack = GetComponent<CinemachineVirtualCamera> ().GetCinemachineComponent<CinemachineTrackedDolly>();
 		camTrack.m_PathPosition = 1f;
@@ -81,7 +81,7 @@ public class IntroCamController : MonoBehaviour {
 			musicaIntro.stop (FMOD.Studio.STOP_MODE.IMMEDIATE);
 
 			activateStartCam = false;
-			pressButtonTxt.SetActive (false);
+			//pressButtonTxt.SetActive (false);
 
 
 

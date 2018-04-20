@@ -211,7 +211,6 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 
 	protected virtual void DefaultState (){
 		currentState = Planta_CurrentState.DefaultState;
-
 	}
 
 	protected virtual void MurchaState (){

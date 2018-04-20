@@ -139,7 +139,8 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 
 	void OnTriggerStay(Collider col){
 		if(col.CompareTag("Wind")){
-			playerCtrl.ContinuousExternalForce (col.transform.up * windForce, false, false);
+			//playerCtrl.ContinuousExternalForce (col.transform.up * windForce, true, false);
+			playerCtrl.AddContinuousExternalForce(col.transform.up * windForce);
 		}
 		if(col.CompareTag("WindCurrent")){
 			centerOfWind = oldWindPoint.position + Vector3.Project(transform.position - oldWindPoint.position, oldWindPoint.forward);

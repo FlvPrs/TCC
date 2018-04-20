@@ -21,7 +21,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	private bool startCDBonusJump;
 	private bool CDBonusJump = false;
 	[HideInInspector]
-	public bool hasBonusJump_2;///erick higa teste poder temporario
+	public bool hasBonusJump_2;//erick higa teste poder temporario
 
 	float gravity;
 	float maxJumpVelocity;
@@ -625,9 +625,19 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		flyStamina = maxFlyStamina;
 	}
 
+	IEnumerator ResetGravToDefault (Vector3 force){
+		yield return new WaitForSeconds (0.2f);
+		stopGravity = false;
+//		ResetGravity ();
+		AddExternalForce(force, 0.1f, false, true);
+	}
+
 	public void ContinuousExternalForce(Vector3 force, bool ignoreGravity, bool ignoreInput){
 		if(ignoreGravity){
-			BypassGravity (true);
+			//BypassGravity (true);
+			stopGravity = true;
+			StopCoroutine ("ResetGravToDefault");
+			StartCoroutine ("ResetGravToDefault");
 		}
 		if(ignoreInput){
 			velocity = Vector3.zero;
@@ -637,16 +647,31 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		}
 
 		rb.AddForce (force, ForceMode.Force);
+		//AddExternalForce (force, 0.1f, true);
 
-		if (!holdingJump) {
-			Vector3 counterForce = -Vector3.up * (force.magnitude * 0.2f);
-			rb.AddForce (counterForce, ForceMode.Force);
-		}
+//		if (!holdingJump) {
+//			//Vector3 counterForce = -Vector3.up * (force.magnitude * 0.2f);
+//			ForceGravity (- gravity - (force.magnitude * 0.2f));
+//			//rb.AddForce (counterForce, ForceMode.Force);
+//			//AddExternalForce (force + counterForce, 0.1f, true);
+//		}
 	}
 
-	public void AddExternalForce(Vector3 force, float duration, bool waitTillGroundedOrJump = false){
-		externalForceAdded = true;
+	public void AddContinuousExternalForce(Vector3 force){
 		externalForce = force;
+		SetVelocityTo(force, false);
+		//rb.AddForce (force, ForceMode.Acceleration);
+		secondJumpStrengthMultiplier = fruitJumpPower + 0.15f;
+
+		StopCoroutine ("ResetGravToDefault");
+		StartCoroutine ("ResetGravToDefault", force);
+	}
+
+	public void AddExternalForce(Vector3 force, float duration, bool ignoreInput = true, bool waitTillGroundedOrJump = false){
+		if (ignoreInput) {
+			externalForceAdded = true;
+			externalForce = force;
+		}
 		//velocity = force;
 		SetVelocityTo(force, false);
 		secondJumpStrengthMultiplier = fruitJumpPower + 0.15f;
@@ -702,7 +727,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		print ("SHOOT!");
 		eatenByCarnivora = false;
 		SetVelocityTo (Vector3.zero, true);
-		AddExternalForce (dir, 1f, true);
+		AddExternalForce (dir, 1f, true, true);
 	}
 	#endregion
 
