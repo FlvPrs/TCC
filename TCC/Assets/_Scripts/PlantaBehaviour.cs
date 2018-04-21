@@ -192,16 +192,25 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 		if(currentState != Planta_CurrentState.Murcho && !isBroto){
 			currentState = Planta_CurrentState.Murcho;
 			isMurcha = true;
+
+			MDL_Broto.SetActive (false);
+			MDL_Crescida.SetActive (false);
+			MDL_Murcha.SetActive (true);
 		} else {
 			return;
 		}
 	}
 
 	//TODO: Esta função será chamada apenas pelo código da Fruta
-	public virtual void RevigorarPlanta (){
+	public virtual void RevigorarPlanta (GameObject fruta){
 		if(currentState == Planta_CurrentState.Murcho){
 			currentState = Planta_CurrentState.DefaultState;
 			isMurcha = false;
+			Destroy (fruta);
+
+			MDL_Broto.SetActive (false);
+			MDL_Crescida.SetActive (true);
+			MDL_Murcha.SetActive (false);
 		} else {
 			return;
 		}
@@ -216,9 +225,6 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 	protected virtual void MurchaState (){
 		if (currentState != Planta_CurrentState.Murcho) {
 			currentState = Planta_CurrentState.Murcho;
-			MDL_Broto.SetActive (false);
-			MDL_Crescida.SetActive (false);
-			MDL_Murcha.SetActive (true);
 		}
 	}
 

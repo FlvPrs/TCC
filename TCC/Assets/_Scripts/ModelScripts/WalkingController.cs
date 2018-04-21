@@ -579,13 +579,12 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			Debug.DrawRay (myT.position, perpendicular * 5, Color.magenta);
 		}
 
-		if(collBelow)
+		if (collBelow) {
 			ResetFlyStamina ();
+			ResetExternalForce ();
+		}
 		if (collAbove)
 			ResetGravity ();
-
-		if (collBelow && externalForceAdded)
-			ResetExternalForce ();
 
 		return collBelow;
 	}
@@ -657,14 +656,31 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 //		}
 	}
 
-	public void AddContinuousExternalForce(Vector3 force){
-		externalForce = force;
-		SetVelocityTo(force, false);
+	public void ZeroExternalForce (bool toCurrentVelocity = false){
+		if (toCurrentVelocity)
+			externalForce = velocity;
+		else
+			externalForce = Vector3.zero;
+	}
+
+	public void AddContinuousExternalForce(Vector3 force, bool smooth = true){
+		if (!smooth) {
+			externalForce = force;
+		} else {
+			if (!holdingJump) {
+				externalForce = Vector3.SmoothDamp (externalForce, force, ref velocity, 0.1f);
+				//rb.AddForce (Vector3.down * force.magnitude * 0.4f);
+			} else {
+				externalForce = Vector3.SmoothDamp (externalForce, force * 0.8f, ref velocity, 0.2f);
+			}
+		}
+
+		SetVelocityTo(externalForce, false);
 		//rb.AddForce (force, ForceMode.Acceleration);
 		secondJumpStrengthMultiplier = fruitJumpPower + 0.15f;
 
-		StopCoroutine ("ResetGravToDefault");
-		StartCoroutine ("ResetGravToDefault", force);
+//		StopCoroutine ("ResetGravToDefault");
+//		StartCoroutine ("ResetGravToDefault", force);
 	}
 
 	public void AddExternalForce(Vector3 force, float duration, bool ignoreInput = true, bool waitTillGroundedOrJump = false){
@@ -681,6 +697,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	}
 	void ResetExternalForce (){
 		externalForceAdded = false;
+		externalForce = Vector3.zero;
 	}
 
 

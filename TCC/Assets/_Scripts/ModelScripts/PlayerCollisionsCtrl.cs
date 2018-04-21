@@ -135,12 +135,20 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			int num = int.Parse(col.name.TrimStart ("LookAt_".ToCharArray ()));
 			camPOI.currentTarget = num;
 		}
+
+		if(col.CompareTag("Wind") || col.CompareTag("Wind2")){
+			playerCtrl.ZeroExternalForce (true);
+		}
 	}
 
 	void OnTriggerStay(Collider col){
 		if(col.CompareTag("Wind")){
 			//playerCtrl.ContinuousExternalForce (col.transform.up * windForce, true, false);
 			playerCtrl.AddContinuousExternalForce(col.transform.up * windForce);
+		}
+		if(col.CompareTag("Wind2")){
+			//playerCtrl.ContinuousExternalForce (col.transform.up * windForce, true, false);
+			playerCtrl.AddContinuousExternalForce(col.transform.up * windForce * 2f);
 		}
 		if(col.CompareTag("WindCurrent")){
 			centerOfWind = oldWindPoint.position + Vector3.Project(transform.position - oldWindPoint.position, oldWindPoint.forward);
@@ -162,8 +170,8 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 	}
 
 	void OnTriggerExit(Collider col){
-		if(col.CompareTag("Wind")){
-			playerCtrl.ContinuousExternalForce (Vector3.zero, false, false);
+		if(col.CompareTag("Wind") || col.CompareTag("Wind2")){
+			playerCtrl.ZeroExternalForce ();
 		}
 		if(col.CompareTag("WindCurrent")){
 			playerCtrl.ContinuousExternalForce (Vector3.zero, false, false);
