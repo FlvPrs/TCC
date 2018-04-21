@@ -624,17 +624,19 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		flyStamina = maxFlyStamina;
 	}
 
-	IEnumerator ResetGravToDefault (Vector3 force){
+	IEnumerator ResetGravToDefault (){
 		yield return new WaitForSeconds (0.2f);
 		stopGravity = false;
+		ResetGravity ();
+		//SetVelocityTo (force, false);
 //		ResetGravity ();
-		AddExternalForce(force, 0.1f, false, true);
+		//AddExternalForce(force, 0.1f);
 	}
 
 	public void ContinuousExternalForce(Vector3 force, bool ignoreGravity, bool ignoreInput){
 		if(ignoreGravity){
-			//BypassGravity (true);
-			stopGravity = true;
+			BypassGravity (true);
+			//stopGravity = true;
 			StopCoroutine ("ResetGravToDefault");
 			StartCoroutine ("ResetGravToDefault");
 		}

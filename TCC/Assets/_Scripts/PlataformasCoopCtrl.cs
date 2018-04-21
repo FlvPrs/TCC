@@ -66,12 +66,47 @@ public class PlataformasCoopCtrl : MonoBehaviour, ISongListener, IFatherSustainI
 
 	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false){
 		if(song == PlayerSongs.Crescimento){
-			for (int i = 0; i < plataformas.Length; i++) {
-				Vector3 newPos = originalPos [i] + son_Distance [i] + dad_deltaY [i];
+			if (!isFather) { //SE FOR O FILHO ---------------------------------------------
+				for (int i = 0; i < plataformas.Length; i++) {
+					Vector3 newPos = originalPos [i] + son_Distance [i] + dad_deltaY [i];
 
-				Vector3 oldPos = plataformas [i].platform.localPosition;
-				plataformas [i].platform.localPosition = Vector3.MoveTowards (plataformas [i].platform.localPosition, newPos, 0.2f);
-				son_deltaY [i] += plataformas [i].platform.localPosition - oldPos;
+					Vector3 oldPos = plataformas [i].platform.localPosition;
+					plataformas [i].platform.localPosition = Vector3.MoveTowards (plataformas [i].platform.localPosition, newPos, 0.2f);
+					son_deltaY [i] += plataformas [i].platform.localPosition - oldPos;
+				}
+			} else { //SE FOR O PAI -------------------------------------------------------
+				if (dad_singTime <= 3f) {
+					dad_singTime += Time.deltaTime;
+
+					if (dad_singTime >= 0) {
+						dadSing = true;
+					} else {
+						dadSing = false;
+					}
+				} else {
+					dadSing = false;
+					dad_singTime = -2f;
+				}
+
+				int chegou = 0;
+
+				for (int i = 0; i < plataformas.Length; i++) {
+					Vector3 newPos = originalPos [i] + dad_Distance [i] + son_deltaY [i];
+
+					if (plataformas [i].platform.localPosition.y >= plataformas [i].newYPos - 0.1f) {
+						chegou++;
+						continue;
+					} else {
+						Vector3 oldPos = plataformas [i].platform.localPosition;
+						plataformas [i].platform.localPosition = Vector3.MoveTowards (plataformas [i].platform.localPosition, newPos, 0.1f);
+						dad_deltaY [i] += plataformas [i].platform.localPosition - oldPos;
+					}
+				}
+
+				if (chegou >= plataformas.Length) {
+					fatherExternalTrigger.SetActive (true);
+					enabled = false;
+				}
 			}
 		}
 	}
@@ -92,38 +127,38 @@ public class PlataformasCoopCtrl : MonoBehaviour, ISongListener, IFatherSustainI
 //	}
 
 	public void FatherSustainInteraction(PlayerSongs song){
-		if (dad_singTime <= 3f) {
-			dad_singTime += Time.deltaTime;
-
-			if (dad_singTime >= 0) {
-				dadSing = true;
-			} else {
-				dadSing = false;
-			}
-		} else {
-			dadSing = false;
-			dad_singTime = -2f;
-		}
-
-		int chegou = 0;
-
-		for (int i = 0; i < plataformas.Length; i++) {
-			Vector3 newPos = originalPos [i] + dad_Distance [i] + son_deltaY [i];
-
-			if (plataformas [i].platform.localPosition.y >= plataformas [i].newYPos - 0.1f) {
-				chegou++;
-				continue;
-			} else {
-				Vector3 oldPos = plataformas [i].platform.localPosition;
-				plataformas [i].platform.localPosition = Vector3.MoveTowards (plataformas [i].platform.localPosition, newPos, 0.1f);
-				dad_deltaY [i] += plataformas [i].platform.localPosition - oldPos;
-			}
-		}
-
-		if (chegou >= plataformas.Length) {
-			fatherExternalTrigger.SetActive (true);
-			enabled = false;
-		}
+//		if (dad_singTime <= 3f) {
+//			dad_singTime += Time.deltaTime;
+//
+//			if (dad_singTime >= 0) {
+//				dadSing = true;
+//			} else {
+//				dadSing = false;
+//			}
+//		} else {
+//			dadSing = false;
+//			dad_singTime = -2f;
+//		}
+//
+//		int chegou = 0;
+//
+//		for (int i = 0; i < plataformas.Length; i++) {
+//			Vector3 newPos = originalPos [i] + dad_Distance [i] + son_deltaY [i];
+//
+//			if (plataformas [i].platform.localPosition.y >= plataformas [i].newYPos - 0.1f) {
+//				chegou++;
+//				continue;
+//			} else {
+//				Vector3 oldPos = plataformas [i].platform.localPosition;
+//				plataformas [i].platform.localPosition = Vector3.MoveTowards (plataformas [i].platform.localPosition, newPos, 0.1f);
+//				dad_deltaY [i] += plataformas [i].platform.localPosition - oldPos;
+//			}
+//		}
+//
+//		if (chegou >= plataformas.Length) {
+//			fatherExternalTrigger.SetActive (true);
+//			enabled = false;
+//		}
 	}
 
 	IEnumerator InteractionStopped(){

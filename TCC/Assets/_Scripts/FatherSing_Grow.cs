@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FatherSing_Grow : MonoBehaviour {
+public class FatherSing_Grow : MonoBehaviour, ISongListener {
 
 	public Transform targetToGrow;
 	//public AudioSource sing;
@@ -30,8 +30,14 @@ public class FatherSing_Grow : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerEnter(Collider col){
-		//sing.Play();
-		startGrow = true;
+	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false){
+		if(isFather && song == PlayerSongs.Crescimento){
+			startGrow = true;
+		}
 	}
+
+//	void OnTriggerEnter(Collider col){
+//		//sing.Play();
+//		startGrow = true;
+//	}
 }

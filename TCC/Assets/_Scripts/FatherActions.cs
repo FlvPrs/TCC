@@ -8,6 +8,7 @@ public enum FSM_IdleStates { Inactive, LookingAtPlayer, RandomWalk, Gliding, Jum
 
 public class FatherActions : AgentFather {
 
+	public FatherSongInteractionsCtrl songInteractionCollider;
 	protected HeightState currentState;
 	public PlayerSongs currentSong;
 
@@ -18,6 +19,8 @@ public class FatherActions : AgentFather {
 
 	[HideInInspector]
 	public bool stopUpdate;
+
+	
 
 	protected override void Start (){
 		base.Start ();
@@ -46,6 +49,8 @@ public class FatherActions : AgentFather {
 //		}
 
 		UpdateHeightCollider (currentState);
+
+		songInteractionCollider.currentSong = currentSong;
 
 		currentStamina = maxStamina - timeMoving;
 	}
@@ -263,21 +268,29 @@ public class FatherActions : AgentFather {
 
 		//TODO: Delete this. Apenas para teste
 		clarinetDefault.TransitionTo (0.01f);
-		//endTODO
+		//end TODO
 
 		animCtrl.SetFloat ("Height", 0f);
 	}
 
+	IEnumerator ResetSingingSomething (){
+		songInteractionCollider.isSingingSomething = true;
+		yield return new WaitForSeconds (0.2f);
+		songInteractionCollider.isSingingSomething = false;
+	}
+
 	public void Sing_SingleNote (){
 		sing.Play ();
-		staccatoColl.SetActive (true);
+		//staccatoColl.SetActive (true);
+		songInteractionCollider.isSingingSomething = true;
 		CancelInvoke("HideStaccatoColl");
-		Invoke ("HideStaccatoColl", 0.5f);
+		Invoke ("HideStaccatoColl", 0.4f);
 	}
 
 	void HideStaccatoColl (){
-		staccatoColl.SetActive (false);
+		//staccatoColl.SetActive (false);
 		currentSong = PlayerSongs.Empty;
+		songInteractionCollider.isSingingSomething = false;
 	}
 
 	//--- Após ser chamada uma vez, enquanto isRepeatingNote for true, esta função roda ~automaticamente~ uma vez a cada <singleNoteMinimumDuration> segundos ---
@@ -317,7 +330,8 @@ public class FatherActions : AgentFather {
 			singSustain.Play ();
 			counter_SingSustain = 0f; //Inicia o counter.
 			sustainDuration = duration;
-			sustainColl.SetActive (true);
+			//sustainColl.SetActive (true);
+			songInteractionCollider.isSingingSomething = true;
 		}
 
 		if(duration > 0f){ //Se foi definido um tempo limite...
@@ -326,8 +340,9 @@ public class FatherActions : AgentFather {
 				//singSustainNote = false;
 				counter_SingSustain = 0f;
 				singSustain.Stop ();
-				sustainColl.SetActive (false);
+				//sustainColl.SetActive (false);
 				currentSong = PlayerSongs.Empty;
+				songInteractionCollider.isSingingSomething = false;
 			}
 			else { //Se ainda não alcançou <duration>s, aumente o counter.
 				counter_SingSustain += Time.deltaTime;
@@ -340,8 +355,9 @@ public class FatherActions : AgentFather {
 				//singSustainNote = false;
 				counter_SingSustain = 0f;
 				singSustain.Stop ();
-				sustainColl.SetActive (false);
+				//sustainColl.SetActive (false);
 				currentSong = PlayerSongs.Empty;
+				songInteractionCollider.isSingingSomething = false;
 			}
 		}
 	}

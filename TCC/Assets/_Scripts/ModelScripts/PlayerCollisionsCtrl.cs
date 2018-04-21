@@ -91,9 +91,9 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			canCenterWind = false;
 
 			currentCount++;
-			if (currentCount == 1) {
-				playerCtrl.BypassGravity (true);
-			}
+//			if (currentCount == 1) {
+//				playerCtrl.BypassGravity (true);
+//			}
 
 			oldWindPoint = col.transform;
 			avrgCurrentMagnitude += col.transform.forward;
@@ -174,8 +174,8 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			playerCtrl.ZeroExternalForce ();
 		}
 		if(col.CompareTag("WindCurrent")){
-			playerCtrl.ContinuousExternalForce (Vector3.zero, false, false);
-			playerCtrl.BypassGravity (false);
+			//playerCtrl.ContinuousExternalForce (Vector3.zero, false, false);
+			//playerCtrl.BypassGravity (false);
 			currentCount--;
 			avrgCurrentMagnitude -= col.transform.forward;
 			if(currentCount < 1){
