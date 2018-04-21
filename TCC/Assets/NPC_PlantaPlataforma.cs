@@ -3,109 +3,165 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class NPC_PlantaPlataforma : PlantaBehaviour {
-	private bool playerPerto, acaoTerminada, idleAbertaOuFechada, stateIdle;
+	private bool playerPerto, idleAbertaOuFechada, stateIdle;
 	private float distToPlayer;
+	public int alturaFlor;
+	private float velocidade = 2f;
+	private Transform t;
+	public bool acaoTerminada;
+	private Rigidbody r;
+	private Vector3 upPlataform, originalPosition, finalDestination, currentDestination;
 	// Use this for initialization
 	protected override void Awake(){
 		base.Awake ();
-//		MudancaEstado (1);
-//		acaoTerminada = false;//algo vai fazer ele termianr a acao, final da animação ou tempo.
+		upPlataform = new Vector3 (0, 1, 0);
+		acaoTerminada = true;
+		t = GetComponent<Transform> ();
+		r = GetComponent<Rigidbody> ();
+		originalPosition = t.position;
+		currentDestination = originalPosition;
+		TrocaAltura (1);
+		alturaFlor = 1;
+		//algo vai fazer ele termianr a acao, final da animação ou tempo.
 	}
 	
 	// Update is called once per frame
 	protected override void Update () {
-		base.Update ();
 		print (currentState);
-//		distToPlayer = Vector3.Distance (player.position, plantaTransform.position);
-//		if (distToPlayer <= 20f) {
-//			playerPerto = true;
-//		} else {
-//			playerPerto = false;
-//		}
-
-	}
-	public enum EstadosPlantaPlataforma{
-		IdleAberta, //case0
-		IdleFechada, //case1
-		Morta, //case2
-		Murcha,//case3
-		Estica,//case4
-		Encolhe,//case5
-		Dancinha//case6
+		base.Update ();
 	}
 
-//	void OnTriggerStay(Collider colisor){
-//		if (colisor.name == "PlayerCollider") {
-//			if (playerPerto) {
-//				if (currentSong != PlayerSongs.Empty && currentSong != PlayerSongs.Ninar) {
-//					MudancaEstado (0);
-//				} else if (currentSong == PlayerSongs.Ninar) {
-//					MudancaEstado (1);
-//				}
-//				if (stateIdle) {
-//					if (currentSong == PlayerSongs.Crescimento) {
-//						MudancaEstado (4);
-//					} else if (currentSong == PlayerSongs.Encolhimento) {
-//						MudancaEstado (5);
-//					} else if (currentSong == PlayerSongs.Alegria) {
-//						MudancaEstado (6);
-//					}
-//				}
-//			}
-//		}
-//	}
-
-	void RetornarEstadoIdle(){//chamar essa funcao quando terminar uma acao para voltar ao estado idle
-		if (acaoTerminada) {//algo vai fazer ele termianr a acao, final da animação ou tempo.
-			if (idleAbertaOuFechada) {//true == aberto , false == fechada
-				MudancaEstado (0);
-			} else {
-				MudancaEstado (1);
+	protected override void Dormir(){
+		if (acaoTerminada) {
+			if (currentState == Planta_CurrentState.Dormindo)
+				return;
+			if (currentState == Planta_CurrentState.DefaultState) {
+				currentState = Planta_CurrentState.Dormindo;
 			}
 		}
 	}
 
-	private EstadosPlantaPlataforma estado;
+	protected override void Crescer(){
+		if (alturaFlor <= 4) {
+			print ("crescendo111");
+			if (acaoTerminada) {
+				if (currentState == Planta_CurrentState.Crescendo) {
+					return;
+				}
 
-	void MudancaEstado(int estadoAtual){
-		switch (estadoAtual) {
+				StartCoroutine ("TimeAcao");
+				//transform.localPosition += upPlataform; 
+				currentState = Planta_CurrentState.Crescendo;
+				alturaFlor++;
+				acaoTerminada = false;
 
-		case 0:
-			estado = EstadosPlantaPlataforma.IdleAberta;
-			idleAbertaOuFechada = true;
-			stateIdle = true;
-			break;
+			} else {
+				TrocaAltura (alturaFlor);
 
+			}
+		}
+	}
+
+	protected override void Encolher(){
+		if (alturaFlor >= 1) {
+			print ("crescendo222");
+			if (acaoTerminada) {
+				if (currentState == Planta_CurrentState.Encolhendo) {
+					return;
+				}
+
+				StartCoroutine ("TimeAcao");
+	
+				currentState = Planta_CurrentState.Encolhendo;
+				alturaFlor--;
+				acaoTerminada = false;
+
+			} else {
+				TrocaAltura (alturaFlor);
+			}
+		}
+	}
+
+	IEnumerator TimeAcao(){
+		yield return new WaitForSecondsRealtime (3.0f);
+		acaoTerminada = true;
+		currentState = Planta_CurrentState.DefaultState;
+	}
+
+	void TrocaAltura(int nivel){
+		switch (nivel) {
 		case 1:
-			estado = EstadosPlantaPlataforma.IdleFechada;
-			idleAbertaOuFechada = false;
-			stateIdle = true;
-			break;
+			print ("rolando1");
+			Vector3 dir1;
+			upPlataform = originalPosition;
 
+			if (Vector3.Distance (t.position, upPlataform) <= 0.1f) {
+				return;
+			}
+			else {
+				dir1 = Vector3.Lerp (t.position, upPlataform, velocidade * Time.deltaTime);
+			}
+			t.position = dir1;
+
+			break;
 		case 2:
-			estado = EstadosPlantaPlataforma.Morta;
-			stateIdle = false;
+			print ("rolando2");
+			Vector3 dir2;
+			upPlataform = originalPosition;
+			upPlataform.y += 4.0f;
+			if (Vector3.Distance (t.position, upPlataform) <= 0.1f) {
+				return;
+			}
+			else {
+				dir2 = Vector3.Lerp (t.position, upPlataform, velocidade * Time.deltaTime);
+			}
+			t.position = dir2;
 			break;
-
 		case 3:
-			estado = EstadosPlantaPlataforma.Murcha;
-			stateIdle = false;
+			print ("rolando3");
+			Vector3 dir3;
+			upPlataform = originalPosition;
+			upPlataform.y += 10.0f;
+			if (Vector3.Distance (t.position, upPlataform) <= 0.1f) {
+				return;
+			}
+			else {
+				dir3 = Vector3.Lerp (t.position, upPlataform, velocidade * Time.deltaTime);
+			}
+			t.position = dir3;
+			//(upPlataform);
+			//plantaTransform.position = Vector3.MoveTowards (originalPosition, upPlataform, velocidade*Time.deltaTime);
 			break;
-
 		case 4:
-			estado = EstadosPlantaPlataforma.Estica;
-			stateIdle = false;
+			print ("rolando4");
+			Vector3 dir4;
+			upPlataform = originalPosition;
+			upPlataform.y += 16.0f;
+			if (Vector3.Distance (t.position, upPlataform) <= 0.1f) {
+				return;
+			}
+			else {
+				dir4 = Vector3.Lerp (t.position, upPlataform, velocidade * Time.deltaTime);
+			}
+			t.position = dir4;
 			break;
 
-		case 5:
-			estado = EstadosPlantaPlataforma.Encolhe;
-			stateIdle = false;
-			break;
-
-		case 6:
-			estado = EstadosPlantaPlataforma.Dancinha;
-			stateIdle = false;
+		default:
+			print ("rolando0");
 			break;
 		}
 	}
+
+	protected override void OnTriggerEnter(Collider colisor){
+		if(colisor.CompareTag("Player")){
+			colisor.transform.parent.SetParent (this.transform);
+		}
+	}
+
+	protected override void OnTriggerExit(Collider colisor){
+		if (colisor.CompareTag ("Player")) {
+			colisor.transform.parent.SetParent (null);
+		}
+	}
+
 }
