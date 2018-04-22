@@ -64,7 +64,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	int flyStamina;
 	float cameraRotation;
 	float jumpTriggerStrength;
-	public float singHoldTreshold = 0.24f;
+	public float singHoldTreshold = 0.2f;
 	public float singHoldTime;
 	bool stopGravity = false;
 
@@ -251,7 +251,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			if (oldState != walkStates.CURR_HEIGHT_STATE && singHoldTime > 0f) {
 				if (walkStates.SEGURANDO_NOTA) {
 					GetComponent<FMODFilhoImplementacao> ().canStartSustain = true;
-					birdSingCtrl.SustainNote ();
+					birdSingCtrl.RepeatNote ();
 				} else {
 					FindObjectOfType<PlayerWalkInput> ().singPressTime = 0f;
 					GetComponent<FMODFilhoImplementacao> ().canStartStaccato = true;
@@ -456,15 +456,16 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		walkStates.TOCANDO_NOTAS = true;
 		birdSingCtrl.SingNote();
 	}
-	public void OnSingInputHold(){ //É sempre chamada apenas 1x, antes de <singleNoteMinimumDuration>s, se o player estiver segurando o botao de canto
+	public void OnSingInputHold(){
 		walkStates.SEGURANDO_NOTA = true;
-		birdSingCtrl.SustainNote();
+		birdSingCtrl.RepeatNote();
 	}
-	//	public void OnSingInputUp(){
-	//		walkStates.SEGURANDO_NOTA = false;
-	//		//canStartSing = true;
-	//		//birdSingCtrl.StopSing();
-	//	}
+	public void OnSingInputUp(){
+		//walkStates.SEGURANDO_NOTA = false; //Já é chamada no PlayerWalkInput
+		//walkStates.TOCANDO_NOTAS = false; //Same
+		canStartSing = true;
+		birdSingCtrl.StopRepeating();
+	}
 
 	public void SetCheatState(bool activateCheat){
 		maxFlyStamina = (activateCheat) ? 10 : 1;
