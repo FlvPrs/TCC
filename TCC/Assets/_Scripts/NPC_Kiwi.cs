@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class NPC_Kiwi : NPCBehaviour {
 
+	Rigidbody rb;
+
 	float defaultStopDist;
 
 	float distToPlayer;
@@ -11,7 +13,7 @@ public class NPC_Kiwi : NPCBehaviour {
 	float timer_Distraido = 0;
 	float timer_PegarObjeto = 0;
 	Vector3 patrulhaStartPos;
-	bool fugindo, patrulhando, isOnArbusto, podePegarObj;
+	bool fugindo, patrulhando, isOnArbusto, podePegarObj, isOnWind;
 
 	List<Transform> collObjects = new List<Transform> ();
 	Transform objetoCarregado;
@@ -20,11 +22,16 @@ public class NPC_Kiwi : NPCBehaviour {
 	{
 		base.Awake ();
 
+		rb = GetComponent<Rigidbody> ();
+
 		defaultStopDist = nmAgent.stoppingDistance;
 	}
 
 	protected override void Update ()
 	{
+		if (isOnWind)
+			return;
+
 		distToPlayer = Vector3.Distance (player.position, npcTransform.position);
 
 		base.Update ();
@@ -230,6 +237,19 @@ public class NPC_Kiwi : NPCBehaviour {
 			}
 		}
 	}
+	void OnTriggerStay (Collider col){
+		if(col.CompareTag("Wind")){
+			isOnWind = true;
+			nmAgent.enabled = false;
+			rb.isKinematic = false;
+			rb.velocity = col.transform.up * 30f;
+		} else if(col.CompareTag("Wind2")){
+			isOnWind = true;
+			nmAgent.enabled = false;
+			rb.isKinematic = false;
+			rb.velocity = col.transform.up * 60f;
+		}
+	}
 	void OnTriggerExit (Collider col){
 		if(col.CompareTag("Fruta") || col.CompareTag("Semente") || col.CompareTag("PaiDebilitado")){
 			if(collObjects.Contains(col.transform)){
@@ -239,6 +259,18 @@ public class NPC_Kiwi : NPCBehaviour {
 
 		if(col.CompareTag("Arbusto")){
 			isOnArbusto = false;
+		}
+
+		if(col.CompareTag("Wind") || col.CompareTag("Wind2")){
+			isOnWind = false;
+			nmAgent.enabled = true;
+			if (!nmAgent.isOnNavMesh)
+				nmAgent.enabled = false;
+			else {
+				nmAgent.SetDestination (npcTransform.position + (col.transform.up * 5f));
+			}
+			rb.isKinematic = true;
+			rb.velocity = Vector3.zero;
 		}
 	}
 }

@@ -251,6 +251,15 @@ public class MenuControllerInGame : MonoBehaviour {
 				}
 			}
 		}
+		if(Input.GetKeyDown(KeyCode.O)){
+			SaveInformations.SaveSlot (1, 0);
+			SaveInformations.SaveSlot (2, 0);
+			SaveInformations.SaveSlot (3, 0);
+
+			saveSlot1 = PlayerPrefs.GetInt ("saveSlot1");
+			saveSlot2 = PlayerPrefs.GetInt ("saveSlot2");
+			saveSlot3 = PlayerPrefs.GetInt ("saveSlot3");
+		}
 	}
 
 	IEnumerator EnterAvailable(){

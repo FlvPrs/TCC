@@ -21,5 +21,7 @@ public class PlayerSongInteractionsCtrl : MonoBehaviour {
 	void OnTriggerStay (Collider col){
 		if(col.GetComponent<ISongListener> () != null)
 			col.GetComponent<ISongListener> ().DetectSong(currentSong, isSingingSomething);
+		else if (col.GetComponentInParent<ISongListener> () != null)
+			col.GetComponentInParent<ISongListener> ().DetectSong(currentSong, isSingingSomething);
 	}
 }

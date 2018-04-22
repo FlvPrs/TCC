@@ -70,13 +70,13 @@ public class BirdSingCtrl : MonoBehaviour {
 		// Alegria	-	-	(Distrair)	-	Start
 
 		partiturasPossiveis = new int[]{ 
-			4, 		//Encolhimento
-			5, 		//Amizade
-			6, 		//Crescimento
-			1111,  	//Estorvo
-			0000,	//Serenidade
-			0000,	//Ninar
-			0000	//Alegria
+			666, //Irritar
+			1221, //Acalmar
+			1212, //Seguir
+			2232, //Distrair
+			3333, //Crescer
+			1111, //Encolher
+			2211 //Dormir
 		};
 
 		noteIndexes = new int[3];
@@ -105,14 +105,14 @@ public class BirdSingCtrl : MonoBehaviour {
 //			playerCtrl.canStartSing = true;
 //		}
 
-		if (!tocouPartitura) {
+	//	if (!tocouPartitura) {
 			if (cooldown > 0f) {
 				cooldown -= Time.deltaTime;
 			} else {
 				cooldown = 0;
 				CancelaPartitura ();
 			}
-		}
+	//	}
 
 		UpdateColor ();
 
@@ -153,7 +153,7 @@ public class BirdSingCtrl : MonoBehaviour {
 		if (!specificIndex) {
 			audioSourceAttack.clip = staccatoSounds [(int)oldState].clip [noteIndexes [(int)oldState]];
 			noteIndexes [(int)oldState]++;
-			if (noteIndexes [(int)oldState] > 3) {
+			if (noteIndexes [(int)oldState] > 3 || noteIndexes [(int)oldState] < 0) {
 				noteIndexes [(int)oldState] = 0;
 			}
 		} else {
@@ -161,10 +161,10 @@ public class BirdSingCtrl : MonoBehaviour {
 		}
 		audioSourceAttack.Play ();
 
-		if (tocouPartitura)
-			CancelaPartitura ();
+//		if (tocouPartitura)
+//			CancelaPartitura ();
 		
-		UpdatePartituraAtual (oldState);
+		UpdatePartituraAtual (oldState, specificIndex);
 		
 		StartCoroutine("StopSingleNote");
 	}
@@ -314,36 +314,40 @@ public class BirdSingCtrl : MonoBehaviour {
 	}
 
 	void TocarPartitura(int partitura){
+		CancelInvoke ("CancelaPartitura");
+
 		tocouPartitura = true;
 		print ("YAYYY " + partitura);
 
+//		666, //Irritar
+//		1221, //Acalmar
+//		1212, //Seguir
+//		2232, //Distrair
+//		3333, //Crescer
+//		1111, //Encolher
+//		2211 //Dormir
+
 		switch (partitura) {
 
-		//Se a partitura for de sustain, espera parar de tocar para cancelar partitura.
-		case 4:	//Encolhimento
+		case 1111:	//Encolhimento
 			partituraCollider.currentSong = PlayerSongs.Encolhimento;
-			partituraIsSustain = true;
 			return;
-		case 5:	//Amizade
+		case 1212:	//Amizade
 			partituraCollider.currentSong = PlayerSongs.Amizade;
-			partituraIsSustain = true;
 			return;
-		case 6:	//Crescimento
+		case 3333:	//Crescimento
 			partituraCollider.currentSong = PlayerSongs.Crescimento;
-			partituraIsSustain = true;
 			return;
-
-		//Se a partitura for só de staccato, cancela a partitura depois de 0.5s.
-		case 1111:	//Estorvo
+		case 666:	//Estorvo
 			partituraCollider.currentSong = PlayerSongs.Estorvo;
 			break;
-		case 0000:	//Serenidade
+		case 1221:	//Serenidade
 			partituraCollider.currentSong = PlayerSongs.Serenidade;
 			break;
-		case 8888:	//Ninar
+		case 2211:	//Ninar
 			partituraCollider.currentSong = PlayerSongs.Ninar;
 			break;
-		case 9999:	//Alegria
+		case 2232:	//Alegria
 			partituraCollider.currentSong = PlayerSongs.Alegria;
 			break;
 		default:
@@ -360,21 +364,15 @@ public class BirdSingCtrl : MonoBehaviour {
 
 		switch (partitura) {
 
-		//Se a partitura for de sustain, espera parar de tocar para cancelar partitura.
 		case 9:    //Encolhimento
 			partituraCollider.currentSong = PlayerSongs.Encolhimento;
-			partituraIsSustain = true;
 			return;
 		case 4:    //Amizade
 			partituraCollider.currentSong = PlayerSongs.Amizade;
-			partituraIsSustain = true;
 			return;
 		case 8:    //Crescimento
 			partituraCollider.currentSong = PlayerSongs.Crescimento;
-			partituraIsSustain = true;
 			return;
-
-			//Se a partitura for só de staccato, cancela a partitura depois de 0.5s.
 		case 5:    //Estorvo
 			partituraCollider.currentSong = PlayerSongs.Estorvo;
 			break;

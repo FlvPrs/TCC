@@ -60,6 +60,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	bool isFlying;
 	bool isOnLedge;
 	bool externalForceAdded;
+	bool continuousExternalForceAdded;
 	Vector3 externalForce;
 	int flyStamina;
 	float cameraRotation;
@@ -132,6 +133,8 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	public float maxSlopeAngle = 50;
 
 	bool holdVelocity;
+
+	bool isPressingDirInput;
 
 
 	void Awake(){
@@ -233,7 +236,8 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		isGrounded = Grounded (out collisionAbove);
 
 		if (velocity.y <= 0 && isGrounded) {
-			velocity = Vector3.up * velocity.y; //Pq o movimento é a partir da animação
+			if(isPressingDirInput)
+				velocity = Vector3.up * velocity.y /*+ externalForce*/; //Pq o movimento é a partir da animação
 		}
 
 		if (directionalInput == Vector3.zero) {
@@ -242,7 +246,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			}
 		}
 
-		animCtrl.SetBool ("isWalking", walkStates.IS_WALKING);
+		animCtrl.SetBool ("isWalking", isPressingDirInput);
 
 		//TODO: Provavelmente tem um jeito facil bem mais otimizado de fazer isso...
 		HeightState oldState = walkStates.CURR_HEIGHT_STATE;
@@ -362,6 +366,11 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	#region Input Control
 
 	public void SetDirectionalInput(Vector3 input){
+		if (input == Vector3.zero)
+			isPressingDirInput = false;
+		else
+			isPressingDirInput = true;
+		
 		//directionalInput = orientation.TransformVector(input);
 
 		Vector3 orientationForward;
@@ -474,7 +483,21 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	#endregion
 
 	void CalculateVelocity () {
+		float animSpeed = 1f;
 		if (!externalForceAdded) {
+			float speed = moveSpeed;
+			if(continuousExternalForceAdded && isGrounded){
+				if (Vector3.Dot (externalForce, directionalInput) <= 0f) {
+					directionalInput = (directionalInput * 2.2f) + (externalForce);
+					//directionalInput = (directionalInput * 2.2f < externalForce) ? directionalInput : externalForce;
+					directionalInput = directionalInput.normalized;
+				} else if (isPressingDirInput) {
+					directionalInput = (directionalInput + externalForce * 2f).normalized * 2f;
+				} else {
+					directionalInput = externalForce;
+				}
+				animSpeed = (Vector3.Dot (externalForce, directionalInput) <= 0f) ? 0.4f : (externalForce.magnitude > 3f) ? 1.8f : 1.4f;
+			}
 			float targetVelocityX = directionalInput.x * moveSpeed;
 			float targetVelocityZ = directionalInput.z * moveSpeed;
 			velocity.x = Mathf.SmoothDamp (velocity.x, targetVelocityX, ref velocityXSmoothing, (isGrounded) ? accelerationTimeGrounded : accelerationTimeAirborne);
@@ -484,14 +507,16 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		if (!stopGravity)
 			velocity.y += gravity * Time.deltaTime;
 
-		if(directionalInput.x != 0 || directionalInput.z != 0){
+		//if(directionalInput.x != 0 || directionalInput.z != 0){
+		if(isPressingDirInput){
 			walkStates.IS_WALKING = true;
 			//			if(isGrounded)
 			anim.ChangeForward(directionalInput.normalized);
 			//			else
 			//				anim.ChangeForward ((myT.forward + rb.velocity).normalized);
+
 			Vector3 clampedAnimSpeed = new Vector3 (directionalInput.x, 0, directionalInput.z);
-			clampedAnimSpeed = Vector3.ClampMagnitude (clampedAnimSpeed, 1f);
+			clampedAnimSpeed = Vector3.ClampMagnitude (clampedAnimSpeed, animSpeed);
 			animCtrl.SetFloat ("WalkVelocity", clampedAnimSpeed.magnitude);
 		} else {
 			walkStates.IS_WALKING = false;
@@ -667,6 +692,10 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	}
 
 	public void AddContinuousExternalForce(Vector3 force, bool smooth = true){
+		CancelInvoke ("ResetExternalForce");
+
+		continuousExternalForceAdded = true;
+
 		if (!smooth) {
 			externalForce = force;
 		} else {
@@ -678,12 +707,10 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			}
 		}
 
-		SetVelocityTo(externalForce, false);
-		//rb.AddForce (force, ForceMode.Acceleration);
+		SetVelocityTo (externalForce, false);
 		secondJumpStrengthMultiplier = fruitJumpPower + 0.15f;
 
-//		StopCoroutine ("ResetGravToDefault");
-//		StartCoroutine ("ResetGravToDefault", force);
+		Invoke ("ResetExternalForce", 0.2f);
 	}
 
 	public void AddExternalForce(Vector3 force, float duration, bool ignoreInput = true, bool waitTillGroundedOrJump = false){
@@ -700,6 +727,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	}
 	void ResetExternalForce (){
 		externalForceAdded = false;
+		continuousExternalForceAdded = false;
 		externalForce = Vector3.zero;
 	}
 
