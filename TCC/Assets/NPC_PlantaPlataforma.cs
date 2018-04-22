@@ -49,10 +49,12 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 					return;
 				}
 
-				StartCoroutine ("TimeAcao");
+				//StartCoroutine ("TimeAcao");
 				//transform.localPosition += upPlataform; 
 				currentState = Planta_CurrentState.Crescendo;
-				alturaFlor++;
+				if (alturaFlor < 4) {
+					alturaFlor++;
+				}
 				acaoTerminada = false;
 
 			} else {
@@ -69,14 +71,13 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 				if (currentState == Planta_CurrentState.Encolhendo) {
 					return;
 				}
-
-				StartCoroutine ("TimeAcao");
-	
+				//StartCoroutine ("TimeAcao");
 				currentState = Planta_CurrentState.Encolhendo;
-				alturaFlor--;
+				if (alturaFlor > 1) {
+					alturaFlor--;
+				}
 				acaoTerminada = false;
-
-			} else {
+				} else {
 				TrocaAltura (alturaFlor);
 			}
 		}
@@ -96,10 +97,13 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 			upPlataform = originalPosition;
 
 			if (Vector3.Distance (t.position, upPlataform) <= 0.1f) {
+				acaoTerminada = true;
+				currentState = Planta_CurrentState.DefaultState;
 				return;
 			}
 			else {
 				dir1 = Vector3.Lerp (t.position, upPlataform, velocidade * Time.deltaTime);
+				acaoTerminada = false;
 			}
 			t.position = dir1;
 
@@ -110,6 +114,8 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 			upPlataform = originalPosition;
 			upPlataform.y += 4.0f;
 			if (Vector3.Distance (t.position, upPlataform) <= 0.1f) {
+				acaoTerminada = true;
+				currentState = Planta_CurrentState.DefaultState;
 				return;
 			}
 			else {
@@ -123,6 +129,8 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 			upPlataform = originalPosition;
 			upPlataform.y += 10.0f;
 			if (Vector3.Distance (t.position, upPlataform) <= 0.1f) {
+				acaoTerminada = true;
+				currentState = Planta_CurrentState.DefaultState;
 				return;
 			}
 			else {
@@ -138,6 +146,8 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 			upPlataform = originalPosition;
 			upPlataform.y += 16.0f;
 			if (Vector3.Distance (t.position, upPlataform) <= 0.1f) {
+				acaoTerminada = true;
+				currentState = Planta_CurrentState.DefaultState;
 				return;
 			}
 			else {
@@ -152,16 +162,16 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 		}
 	}
 
-	protected override void OnTriggerEnter(Collider colisor){
-		if(colisor.CompareTag("Player")){
-			colisor.transform.parent.SetParent (this.transform);
-		}
-	}
-
-	protected override void OnTriggerExit(Collider colisor){
-		if (colisor.CompareTag ("Player")) {
-			colisor.transform.parent.SetParent (null);
-		}
-	}
+//	protected override void OnTriggerEnter(Collider colisor){
+//		if(colisor.CompareTag("Player")){
+//			colisor.transform.parent.SetParent (this.transform);
+//		}
+//	}
+//
+//	protected override void OnTriggerExit(Collider colisor){
+//		if (colisor.CompareTag ("Player")) {
+//			colisor.transform.parent.SetParent (null);
+//		}
+//	}
 
 }
