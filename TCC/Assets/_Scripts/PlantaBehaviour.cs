@@ -130,17 +130,23 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 					case Planta_CurrentState.Seguindo:
 						Seguir ();
 						break;
-					case Planta_CurrentState.Dormindo:
-						Dormir ();
-						break;
-					case Planta_CurrentState.Calmo:
-						Acalmar ();
-						break;
-					case Planta_CurrentState.Irritado:
-						Irritar ();
-						break;
+//					case Planta_CurrentState.Dormindo:
+//						Dormir ();
+//						break;
+//					case Planta_CurrentState.Calmo:
+//						Acalmar ();
+//						break;
+//					case Planta_CurrentState.Irritado:
+//						Irritar ();
+//						break;
 					case Planta_CurrentState.Distraido:
 						Distrair ();
+						break;
+					case Planta_CurrentState.Crescendo:
+						Crescer ();
+						break;
+					case Planta_CurrentState.Encolhendo:
+						Encolher ();
 						break;
 					default:
 						DefaultState ();

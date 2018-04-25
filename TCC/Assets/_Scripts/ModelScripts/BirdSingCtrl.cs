@@ -54,7 +54,7 @@ public class BirdSingCtrl : MonoBehaviour {
 
 	void Awake () {
 //		sustainCollider.gameObject.SetActive (false);
-//		singleNoteCollider.gameObject.SetActive (false);
+		singleNoteCollider.gameObject.SetActive (false);
 
 		partituraCollider.gameObject.SetActive (true);
 
@@ -172,11 +172,11 @@ public class BirdSingCtrl : MonoBehaviour {
 	}
 
 	IEnumerator StopSingleNote(){
-//		yield return new WaitForSeconds (0.05f);
-//		singleNoteCollider.gameObject.SetActive (true);
+		yield return new WaitForSeconds (0.05f);
+		singleNoteCollider.gameObject.SetActive (true);
 
-		yield return new WaitForSeconds (singleNoteMinimumDuration);
-
+		yield return new WaitForSeconds (singleNoteMinimumDuration-0.05f);
+		singleNoteCollider.gameObject.SetActive (false);
 //		playerCtrl.walkStates.TOCANDO_NOTAS = false;
 //		playerCtrl.canStartSing = true;
 		partituraCollider.isSingingSomething = false;
@@ -357,12 +357,15 @@ public class BirdSingCtrl : MonoBehaviour {
 
 		case 1111:	//Encolhimento
 			partituraCollider.currentSong = PlayerSongs.Encolhimento;
+			partituraIsSustain = true;
 			return;
 		case 1212:	//Amizade
 			partituraCollider.currentSong = PlayerSongs.Amizade;
+			partituraIsSustain = true;
 			return;
 		case 3333:	//Crescimento
 			partituraCollider.currentSong = PlayerSongs.Crescimento;
+			partituraIsSustain = true;
 			return;
 		case 666:	//Estorvo
 			partituraCollider.currentSong = PlayerSongs.Estorvo;

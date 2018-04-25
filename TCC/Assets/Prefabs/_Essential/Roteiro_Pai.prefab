@@ -1,0 +1,435 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1156016687763500}
+  m_IsPrefabParent: 1
+--- !u!1 &1156016687763500
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4349827139606424}
+  - component: {fileID: 114885591094483040}
+  m_Layer: 0
+  m_Name: Roteiro_Pai
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1599315316375796
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4652937120310620}
+  - component: {fileID: 114186368592174126}
+  m_Layer: 0
+  m_Name: Roteiro_SongList
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4349827139606424
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1156016687763500}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4652937120310620}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4652937120310620
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1599315316375796}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4349827139606424}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114186368592174126
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1599315316375796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75f6ccb6f52d4c24dbc57bf04b643d34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listaDePartituras:
+  - name: InstrumentoTutorial
+    partitura:
+    - Height: 2
+      Sustain: 0
+      WaitTimeBeforeNext: 1
+      SustainTime: 0
+    - Height: 0
+      Sustain: 0
+      WaitTimeBeforeNext: 1
+      SustainTime: 0
+    - Height: 1
+      Sustain: 0
+      WaitTimeBeforeNext: 1
+      SustainTime: 0
+--- !u!114 &114885591094483040
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1156016687763500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54235442173ef164b9e835897c6cb11e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fatherFSM: {fileID: 0}
+  roteiro:
+  - name: "Guiar filho at\xE9 beirada"
+    state: 7
+    showAdvanced: 0
+    show: 0
+    destination: {fileID: 0}
+    secondsFlying: 0
+    allowSlowFalling: 0
+    jumpHeight: 5
+    timeToJumpApex: 0.3
+    areaCenter: {fileID: 0}
+    areaRadius: 0
+    songType: 0
+    songIndex: 0
+    simpleSong: 0
+    sustainSong: 0
+    duration: 0
+    startingHeight: 0
+    stateChanger: 0
+    triggerDetail: 0
+  - name: "Andar at\xE9 outra beirada"
+    state: 5
+    showAdvanced: 0
+    show: 0
+    destination: {fileID: 0}
+    secondsFlying: 0
+    allowSlowFalling: 0
+    jumpHeight: 5
+    timeToJumpApex: 0.3
+    areaCenter: {fileID: 0}
+    areaRadius: 0
+    songType: 0
+    songIndex: 0
+    simpleSong: 0
+    sustainSong: 0
+    duration: 0
+    startingHeight: 0
+    stateChanger: 0
+    triggerDetail: 0
+  - name: '!Ficar olhando filho'
+    state: 1
+    showAdvanced: 0
+    show: 0
+    destination: {fileID: 0}
+    secondsFlying: 0
+    allowSlowFalling: 0
+    jumpHeight: 5
+    timeToJumpApex: 0.3
+    areaCenter: {fileID: 0}
+    areaRadius: 0
+    songType: 0
+    songIndex: 0
+    simpleSong: 0
+    sustainSong: 0
+    duration: 0
+    startingHeight: 0
+    stateChanger: 3
+    triggerDetail: 0
+  - name: "Andar at\xE9 muffins"
+    state: 5
+    showAdvanced: 0
+    show: 0
+    destination: {fileID: 0}
+    secondsFlying: 0
+    allowSlowFalling: 0
+    jumpHeight: 5
+    timeToJumpApex: 0.3
+    areaCenter: {fileID: 0}
+    areaRadius: 0
+    songType: 0
+    songIndex: 0
+    simpleSong: 0
+    sustainSong: 0
+    duration: 0
+    startingHeight: 0
+    stateChanger: 0
+    triggerDetail: 0
+  - name: Esperando para ativar Muffins
+    state: 1
+    showAdvanced: 0
+    show: 0
+    destination: {fileID: 0}
+    secondsFlying: 0
+    allowSlowFalling: 0
+    jumpHeight: 5
+    timeToJumpApex: 0.3
+    areaCenter: {fileID: 0}
+    areaRadius: 0
+    songType: 0
+    songIndex: 0
+    simpleSong: 0
+    sustainSong: 0
+    duration: 0
+    startingHeight: 0
+    stateChanger: 2
+    triggerDetail: 6
+  - name: "Can\xE7\xE3o Crescimento, parado"
+    state: 0
+    showAdvanced: 0
+    show: 0
+    destination: {fileID: 0}
+    secondsFlying: 0
+    allowSlowFalling: 0
+    jumpHeight: 5
+    timeToJumpApex: 0.3
+    areaCenter: {fileID: 0}
+    areaRadius: 0
+    songType: 3
+    songIndex: 0
+    simpleSong: 0
+    sustainSong: 1
+    duration: 3
+    startingHeight: 0
+    stateChanger: 1
+    triggerDetail: 5
+  - name: "Andar at\xE9 topo do cu"
+    state: 5
+    showAdvanced: 0
+    show: 0
+    destination: {fileID: 0}
+    secondsFlying: 0
+    allowSlowFalling: 0
+    jumpHeight: 5
+    timeToJumpApex: 0.3
+    areaCenter: {fileID: 0}
+    areaRadius: 0
+    songType: 0
+    songIndex: 0
+    simpleSong: 0
+    sustainSong: 0
+    duration: 0
+    startingHeight: 0
+    stateChanger: 0
+    triggerDetail: 0
+  - name: "Guiar player at\xE9 plataformas"
+    state: 7
+    showAdvanced: 0
+    show: 0
+    destination: {fileID: 0}
+    secondsFlying: 0
+    allowSlowFalling: 0
+    jumpHeight: 5
+    timeToJumpApex: 0.3
+    areaCenter: {fileID: 0}
+    areaRadius: 0
+    songType: 0
+    songIndex: 0
+    simpleSong: 0
+    sustainSong: 0
+    duration: 0
+    startingHeight: 0
+    stateChanger: 0
+    triggerDetail: 0
+  - name: "!Can\xE7\xE3o Crescimento, olhando player"
+    state: 1
+    showAdvanced: 0
+    show: 0
+    destination: {fileID: 0}
+    secondsFlying: 0
+    allowSlowFalling: 0
+    jumpHeight: 5
+    timeToJumpApex: 0.3
+    areaCenter: {fileID: 0}
+    areaRadius: 0
+    songType: 3
+    songIndex: 0
+    simpleSong: 0
+    sustainSong: 1
+    duration: 3
+    startingHeight: 0
+    stateChanger: 4
+    triggerDetail: 5
+  - name: "Andar at\xE9 fenda"
+    state: 5
+    showAdvanced: 0
+    show: 0
+    destination: {fileID: 0}
+    secondsFlying: 0
+    allowSlowFalling: 0
+    jumpHeight: 5
+    timeToJumpApex: 0.3
+    areaCenter: {fileID: 0}
+    areaRadius: 0
+    songType: 0
+    songIndex: 0
+    simpleSong: 0
+    sustainSong: 0
+    duration: 0
+    startingHeight: 0
+    stateChanger: 0
+    triggerDetail: 0
+  - name: Esticar, olhando player
+    state: 1
+    showAdvanced: 1
+    show: 0
+    destination: {fileID: 0}
+    secondsFlying: 0
+    allowSlowFalling: 0
+    jumpHeight: 5
+    timeToJumpApex: 0.3
+    areaCenter: {fileID: 0}
+    areaRadius: 0
+    songType: 0
+    songIndex: 0
+    simpleSong: 0
+    sustainSong: 0
+    duration: 0
+    startingHeight: 1
+    stateChanger: 2
+    triggerDetail: 7
+  - name: "Andar at\xE9 tronco de abaixar"
+    state: 5
+    showAdvanced: 0
+    show: 0
+    destination: {fileID: 0}
+    secondsFlying: 0
+    allowSlowFalling: 0
+    jumpHeight: 5
+    timeToJumpApex: 0.3
+    areaCenter: {fileID: 0}
+    areaRadius: 0
+    songType: 0
+    songIndex: 0
+    simpleSong: 0
+    sustainSong: 0
+    duration: 0
+    startingHeight: 0
+    stateChanger: 0
+    triggerDetail: 0
+  - name: Abaixado, olhando player
+    state: 1
+    showAdvanced: 0
+    show: 0
+    destination: {fileID: 0}
+    secondsFlying: 0
+    allowSlowFalling: 0
+    jumpHeight: 5
+    timeToJumpApex: 0.3
+    areaCenter: {fileID: 0}
+    areaRadius: 0
+    songType: 0
+    songIndex: 0
+    simpleSong: 0
+    sustainSong: 0
+    duration: 0
+    startingHeight: 2
+    stateChanger: 2
+    triggerDetail: 6
+  - name: "Voar at\xE9 instrumento"
+    state: 5
+    showAdvanced: 0
+    show: 0
+    destination: {fileID: 0}
+    secondsFlying: 0
+    allowSlowFalling: 0
+    jumpHeight: 5
+    timeToJumpApex: 0.3
+    areaCenter: {fileID: 0}
+    areaRadius: 0
+    songType: 0
+    songIndex: 0
+    simpleSong: 0
+    sustainSong: 0
+    duration: 0
+    startingHeight: 0
+    stateChanger: 0
+    triggerDetail: 10
+  - name: Waiting Player, looking at them
+    state: 1
+    showAdvanced: 0
+    show: 0
+    destination: {fileID: 0}
+    secondsFlying: 0
+    allowSlowFalling: 0
+    jumpHeight: 5
+    timeToJumpApex: 0.3
+    areaCenter: {fileID: 0}
+    areaRadius: 0
+    songType: 0
+    songIndex: 0
+    simpleSong: 0
+    sustainSong: 0
+    duration: 0
+    startingHeight: 0
+    stateChanger: 2
+    triggerDetail: 8
+  - name: Ensinar notas do instrumento
+    state: 0
+    showAdvanced: 0
+    show: 0
+    destination: {fileID: 0}
+    secondsFlying: 0
+    allowSlowFalling: 0
+    jumpHeight: 5
+    timeToJumpApex: 0.3
+    areaCenter: {fileID: 0}
+    areaRadius: 0
+    songType: 1
+    songIndex: 0
+    simpleSong: 0
+    sustainSong: 0
+    duration: 0
+    startingHeight: 0
+    stateChanger: 1
+    triggerDetail: 5
+  - name: '!Sair voando'
+    state: 5
+    showAdvanced: 0
+    show: 0
+    destination: {fileID: 0}
+    secondsFlying: 0
+    allowSlowFalling: 0
+    jumpHeight: 5
+    timeToJumpApex: 0.3
+    areaCenter: {fileID: 0}
+    areaRadius: 0
+    songType: 0
+    songIndex: 0
+    simpleSong: 0
+    sustainSong: 0
+    duration: 0
+    startingHeight: 0
+    stateChanger: 3
+    triggerDetail: 0
+  currentState: 0
