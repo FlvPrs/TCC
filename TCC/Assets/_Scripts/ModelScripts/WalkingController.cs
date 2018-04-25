@@ -252,15 +252,13 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		HeightState oldState = walkStates.CURR_HEIGHT_STATE;
 		walkStates.CURR_HEIGHT_STATE = birdHeightCtrl.currentHeightState;
 		if(walkStates.TOCANDO_NOTAS){
-			if (oldState != walkStates.CURR_HEIGHT_STATE && singHoldTime > 0f) {
-				if (walkStates.SEGURANDO_NOTA) {
-					GetComponent<FMODFilhoImplementacao> ().canStartSustain = true;
-					birdSingCtrl.RepeatNote ();
-				} else {
-					FindObjectOfType<PlayerWalkInput> ().singPressTime = 0f;
-					GetComponent<FMODFilhoImplementacao> ().canStartStaccato = true;
-					birdSingCtrl.SingNote ();
-				}
+			if (oldState != walkStates.CURR_HEIGHT_STATE && walkStates.SEGURANDO_NOTA) {
+				birdSingCtrl.RepeatNote (true, walkStates.CURR_HEIGHT_STATE);
+//					if () {} else {
+//					FindObjectOfType<PlayerWalkInput> ().singPressTime = 0f;
+//					GetComponent<FMODFilhoImplementacao> ().canStartStaccato = true;
+//					birdSingCtrl.SingNote ();
+//				}
 			}
 		}
 
@@ -285,7 +283,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			if(!externalForceAdded)
 				jumpInertia = Vector3.ClampMagnitude (jumpInertia, moveSpeed);
 			else
-				jumpInertia = Vector3.ClampMagnitude (jumpInertia, externalForce.magnitude);
+				jumpInertia = Vector3.ClampMagnitude (jumpInertia, externalForce.magnitude * 1.25f);
 			rb.velocity = new Vector3 (jumpInertia.x, velocity.y, jumpInertia.z);
 
 			//Debug.DrawRay (myT.position, rb.velocity.normalized * 5, Color.magenta);
@@ -412,7 +410,8 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			velocity.y = maxJumpVelocity;
 			jumpInertia = velocity;
 
-
+			if(continuousExternalForceAdded)
+				externalForce += Vector3.up * maxJumpHeight;
 		} 
 		else if (canFly && !stopGravity && (flyStamina > 0 || hasBonusJump))	//------ Se eu estou no ar e consigo voar -------------------------
 		{
@@ -423,6 +422,9 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			velocity.y = maxJumpVelocity * secondJumpStrengthMultiplier;
 			jumpInertia = velocity;
 			VelocidadeDiminuidaNoVoo = true;
+
+			if(continuousExternalForceAdded)
+				externalForce += Vector3.up * maxJumpVelocity * secondJumpStrengthMultiplier * 0.25f;
 
 			/* if (flyStamina > 0) {
 				flyStamina--;
@@ -487,13 +489,17 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		if (!externalForceAdded) {
 			float speed = moveSpeed;
 			if(continuousExternalForceAdded && isGrounded){
-				if (Vector3.Dot (externalForce, directionalInput) <= 0f) {
+				print (Vector3.Dot (externalForce, directionalInput));
+				if (Vector3.Dot (externalForce, directionalInput) <= -1.5f) { //Andando contra o vento...
 					directionalInput = (directionalInput * 2.2f) + (externalForce);
 					//directionalInput = (directionalInput * 2.2f < externalForce) ? directionalInput : externalForce;
 					directionalInput = directionalInput.normalized;
-				} else if (isPressingDirInput) {
+				} else if (Vector3.Dot (externalForce, directionalInput) < 0) { //Andando lateralmente, mas contra o vento...
+					directionalInput = (directionalInput * 1.5f) + (externalForce);
+					directionalInput = directionalInput.normalized;
+				} else if (isPressingDirInput) { //Andando a favor do vento...
 					directionalInput = (directionalInput + externalForce * 2f).normalized * 2f;
-				} else {
+				} else { //Só curtindo o vento...
 					directionalInput = externalForce;
 				}
 				animSpeed = (Vector3.Dot (externalForce, directionalInput) <= 0f) ? 0.4f : (externalForce.magnitude > 3f) ? 1.8f : 1.4f;
@@ -539,7 +545,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 
 
 	bool Grounded(out bool collAbove){
-		if(eatenByCarnivora){
+		if(eatenByCarnivora) {
 			collAbove = false;
 			return false;
 		}
@@ -553,7 +559,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		Vector3 normalDir = Vector3.zero;
 
 		float directionY = Mathf.Sign (velocity.y);
-		float rayLength = 1f + skinWidth;
+		float rayLength = 1f + skinWidth + Mathf.Clamp(Mathf.Abs (velocity.y * 0.1f), 0f, 4f);
 
 		for (int i = 0; i < verticalRayCount; i++) {
 			for (int j = 0; j < verticalRayCount; j++) {

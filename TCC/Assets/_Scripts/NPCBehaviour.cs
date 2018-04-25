@@ -42,7 +42,7 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 		nmAgent = GetComponent<NavMeshAgent> ();
 		npcTransform = GetComponent<Transform> ();
 		player = GameObject.FindObjectOfType<WalkingController> ().transform;
-		//father = GameObject.FindObjectOfType<FatherFSM> ().transform;
+		father = GameObject.FindObjectOfType<FatherActions> ().transform;
 
 		currentSong = PlayerSongs.Empty;
 		currentState = NPC_CurrentState.DefaultState;
@@ -56,6 +56,7 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 	protected virtual void Update () {
 		if (timer >= 1f) {
 			timer = 1f;
+			currentInteractionAgent = null;
 			currentSong = PlayerSongs.Empty;
 			if (currentState == NPC_CurrentState.Seguindo)
 				currentState = NPC_CurrentState.DefaultState;
@@ -121,14 +122,17 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 	}
 
 	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false){
-		timer = 0f;
-		currentSong = song;
-		playerIsMakingNoise = isSingingSomething;
-
-		if (!isFather)
-			currentInteractionAgent = player;
-		else
+		if (isFather && currentInteractionAgent != player) {
 			currentInteractionAgent = father;
+			timer = 0f;
+			currentSong = song;
+			playerIsMakingNoise = isSingingSomething;
+		} else if (!isFather) {
+			currentInteractionAgent = player;
+			timer = 0f;
+			currentSong = song;
+			playerIsMakingNoise = isSingingSomething;
+		}
 	}
 
 	//======================================================================================================================

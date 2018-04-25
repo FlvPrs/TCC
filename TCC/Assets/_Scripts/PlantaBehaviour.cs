@@ -44,7 +44,7 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 		selectedSongs = ReturnSelectedElements ();
 		plantaTransform = GetComponent<Transform> ();
 		player = GameObject.FindObjectOfType<WalkingController> ().transform;
-		//father = GameObject.FindObjectOfType<FatherFSM> ().transform;
+		father = GameObject.FindObjectOfType<FatherActions> ().transform;
 
 		MDL_Broto = plantaTransform.Find ("MDL_Broto").gameObject;
 		MDL_Crescida = plantaTransform.Find ("MDL_Crescida").gameObject;
@@ -170,7 +170,7 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 
 		if (!isFather)
 			currentInteractionAgent = player;
-		else
+		else if(currentInteractionAgent != player)
 			currentInteractionAgent = father;
 	}
 

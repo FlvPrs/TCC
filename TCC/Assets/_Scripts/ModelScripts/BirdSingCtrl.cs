@@ -50,6 +50,8 @@ public class BirdSingCtrl : MonoBehaviour {
 	private bool isRepeating;
 	private int repeatIndex = 0;
 
+	private bool transitionHeight;
+
 	void Awake () {
 //		sustainCollider.gameObject.SetActive (false);
 //		singleNoteCollider.gameObject.SetActive (false);
@@ -180,7 +182,7 @@ public class BirdSingCtrl : MonoBehaviour {
 		partituraCollider.isSingingSomething = false;
 	}
 
-	public void RepeatNote (){
+	public void RepeatNote (bool nextNote = false, HeightState currHeight = HeightState.Default){
 //		if (repeatTimer < 0f) {
 //			//StopCoroutine ("StopSingleNote");
 //			repeatTimer = 0f;
@@ -189,10 +191,30 @@ public class BirdSingCtrl : MonoBehaviour {
 //			SingNote (repeatIndex);
 //		}
 		isRepeating = true;
+
+		//ESTE FAZ EU IMEDIATAMENTE TOCAR AO TROCAR DE NOTA
+//		if (nextNote)
+//			SingNote ();
+
+		//ESTE CRIA UM DELAY AO TROCAR DE ALTURA
+		if(nextNote){
+			if(transitionHeight){
+				noteIndexes [(int)oldState]--;
+			}
+			transitionHeight = true;
+			oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
+			noteIndexes [(int)oldState]++;
+			if (noteIndexes [(int)oldState] > 3) {
+				noteIndexes [(int)oldState] = 0;
+			}
+		}
+
 		repeatIndex = noteIndexes [(int)oldState] - 1;
+
 		if (repeatIndex < 0) {
 			repeatIndex = 3;
 		}
+
 		StopCoroutine ("StartRepeat");
 		StartCoroutine("StartRepeat", repeatIndex);
 	}
@@ -200,6 +222,10 @@ public class BirdSingCtrl : MonoBehaviour {
 	IEnumerator StartRepeat (int index) {
 		while (isRepeating) {
 			yield return new WaitForSeconds (singleNoteMinimumDuration);
+			if (!playerCtrl.walkStates.SEGURANDO_NOTA)
+				break;
+
+			transitionHeight = false;
 			SingNote (true, index);
 		}
 	}

@@ -20,7 +20,8 @@ public class FatherActions : AgentFather {
 	[HideInInspector]
 	public bool stopUpdate;
 
-	
+	[HideInInspector]
+	public bool isCarregadoPorKiwis;
 
 	protected override void Start (){
 		base.Start ();
@@ -50,7 +51,10 @@ public class FatherActions : AgentFather {
 
 		UpdateHeightCollider (currentState);
 
-		songInteractionCollider.currentSong = currentSong;
+		if(!isCarregadoPorKiwis)
+			songInteractionCollider.currentSong = currentSong;
+//		else
+//			songInteractionCollider.currentSong = PlayerSongs.Alegria;
 
 		currentStamina = maxStamina - timeMoving;
 	}
@@ -67,8 +71,8 @@ public class FatherActions : AgentFather {
 		isWalking = isRandomWalking = isGuiding = isFollowingPlayer = false;
 		stopHoldFly = stopRepeatingNote = stopSustainNote = false;
 		nmAgent.isStopped = true;
-		sustainColl.SetActive (false);
-		staccatoColl.SetActive (false);
+		//sustainColl.SetActive (false);
+		//staccatoColl.SetActive (false);
 		currentSong = PlayerSongs.Empty;
 	}
 
@@ -274,15 +278,18 @@ public class FatherActions : AgentFather {
 	}
 
 	IEnumerator ResetSingingSomething (){
-		songInteractionCollider.isSingingSomething = true;
+		if(!isCarregadoPorKiwis)
+			songInteractionCollider.isSingingSomething = true;
 		yield return new WaitForSeconds (0.2f);
-		songInteractionCollider.isSingingSomething = false;
+		if(!isCarregadoPorKiwis)
+			songInteractionCollider.isSingingSomething = false;
 	}
 
 	public void Sing_SingleNote (){
 		sing.Play ();
 		//staccatoColl.SetActive (true);
-		songInteractionCollider.isSingingSomething = true;
+		if(!isCarregadoPorKiwis)
+			songInteractionCollider.isSingingSomething = true;
 		CancelInvoke("HideStaccatoColl");
 		Invoke ("HideStaccatoColl", 0.4f);
 	}
@@ -290,7 +297,8 @@ public class FatherActions : AgentFather {
 	void HideStaccatoColl (){
 		//staccatoColl.SetActive (false);
 		currentSong = PlayerSongs.Empty;
-		songInteractionCollider.isSingingSomething = false;
+		if(!isCarregadoPorKiwis)
+			songInteractionCollider.isSingingSomething = false;
 	}
 
 	//--- Após ser chamada uma vez, enquanto isRepeatingNote for true, esta função roda ~automaticamente~ uma vez a cada <singleNoteMinimumDuration> segundos ---
@@ -331,7 +339,8 @@ public class FatherActions : AgentFather {
 			counter_SingSustain = 0f; //Inicia o counter.
 			sustainDuration = duration;
 			//sustainColl.SetActive (true);
-			songInteractionCollider.isSingingSomething = true;
+			if(!isCarregadoPorKiwis)
+				songInteractionCollider.isSingingSomething = true;
 		}
 
 		if(duration > 0f){ //Se foi definido um tempo limite...
@@ -342,7 +351,8 @@ public class FatherActions : AgentFather {
 				singSustain.Stop ();
 				//sustainColl.SetActive (false);
 				currentSong = PlayerSongs.Empty;
-				songInteractionCollider.isSingingSomething = false;
+				if(!isCarregadoPorKiwis)
+					songInteractionCollider.isSingingSomething = false;
 			}
 			else { //Se ainda não alcançou <duration>s, aumente o counter.
 				counter_SingSustain += Time.deltaTime;
@@ -357,7 +367,8 @@ public class FatherActions : AgentFather {
 				singSustain.Stop ();
 				//sustainColl.SetActive (false);
 				currentSong = PlayerSongs.Empty;
-				songInteractionCollider.isSingingSomething = false;
+				if(!isCarregadoPorKiwis)
+					songInteractionCollider.isSingingSomething = false;
 			}
 		}
 	}

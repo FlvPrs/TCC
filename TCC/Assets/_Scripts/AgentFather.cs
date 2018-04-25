@@ -12,7 +12,7 @@ public class AgentFather : MonoBehaviour {
 	protected Rigidbody rb;
 	protected Animator animCtrl;
 	protected BoxCollider coll;
-	public GameObject staccatoColl, sustainColl;
+	//public GameObject staccatoColl, sustainColl;
 	[SerializeField]
 	GameObject l_wing, r_wing;
 	[HideInInspector]
@@ -20,6 +20,9 @@ public class AgentFather : MonoBehaviour {
 	[Range(1f, 300f)]
 	public float maxStamina;
 	public float currentStamina;
+
+	[HideInInspector]
+	public FatherConditions currentDisposition;
 
 	#region ========== Debug Variables ==========
 	public Transform targetReference;
@@ -39,8 +42,8 @@ public class AgentFather : MonoBehaviour {
 		animCtrl = GetComponentInChildren<Animator> ();
 		coll = GetComponent<BoxCollider> ();
 
-		staccatoColl.SetActive (false);
-		sustainColl.SetActive (false);
+		//staccatoColl.SetActive (false);
+		//sustainColl.SetActive (false);
 
 		timeMoving = 0f;
 
@@ -74,11 +77,26 @@ public class AgentFather : MonoBehaviour {
 				openWings (false);
 			}
 		}
-			
+
+		string walkAnim = "isWalking";
+		switch (currentDisposition) {
+		case FatherConditions.Debilitado:
+			//TODO trocar animação
+			break;
+		case FatherConditions.Machucado:
+			//TODO trocar animação
+			break;
+		case FatherConditions.MuitoMachucado:
+			//TODO trocar animação
+			break;
+		default:
+			break;
+		}
+
 		if (rb.isKinematic) {
-			animCtrl.SetBool ("isWalking", (!nmAgent.isStopped)? isWalking : false);
+			animCtrl.SetBool (walkAnim, (nmAgent.enabled && !nmAgent.isStopped)? isWalking : false);
 		} else {
-			animCtrl.SetBool ("isWalking", isWalking);
+			animCtrl.SetBool (walkAnim, isWalking);
 		}
 	}
 
@@ -127,6 +145,9 @@ public class AgentFather : MonoBehaviour {
 	protected float oldPosY;
 
 	protected void MoveAgentWithRB (Vector3 target){
+		if (currentDisposition == FatherConditions.Machucado || currentDisposition == FatherConditions.MuitoMachucado)
+			return;
+
 		if (!nmAgent.isStopped) {
 			nmAgent.isStopped = true;
 			rb.isKinematic = false;
@@ -149,6 +170,11 @@ public class AgentFather : MonoBehaviour {
 	}
 
 	protected void MoveAgentOnNavMesh (Vector3 target){
+		if (currentDisposition == FatherConditions.Machucado || currentDisposition == FatherConditions.MuitoMachucado) {
+			//nmAgent.isStopped = true;
+			return;
+		}
+		
 		if (nmAgent.isStopped) {
 			nmAgent.isStopped = false;
 			rb.isKinematic = true;

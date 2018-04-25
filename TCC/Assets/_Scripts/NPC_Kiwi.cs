@@ -13,7 +13,7 @@ public class NPC_Kiwi : NPCBehaviour {
 	float timer_Distraido = 0;
 	float timer_PegarObjeto = 0;
 	Vector3 patrulhaStartPos;
-	bool fugindo, patrulhando, isOnArbusto, podePegarObj, isOnWind;
+	bool fugindo, patrulhando, isOnArbusto, podePegarObj, isOnWind, isCarregandoPai;
 
 	List<Transform> collObjects = new List<Transform> ();
 	Transform objetoCarregado;
@@ -63,7 +63,7 @@ public class NPC_Kiwi : NPCBehaviour {
 
 		if (!isOnArbusto) {
 			//Normalmente, Foge do player quando este se aproxima.
-			if (distToPlayer < 7f) {
+			if (distToPlayer < 7f && !isCarregandoPai) {
 				patrulhando = false;
 				timer_StartPatrulha = 0;
 				currentSong = PlayerSongs.Empty;
@@ -89,7 +89,7 @@ public class NPC_Kiwi : NPCBehaviour {
 			}
 
 			//Se ficar 10s parado, anda pra um lugar aleatorio perto de onde está
-			if (timer_StartPatrulha >= 7f) {
+			if (timer_StartPatrulha >= 7f && !isCarregandoPai) {
 
 				if (!patrulhando) {
 					patrulhando = true;
@@ -140,7 +140,7 @@ public class NPC_Kiwi : NPCBehaviour {
 
 	protected override void Seguir ()
 	{
-		if(currentState != NPC_CurrentState.Distraido && currentState != NPC_CurrentState.Seguindo){
+		if(!isCarregandoPai && currentState != NPC_CurrentState.Distraido && currentState != NPC_CurrentState.Seguindo){
 			DefaultState ();
 			return;
 		}
@@ -209,18 +209,28 @@ public class NPC_Kiwi : NPCBehaviour {
 	void CarregarObjeto (Transform obj){
 		objetoCarregado = obj;
 
+		if(objetoCarregado.CompareTag("PaiDebilitado")){
+			isCarregandoPai = true;
+			objetoCarregado.GetComponent<Father_DebilitadoCtrl> ().carregadoPorKiwis = true;
+		}
+
 		objetoCarregado.SetParent (npcTransform);
 		objetoCarregado.localPosition = new Vector3 (0, 2, 0);
 	}
 
 	void SoltarObjeto (){
-		objetoCarregado.SetParent (null);
+		if(isCarregandoPai){
+			objetoCarregado.GetComponent<Father_DebilitadoCtrl> ().StopCarriedByKiwis ();
+		} else {
+			objetoCarregado.SetParent (null);
+		}
 		objetoCarregado = null;
+		isCarregandoPai = false;
 		timer_PegarObjeto = 2f;
 	}
 
 	void OnTriggerEnter (Collider col){
-		if(col.CompareTag("Fruta") || col.CompareTag("Semente") || col.CompareTag("PaiDebilitado")){
+		if(col.CompareTag("Fruta") || col.CompareTag("Semente")){
 			if (objetoCarregado == null && podePegarObj) {
 				if(!collObjects.Contains(col.transform)){
 					collObjects.Add (col.transform);
@@ -229,21 +239,36 @@ public class NPC_Kiwi : NPCBehaviour {
 				}
 			}
 		}
+		if (col.CompareTag("PaiDebilitado")) {
+			if (objetoCarregado == null && podePegarObj && col.GetComponent<Father_DebilitadoCtrl> ().CanBeCarriedByKiwis ()) {
+				if(!collObjects.Contains(col.transform)){
+					collObjects.Add (col.transform);
+					StopCoroutine ("PegarObjeto");
+					StartCoroutine ("PegarObjeto");
+				}
+			}
+		}
 
-		if(col.CompareTag("Arbusto")){
+		if(col.CompareTag("Arbusto") && !isCarregandoPai){
 			if(currentState == NPC_CurrentState.DefaultState && !isOnArbusto){
 				nmAgent.SetDestination (col.transform.position);
 				isOnArbusto = true;
 			}
 		}
+
+		if(col.CompareTag("Wind") || col.CompareTag("Wind2")){
+			SoltarObjeto ();
+		}
 	}
 	void OnTriggerStay (Collider col){
 		if(col.CompareTag("Wind")){
+			StopCoroutine ("ResetNavMeshAfterWind");
 			isOnWind = true;
 			nmAgent.enabled = false;
 			rb.isKinematic = false;
 			rb.velocity = col.transform.up * 30f;
 		} else if(col.CompareTag("Wind2")){
+			StopCoroutine ("ResetNavMeshAfterWind");
 			isOnWind = true;
 			nmAgent.enabled = false;
 			rb.isKinematic = false;
@@ -256,19 +281,33 @@ public class NPC_Kiwi : NPCBehaviour {
 				collObjects.Remove (col.transform);
 			}
 		}
+		if(col.CompareTag("PaiDebilitado")){
+			col.GetComponent<Father_DebilitadoCtrl> ().ResetNumeroDeKiwis ();
+			if(collObjects.Contains(col.transform)){
+				collObjects.Remove (col.transform);
+			}
+		}
 
 		if(col.CompareTag("Arbusto")){
 			isOnArbusto = false;
 		}
 
 		if(col.CompareTag("Wind") || col.CompareTag("Wind2")){
-			isOnWind = false;
-			nmAgent.enabled = true;
-			if (!nmAgent.isOnNavMesh)
-				nmAgent.enabled = false;
-			else {
-				nmAgent.SetDestination (npcTransform.position + (col.transform.up * 5f));
-			}
+			StartCoroutine ("ResetNavMeshAfterWind", col.transform.up);
+		}
+	}
+
+	IEnumerator ResetNavMeshAfterWind (Vector3 windUp){
+		yield return new WaitForSeconds (1f);
+		isOnWind = false;
+		nmAgent.enabled = true;
+		if (!nmAgent.isOnNavMesh) {
+			nmAgent.enabled = false;
+			enabled = false;
+			Destroy (gameObject, 5f);
+		}
+		else {
+			nmAgent.SetDestination (npcTransform.position + (windUp * 5f));
 			rb.isKinematic = true;
 			rb.velocity = Vector3.zero;
 		}

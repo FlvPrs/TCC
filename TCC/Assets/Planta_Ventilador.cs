@@ -5,6 +5,10 @@ using UnityEngine;
 public class Planta_Ventilador : PlantaBehaviour {
 
 	public GameObject vento;
+	public bool ventiladorAutomatico = false;
+	public float auto_OnOffTimer = 2f;
+	bool canStartVentiladorAutomatico;
+	float ventiladorCooldown;
 
 	bool fechada = true;
 
@@ -21,6 +25,7 @@ public class Planta_Ventilador : PlantaBehaviour {
 		//vento = plantaTransform.Find ("Vento").gameObject;
 
 		originalOrientation = headJoint.rotation;
+		canStartVentiladorAutomatico = true;
 	}
 
 	protected override void Update ()
@@ -33,7 +38,7 @@ public class Planta_Ventilador : PlantaBehaviour {
 			vento.SetActive (true);
 		}
 
-		if(timer >= 1f){
+		if(timer >= 1f && currentState == Planta_CurrentState.Seguindo){
 			Invoke ("PararDeSeguir", 2f);
 		}
 	}
@@ -42,12 +47,27 @@ public class Planta_Ventilador : PlantaBehaviour {
 	{
 		base.DefaultState ();
 
-		headJoint.rotation = Quaternion.Slerp(headJoint.rotation, originalOrientation, Time.deltaTime * angularSpeed);
+		//headJoint.rotation = Quaternion.Slerp(headJoint.rotation, originalOrientation, Time.deltaTime * angularSpeed);
+
+		if(ventiladorAutomatico && canStartVentiladorAutomatico){
+			ventiladorCooldown += Time.deltaTime;
+			if(ventiladorCooldown <= auto_OnOffTimer){
+				fechada = false;
+			} else if (ventiladorCooldown <= auto_OnOffTimer * 2f) {
+				fechada = true;
+			} else {
+				ventiladorCooldown = 0f;
+			}
+		} else {
+			ventiladorCooldown = 0f;
+		}
 	}
 
 	protected override void Seguir ()
 	{
 		base.Seguir ();
+
+		canStartVentiladorAutomatico = false;
 
 		if (Vector3.Dot (-Vector3.up, (currentInteractionAgent.position - headJoint.position).normalized) < 0.333f) {
 			headJoint.rotation = Quaternion.Slerp (headJoint.rotation, Quaternion.LookRotation (currentInteractionAgent.position - headJoint.position), Time.deltaTime * angularSpeed);
@@ -57,6 +77,17 @@ public class Planta_Ventilador : PlantaBehaviour {
 	protected override void PararDeSeguir ()
 	{
 		base.PararDeSeguir ();
+
+		StartCoroutine ("ReturnToOriginalOrientation");
+	}
+
+	IEnumerator ReturnToOriginalOrientation (){
+		yield return new WaitForSeconds (10f);
+		while (Quaternion.Dot(headJoint.rotation, originalOrientation) < 0.9999f) {
+			headJoint.rotation = Quaternion.Slerp(headJoint.rotation, originalOrientation, Time.deltaTime * angularSpeed);
+			yield return new WaitForSeconds(10f * Time.deltaTime);
+		}
+		canStartVentiladorAutomatico = true;
 	}
 
 	IEnumerator Close (){
@@ -69,12 +100,18 @@ public class Planta_Ventilador : PlantaBehaviour {
 		base.Irritar ();
 
 		vento.tag = "Wind2";
+
+		DefaultState ();
 	}
 	protected override void Acalmar ()
 	{
 		base.Acalmar ();
 
 		vento.tag = "Wind";
+
+		//canStartVentiladorAutomatico = false; 
+
+		DefaultState ();
 	}
 
 	protected override void OnTriggerEnter (Collider col)
@@ -95,7 +132,7 @@ public class Planta_Ventilador : PlantaBehaviour {
 	{
 		base.OnTriggerExit (col);
 
-		if(col.CompareTag("Player")){
+		if(col.CompareTag("Player") && !ventiladorAutomatico){
 			StartCoroutine ("Close");
 		}
 	}

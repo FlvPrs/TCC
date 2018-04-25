@@ -54,7 +54,9 @@ public class FrutaDeCura_Controller : MonoBehaviour, ICarnivoraEdible {
 	#endregion
 
 	void OnTriggerEnter (Collider col){
-		if(col.GetComponent<PlantaBehaviour>() != null){
+		if (col.CompareTag("PaiDebilitado")) {
+			col.GetComponent<Father_DebilitadoCtrl> ().Revigorar (gameObject);
+		} else if (col.GetComponent<PlantaBehaviour>() != null) {
 			col.GetComponent<PlantaBehaviour> ().RevigorarPlanta (gameObject);
 		}
 	}

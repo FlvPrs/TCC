@@ -11,13 +11,14 @@ public class PoisonMushroom_Ctrl : MonoBehaviour {
 	public bool venenoCanGrow = true;
 	public bool venenoCanDissipate = true;
 
-	public WalkingController player;
+	WalkingController player;
 	public GameObject venenoPrefab;
 
 	private Animator mushAnimCtrl;
 
 	void Awake(){
 		mushAnimCtrl = GetComponentInParent<Animator> ();
+		player = FindObjectOfType<WalkingController> ();
 	}
 
 	void OnTriggerEnter(Collider col){
