@@ -7,7 +7,7 @@ public class Npc_BeijaFlor : NPCBehaviour {
 	private float distToPlayer;
 	private float timerToPatrulha;
 	private bool playerPerto;
-	private bool dentroVeneno, podePegarObj;
+	private bool dentroVeneno, podePegarObj, seguindo;
 	float timer_PegarObjeto = 0;
 
 	List<Transform> collObjects = new List<Transform>();
@@ -39,7 +39,7 @@ public class Npc_BeijaFlor : NPCBehaviour {
 			podePegarObj = true;
 		}
 
-		//print (estado);
+		print (estado);
 	}
 
 	public enum EstadosBeijaFro{
@@ -112,7 +112,7 @@ public class Npc_BeijaFlor : NPCBehaviour {
 	}
 
 	protected override void Seguir(){
-		if (dentroVeneno == false && distToPlayer <=15f) {
+		if (dentroVeneno == false) {
 			base.Seguir ();
 		}
 		if (dentroVeneno == true) {
@@ -123,27 +123,26 @@ public class Npc_BeijaFlor : NPCBehaviour {
 
 	void OnTriggerStay(Collider colisor){
 		if (colisor.name == "PlayerCollider") {
-			if (distToPlayer <= 15f && currentSong == PlayerSongs.Amizade) {
-				playerPerto = true;
+			playerPerto = true;
+			if (currentSong == PlayerSongs.Amizade) {
 				timerToPatrulha = 0f;
 				mudancaEstado (4);
-				Seguir ();
-			} else {
-				playerPerto = false;
-				PararDeSeguir ();
+				seguindo = true;
+				//Seguir ();
+			} else if(currentSong != PlayerSongs.Empty && currentSong != PlayerSongs.Amizade) {
+				seguindo = false;
+				//playerPerto = false;
+				//PararDeSeguir ();
 				if (timerToPatrulha <= 10) {
 					mudancaEstado (0);
 				}
 			}
+			if (seguindo) {
+				Seguir ();
+			} else {
+				PararDeSeguir ();
+			}
 		}
-//		else {
-//			playerPerto = false;
-//			PararDeSeguir ();
-//			if (timerToPatrulha <= 10) {
-//					mudancaEstado (0);
-//			}
-//		}
-
 	}
 
 	void OnTriggerEnter(Collider colisor){
@@ -164,7 +163,8 @@ public class Npc_BeijaFlor : NPCBehaviour {
 			SoltarObjeto ();
 		}//TO DO(Mudar o jeito de procurar pelo kiwi pelo codigo do fabio)
 	}
-	void OnTriggerExit(Collider colisor){
+	void OnTriggerExit (Collider colisor)
+	{
 		if (colisor.name == "Veneno") {
 			dentroVeneno = false;
 			if (colisor.CompareTag ("Semente")) {
@@ -174,17 +174,11 @@ public class Npc_BeijaFlor : NPCBehaviour {
 			}
 
 		}
-
-//		if (colisor.name == "PlayerCollider") {
-//			playerPerto = false;
-//			PararDeSeguir ();
-//			if (timerToPatrulha <= 10) {
-//				mudancaEstado (0);
-//			}
-//		}
+		if (colisor.name == "PlayerCollider") {
+			playerPerto = false;
+			seguindo = false;
+			mudancaEstado (0);
+		}
 	}
-		//else {
-			//dentroVeneno = false;
-		//}
-	
 }
+
