@@ -102,11 +102,12 @@ public class Npc_BeijaFlor : NPCBehaviour {
 		objetoCarregado = obj;
 
 		objetoCarregado.SetParent (npcTransform);
-		objetoCarregado.localPosition = new Vector3 (0, 2, 0);
+		objetoCarregado.localPosition = new Vector3 (0, 0, 1);
 	}
 
-	void SoltarObjeto(){
-		objetoCarregado.SetParent (null);
+	void SoltarObjeto(Transform obj){
+		objetoCarregado.SetParent (obj);
+		//objetoCarregado.transform = obj.transform;
 		objetoCarregado = null;
 		timer_PegarObjeto = 2f;
 	}
@@ -160,7 +161,7 @@ public class Npc_BeijaFlor : NPCBehaviour {
 		}
 		if (colisor.CompareTag("TerraFertil")) {
 			print ("colidiu");
-			SoltarObjeto ();
+			SoltarObjeto (colisor.transform);
 		}//TO DO(Mudar o jeito de procurar pelo kiwi pelo codigo do fabio)
 	}
 	void OnTriggerExit (Collider colisor)
