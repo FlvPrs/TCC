@@ -89,7 +89,7 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 			filhoMelodyMedia.start ();
 			//}
 
-			//print ("tocando media");
+			//////print ("tocando media");
 			break;
 		case HeightState.High:				
 
@@ -97,7 +97,7 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 			filhoMelodyAguda.start ();
 			//	}
 
-			//print ("tocando aguda");
+			//////print ("tocando aguda");
 
 			break;
 		case HeightState.Low:
@@ -105,10 +105,10 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 			//if (playing2 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing1 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing3 != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
 			filhoMelodyGrave.start ();
 			//}
-			//print ("tocando grave");
+			//////print ("tocando grave");
 			break;
 		default:
-			print ("fez mierda");
+			////print ("fez mierda");
 			break;
 		}
 	}
@@ -145,7 +145,7 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 				filhoMelodyMedia2.start();
 			}
 
-			print ("tocando media2");
+			////print ("tocando media2");
 			break;
 		case HeightState.High:				
 
@@ -153,7 +153,7 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 			filhoMelodyAguda2.start ();
 			//	}
 
-			print ("tocando aguda2");
+			////print ("tocando aguda2");
 
 			break;
 		case HeightState.Low:
@@ -161,10 +161,10 @@ public class FMODFilhoImplementacao : MonoBehaviour {
 			//if (playing2 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing1 != FMOD.Studio.PLAYBACK_STATE.PLAYING && playing3 != FMOD.Studio.PLAYBACK_STATE.PLAYING) {
 			filhoMelodyGrave2.start ();
 			//}
-			print ("tocando grave2");
+			////print ("tocando grave2");
 			break;
 		default:
-			print ("fez mierda2");
+			////print ("fez mierda2");
 			break;
 		}
 	}

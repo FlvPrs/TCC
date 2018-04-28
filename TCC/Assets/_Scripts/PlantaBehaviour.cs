@@ -130,9 +130,9 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 					case Planta_CurrentState.Seguindo:
 						Seguir ();
 						break;
-//					case Planta_CurrentState.Dormindo:
-//						Dormir ();
-//						break;
+					case Planta_CurrentState.Dormindo:
+						Dormir ();
+						break;
 //					case Planta_CurrentState.Calmo:
 //						Acalmar ();
 //						break;
@@ -194,7 +194,8 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 
 	//----------------------------------------------------------------------------------------------------------------------
 
-	protected virtual void MurcharPlanta (){
+	//Esta função será chamada pelo código do Veneno
+	public virtual void MurcharPlanta (){
 		if(currentState != Planta_CurrentState.Murcho && !isBroto){
 			currentState = Planta_CurrentState.Murcho;
 			isMurcha = true;
@@ -207,7 +208,7 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 		}
 	}
 
-	//TODO: Esta função será chamada apenas pelo código da Fruta
+	//Esta função será chamada apenas pelo código da Fruta
 	public virtual void RevigorarPlanta (GameObject fruta){
 		if(currentState == Planta_CurrentState.Murcho){
 			currentState = Planta_CurrentState.DefaultState;
@@ -307,9 +308,9 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 		
 	}
 	protected virtual void OnTriggerStay (Collider col){
-		if(col.CompareTag("Veneno") && !isMurcha){
-			MurcharPlanta ();
-		}
+//		if(col.CompareTag("Veneno") && !isMurcha){
+//			MurcharPlanta ();
+//		}
 	}
 	protected virtual void OnTriggerExit (Collider col){
 

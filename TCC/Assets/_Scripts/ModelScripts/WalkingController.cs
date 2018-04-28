@@ -189,10 +189,10 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 
 		if (isGrounded) {
 			startCDBonusJump = false;
-			//print ("estou no chao");
+			//////print ("estou no chao");
 		}
 
-		//print (startCDBonusJump);
+		//////print (startCDBonusJump);
 		#region power up fruit limitado
 		if(hasBonusJump_2){
 			if (startCDBonusJump) {
@@ -201,14 +201,14 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			fruitJumpPower = 1.3f;
 			if(CDBonusJump){
 				timerSecondJumpPower -= 1 *Time.deltaTime;
-				//print("comecou contagem regressiva");
+				//////print("comecou contagem regressiva");
 			}
 			if(timerSecondJumpPower <= 0){
 				timerSecondJumpPower = 5.0f;
 				hasBonusJump_2 = false;
 				fruitJumpPower = 0.75f;
 				CDBonusJump = false;
-				//print("acabou contagem");
+				//////print("acabou contagem");
 			}
 		}
 		#endregion
@@ -293,7 +293,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			} else {
 				secondJumpStrengthMultiplier = 0.0f;
 			}
-			//print (secondJumpStrengthMultiplier);
+			//////print (secondJumpStrengthMultiplier);
 
 			#region Pulo Duplo limiter
 			if (timeOnAir >= 0.15f) { //Só permite pulo duplo após 0.15s no ar
@@ -489,7 +489,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		if (!externalForceAdded) {
 			float speed = moveSpeed;
 			if(continuousExternalForceAdded && isGrounded){
-				print (Vector3.Dot (externalForce, directionalInput));
+				//print (Vector3.Dot (externalForce, directionalInput));
 				if (Vector3.Dot (externalForce, directionalInput) <= -1.5f) { //Andando contra o vento...
 					directionalInput = (directionalInput * 2.2f) + (externalForce);
 					//directionalInput = (directionalInput * 2.2f < externalForce) ? directionalInput : externalForce;
@@ -764,21 +764,21 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	public bool eatenByCarnivora = false;
 
 	public void Carnivora_GetReadyToBeEaten (){
-		print ("EATEN");
+		////print ("EATEN");
 		eatenByCarnivora = true;
 		SetVelocityTo (Vector3.zero, true);
 		//BypassGravity (true);
 		walkStates.IS_WALKING = false;
 	}
 	public void Carnivora_Release (){
-		print ("released");
+		////print ("released");
 		eatenByCarnivora = false;
 		SetVelocityTo (Vector3.zero, false);
 		//BypassGravity (false);
 	}
 
 	public void Carnivora_Shoot (Vector3 dir){
-		print ("SHOOT!");
+		////print ("SHOOT!");
 		eatenByCarnivora = false;
 		SetVelocityTo (Vector3.zero, true);
 		AddExternalForce (dir, 1f, true, true);

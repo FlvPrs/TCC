@@ -562,9 +562,22 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  currentEmotion: 0
+  currentAttitude: 0
+  currentBehaviour: 0
   state: 0
+  nextWaypoint: 0
   currentWayPoint: 0
+  filho: {fileID: 0}
   esperaFilho: 1
+  wait: 0
+  holdWPBehaviour: 0
+  minDistanceToWaypoint: 2
+  isGuidingPlayer: 0
+  minDistToPlayer: 8
+  endBehaviourWhenPlayerLeaves: 0
+  l_asa: {fileID: 0}
+  r_asa: {fileID: 0}
 --- !u!119 &119200832492718324
 Projector:
   m_ObjectHideFlags: 1

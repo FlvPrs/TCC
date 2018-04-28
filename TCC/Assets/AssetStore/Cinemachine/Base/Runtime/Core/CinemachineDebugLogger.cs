@@ -21,7 +21,7 @@ namespace Cinemachine.Utility
         /// <param name="text">Sample text, for determining rectangle size</param>
         /// <param name="style">What style will be used to draw, used here for
         /// determining rect size</param>
-        /// <returns>An area on the game screen large enough to print the text
+        /// <returns>An area on the game screen large enough to ////print the text
         /// in the style indicated</returns>
         public static Rect GetScreenPos(Object client, string text, GUIStyle style)
         {

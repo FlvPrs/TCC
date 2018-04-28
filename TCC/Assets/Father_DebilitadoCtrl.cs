@@ -29,7 +29,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 
 		switch (currentDisposition) {
 		case FatherConditions.Disposto: //Andando normal
-
+			tag = "NPC_Pai";
 			break;
 		case FatherConditions.Debilitado: //Andando com dificuldade
 			tag = "PaiDebilitado";
@@ -95,6 +95,16 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 		} else if (currentDisposition == FatherConditions.Debilitado) {
 			currentDisposition = FatherConditions.Disposto;
 			Destroy (fruta);
+		}
+	}
+
+	void OnTriggerStay (Collider col){
+		if (!carregadoPorKiwis) {
+			if (col.CompareTag ("Wind")) {
+				nmAgent.Move (col.transform.up * 0.02f);
+			} else if (col.CompareTag ("Wind2")) {
+				nmAgent.Move (col.transform.up * 0.05f);
+			}
 		}
 	}
 }

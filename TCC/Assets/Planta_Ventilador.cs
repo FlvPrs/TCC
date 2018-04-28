@@ -6,6 +6,7 @@ public class Planta_Ventilador : PlantaBehaviour {
 
 	public GameObject vento;
 	public bool ventiladorAutomatico = false;
+	public bool startAngry = false;
 	public float auto_OnOffTimer = 2f;
 	bool canStartVentiladorAutomatico;
 	float ventiladorCooldown;
@@ -26,6 +27,10 @@ public class Planta_Ventilador : PlantaBehaviour {
 
 		originalOrientation = headJoint.rotation;
 		canStartVentiladorAutomatico = true;
+
+		if(startAngry){
+			vento.tag = "Wind2";
+		}
 	}
 
 	protected override void Update ()
@@ -51,7 +56,7 @@ public class Planta_Ventilador : PlantaBehaviour {
 
 		if(ventiladorAutomatico && canStartVentiladorAutomatico){
 			ventiladorCooldown += Time.deltaTime;
-			if(ventiladorCooldown <= auto_OnOffTimer){
+			if(ventiladorCooldown <= auto_OnOffTimer || auto_OnOffTimer == 0f){
 				fechada = false;
 			} else if (ventiladorCooldown <= auto_OnOffTimer * 2f) {
 				fechada = true;
@@ -67,15 +72,28 @@ public class Planta_Ventilador : PlantaBehaviour {
 	{
 		base.Seguir ();
 
+		StopCoroutine ("ReturnToOriginalOrientation");
+
 		canStartVentiladorAutomatico = false;
 
-		if (Vector3.Dot (-Vector3.up, (currentInteractionAgent.position - headJoint.position).normalized) < 0.333f) {
+		if (playerIsMakingNoise) {
+			PararDeSeguir ();
+			return;
+		}
+
+		if (Vector3.Dot (-Vector3.up, (currentInteractionAgent.position - headJoint.position).normalized) < 0f) {
 			headJoint.rotation = Quaternion.Slerp (headJoint.rotation, Quaternion.LookRotation (currentInteractionAgent.position - headJoint.position), Time.deltaTime * angularSpeed);
+		} else {
+			Vector3 dir = currentInteractionAgent.position - headJoint.position;
+			dir.y = 0;
+			headJoint.rotation = Quaternion.Slerp (headJoint.rotation, Quaternion.LookRotation (dir), Time.deltaTime * angularSpeed);
 		}
 	}
 
 	protected override void PararDeSeguir ()
 	{
+		CancelInvoke ("PararDeSeguir");
+
 		base.PararDeSeguir ();
 
 		StartCoroutine ("ReturnToOriginalOrientation");
@@ -85,7 +103,7 @@ public class Planta_Ventilador : PlantaBehaviour {
 		yield return new WaitForSeconds (10f);
 		while (Quaternion.Dot(headJoint.rotation, originalOrientation) < 0.9999f) {
 			headJoint.rotation = Quaternion.Slerp(headJoint.rotation, originalOrientation, Time.deltaTime * angularSpeed);
-			yield return new WaitForSeconds(10f * Time.deltaTime);
+			yield return new WaitForSeconds(Time.deltaTime);
 		}
 		canStartVentiladorAutomatico = true;
 	}
@@ -114,6 +132,21 @@ public class Planta_Ventilador : PlantaBehaviour {
 		DefaultState ();
 	}
 
+	protected override void Dormir ()
+	{
+		base.Dormir ();
+
+		fechada = true;
+	}
+	protected override void Acordar ()
+	{
+		base.Acordar ();
+
+		canStartVentiladorAutomatico = true;
+		fechada = false;
+		ventiladorCooldown = 0f;
+	}
+
 	protected override void OnTriggerEnter (Collider col)
 	{
 		base.OnTriggerEnter (col);
@@ -122,7 +155,7 @@ public class Planta_Ventilador : PlantaBehaviour {
 			return;
 		}
 
-		if(col.CompareTag("Player")){
+		if(col.CompareTag("Player") && !ventiladorAutomatico){
 			StopCoroutine ("Close");
 			fechada = false;
 		}

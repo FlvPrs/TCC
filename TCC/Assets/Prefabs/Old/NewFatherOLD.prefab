@@ -2236,13 +2236,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  staccatoColl: {fileID: 1039873296242038}
-  sustainColl: {fileID: 1328737176360134}
   l_wing: {fileID: 1187005119169382}
   r_wing: {fileID: 1059376690707108}
   timeMoving: 0
   maxStamina: 0
   currentStamina: 0
+  currentDisposition: 0
   targetReference: {fileID: 4993737907756804}
   singSustain: {fileID: 82437071777509818}
   clarinetDefault: {fileID: 24500006, guid: 33da73c7db00cb1418368592c96aba19, type: 2}
@@ -2256,12 +2255,15 @@ MonoBehaviour:
   CollHeight_Low: 2
   CollHeight_Default: 4.5
   CollHeight_High: 7
+  songInteractionCollider: {fileID: 0}
   currentSong: 0
   flySeconds: 0
   jumpHeight: 0
   timeToJumpApex: 0
   sustainDuration: 0
   allowFlySlowFall: 0
+  stopUpdate: 0
+  isCarregadoPorKiwis: 0
   stopHoldFly: 0
 --- !u!119 &119506694501280382
 Projector:

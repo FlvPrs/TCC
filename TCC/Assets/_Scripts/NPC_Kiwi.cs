@@ -18,17 +18,31 @@ public class NPC_Kiwi : NPCBehaviour {
 	List<Transform> collObjects = new List<Transform> ();
 	Transform objetoCarregado;
 
+	bool stopUpdate;
+	Vector3 spawnPoint;
+	Quaternion initialOrientation;
+
 	protected override void Awake ()
 	{
 		base.Awake ();
 
 		rb = GetComponent<Rigidbody> ();
 
+		if (npcTransform.parent != null && npcTransform.parent.name == "NPC_SpawnPoint")
+			spawnPoint = npcTransform.parent.position;
+		else
+			spawnPoint = npcTransform.position;
+		
+		initialOrientation = npcTransform.rotation;
+
 		defaultStopDist = nmAgent.stoppingDistance;
 	}
 
 	protected override void Update ()
 	{
+		if (stopUpdate)
+			return;
+
 		if (isOnWind)
 			return;
 
@@ -56,6 +70,9 @@ public class NPC_Kiwi : NPCBehaviour {
 	{
 		if(currentState == NPC_CurrentState.Distraido){
 			Distrair ();
+			return;
+		} else if (currentState == NPC_CurrentState.Seguindo) {
+			Seguir ();
 			return;
 		}
 
@@ -120,7 +137,7 @@ public class NPC_Kiwi : NPCBehaviour {
 			timer_StartPatrulha += Time.deltaTime;
 		} 
 		else { //Se ele estiver dentro de um Arbusto...
-			nmAgent.stoppingDistance = 0f;
+			nmAgent.stoppingDistance = 0.5f;
 			timer_StartPatrulha = 0f;
 		}
 	}
@@ -230,6 +247,9 @@ public class NPC_Kiwi : NPCBehaviour {
 	}
 
 	void OnTriggerEnter (Collider col){
+		if (stopUpdate)
+			return;
+
 		if(col.CompareTag("Fruta") || col.CompareTag("Semente")){
 			if (objetoCarregado == null && podePegarObj) {
 				if(!collObjects.Contains(col.transform)){
@@ -257,7 +277,8 @@ public class NPC_Kiwi : NPCBehaviour {
 		}
 
 		if(col.CompareTag("Wind") || col.CompareTag("Wind2")){
-			SoltarObjeto ();
+			if(objetoCarregado != null)
+				SoltarObjeto ();
 		}
 	}
 	void OnTriggerStay (Collider col){
@@ -266,13 +287,15 @@ public class NPC_Kiwi : NPCBehaviour {
 			isOnWind = true;
 			nmAgent.enabled = false;
 			rb.isKinematic = false;
-			rb.velocity = col.transform.up * 30f;
+			rb.velocity = (col.transform.up * 25f) + (Vector3.down * 5f);
+			StartCoroutine ("ResetNavMeshAfterWind", col.transform.up);
 		} else if(col.CompareTag("Wind2")){
 			StopCoroutine ("ResetNavMeshAfterWind");
 			isOnWind = true;
 			nmAgent.enabled = false;
 			rb.isKinematic = false;
-			rb.velocity = col.transform.up * 60f;
+			rb.velocity = (col.transform.up * 50f) + (Vector3.down * 5f);
+			StartCoroutine ("ResetNavMeshAfterWind", col.transform.up);
 		}
 	}
 	void OnTriggerExit (Collider col){
@@ -291,25 +314,45 @@ public class NPC_Kiwi : NPCBehaviour {
 		if(col.CompareTag("Arbusto")){
 			isOnArbusto = false;
 		}
-
-		if(col.CompareTag("Wind") || col.CompareTag("Wind2")){
-			StartCoroutine ("ResetNavMeshAfterWind", col.transform.up);
-		}
 	}
 
 	IEnumerator ResetNavMeshAfterWind (Vector3 windUp){
-		yield return new WaitForSeconds (1f);
+		yield return new WaitForSeconds (2f);
 		isOnWind = false;
+		rb.angularVelocity = Vector3.zero;
+		npcTransform.rotation = initialOrientation;
 		nmAgent.enabled = true;
 		if (!nmAgent.isOnNavMesh) {
 			nmAgent.enabled = false;
-			enabled = false;
-			Destroy (gameObject, 5f);
+			//enabled = false;
+			//Destroy (gameObject, 5f);
+			stopUpdate = true;
+			yield return new WaitForSeconds (6f);
+			rb.velocity = Vector3.zero;
+			rb.angularVelocity = Vector3.zero;
+			rb.isKinematic = true;
+			npcTransform.rotation = initialOrientation;
+			yield return new WaitForSeconds (0.1f);
+			nmAgent.enabled = true;
+			if (!nmAgent.isOnNavMesh) {
+				nmAgent.enabled = false;
+				npcTransform.position = spawnPoint;
+				nmAgent.enabled = true;
+			}
+			stopUpdate = false;
 		}
 		else {
-			nmAgent.SetDestination (npcTransform.position + (windUp * 5f));
-			rb.isKinematic = true;
 			rb.velocity = Vector3.zero;
+			rb.isKinematic = true;
+			nmAgent.enabled = true;
+			nmAgent.SetDestination (npcTransform.position + (windUp * 5f));
 		}
+	}
+
+	public void OnMovingPlat (bool enableNavMesh, Transform plat){
+		nmAgent.enabled = enableNavMesh;
+		npcTransform.parent = plat;
+		//rb.isKinematic = enableNavMesh;
+		stopUpdate = !enableNavMesh;
 	}
 }

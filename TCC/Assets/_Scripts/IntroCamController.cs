@@ -69,11 +69,11 @@ public class IntroCamController : MonoBehaviour {
 	void Update () {
 
 		musicaTema.getPlaybackState (out playingTema);
-		//print ("muzika tema iz " + playingTema);
+		//////print ("muzika tema iz " + playingTema);
 		if ( fallctrl.af == true){
-			print ("o af é igual a: " + fallctrl.af); 
+			////print ("o af é igual a: " + fallctrl.af); 
 			musicaTema.stop (FMOD.Studio.STOP_MODE.IMMEDIATE);
-			print ("parou");
+			////print ("parou");
 
 		}
 

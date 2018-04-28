@@ -29,6 +29,11 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 	public Transform[] spawnPoints;
 	private int currentSpawnPoint = 0;
 
+	private float timeToDieByVeneno = 2f;
+	[SerializeField]
+	private float poisoningTimer = 0f;
+	private bool venenoDecay, venenoIncrease;
+
 	void Awake(){
 		playerCtrl = GetComponent<WalkingController> ();
 
@@ -54,6 +59,21 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 //			}
 //		}
 //	}
+
+	void Update (){
+		if(poisoningTimer >= 0f){
+			if(venenoDecay)
+				poisoningTimer -= Time.deltaTime;
+			else if (venenoIncrease)
+				poisoningTimer += Time.deltaTime;
+
+			if(poisoningTimer > timeToDieByVeneno){
+				//TODO Die Birdo Die
+			}
+		} else {
+			poisoningTimer = 0f;
+		}
+	}
 
 	IEnumerator FallThroughCollider(Collider col){
 		col.enabled = false;
@@ -145,12 +165,10 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 		if(col.CompareTag("Wind")){
 			//playerCtrl.ContinuousExternalForce (col.transform.up * windForce, true, false);
 			playerCtrl.AddContinuousExternalForce(col.transform.up * windForce);
-		}
-		if(col.CompareTag("Wind2")){
+		} else if(col.CompareTag("Wind2")){
 			//playerCtrl.ContinuousExternalForce (col.transform.up * windForce, true, false);
 			playerCtrl.AddContinuousExternalForce(col.transform.up * windForce * 2f);
-		}
-		if(col.CompareTag("WindCurrent")){
+		} else if(col.CompareTag("WindCurrent")){
 			centerOfWind = oldWindPoint.position + Vector3.Project(transform.position - oldWindPoint.position, oldWindPoint.forward);
 
 			if(canCenterWind)
@@ -167,12 +185,18 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			if (playerCtrl.walkStates.CURR_HEIGHT_STATE == HeightState.Low)
 				playerCtrl.holdHeight = true;
 		}
+			
+		if(col.CompareTag("Veneno")){
+			venenoDecay = false;
+			venenoIncrease = true;
+		}
 	}
 
 	void OnTriggerExit(Collider col){
 		if(col.CompareTag("Wind") || col.CompareTag("Wind2")){
 			playerCtrl.ZeroExternalForce ();
 		}
+
 		if(col.CompareTag("WindCurrent")){
 			//playerCtrl.ContinuousExternalForce (Vector3.zero, false, false);
 			//playerCtrl.BypassGravity (false);
@@ -186,5 +210,16 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 		if(col.CompareTag("StretchTrigger") || col.CompareTag("SquashTrigger")){
 			playerCtrl.holdHeight = false;
 		}
+
+		if(col.CompareTag("Veneno")){
+			StartCoroutine (ClearPoison ());
+		}
+	}
+
+	IEnumerator ClearPoison (){
+		venenoDecay = false;
+		venenoIncrease = false;
+		yield return new WaitForSeconds (3f);
+		venenoDecay = true;
 	}
 }

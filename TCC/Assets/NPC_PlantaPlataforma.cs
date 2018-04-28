@@ -1,8 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class NPC_PlantaPlataforma : PlantaBehaviour {
+
+	NavMeshSurface nmSurface;
+
 	private bool playerPerto, idleAbertaOuFechada, stateIdle, primeiraTroca;
 	private float distToPlayer;
 	public int alturaFlor;
@@ -18,7 +22,10 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 		base.Awake ();
 		MDL_Fechada = plantaTransform.Find ("MDL_Fechada").gameObject;
 
+		nmSurface = FindObjectOfType<NavMeshSurface> ();
+
 		if (isClosed) {
+			currentState = Planta_CurrentState.Dormindo;
 			MDL_Fechada.SetActive (true);
 			MDL_Broto.SetActive (false);
 			MDL_Crescida.SetActive (false);
@@ -50,7 +57,7 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 	
 	// Update is called once per frame
 	protected override void Update () {
-		print (currentState);
+		//////print (currentState);
 		if (currentState != Planta_CurrentState.Dormindo && !isClosed && !isBroto && !isMurcha) {
 			MDL_Crescida.SetActive (true);
 			MDL_Fechada.SetActive (false);
@@ -79,6 +86,12 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 			}
 		}
 	}
+	protected override void ChamarAtencao ()
+	{
+		base.ChamarAtencao ();
+
+		isClosed = false;
+	}
 
 	protected override void CrescerBroto(){
 		MDL_Broto.SetActive (false);
@@ -90,7 +103,7 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 		isMurcha = false;
 	}
 
-	protected override void MurcharPlanta(){
+	public override void MurcharPlanta(){
 		if(currentState != Planta_CurrentState.Murcho && !isBroto){
 			currentState = Planta_CurrentState.Murcho;
 			isMurcha = true;
@@ -121,7 +134,7 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 
 	protected override void Crescer(){
 		if (alturaFlor <= 4) {
-			print ("crescendo111");
+			////print ("crescendo111");
 			if (acaoTerminada) {
 				if (currentState == Planta_CurrentState.Crescendo) {
 					return;
@@ -145,7 +158,7 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 
 	protected override void Encolher(){
 		if (alturaFlor >= 1) {
-			print ("crescendo222");
+			////print ("crescendo222");
 			if (acaoTerminada) {
 				if (currentState == Planta_CurrentState.Encolhendo) {
 					return;
@@ -174,10 +187,11 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 
 	}
 	void TrocaAltura(int nivel){
-		
+		//nmSurface.BuildNavMesh ();
+
 		switch (nivel) {
 		case 1:
-			print ("rolando1");
+			////print ("rolando1");
 			Vector3 dir1 = Vector3.zero;
 			upPlataform = originalPosition;
 			if (!primeiraTroca) { 
@@ -193,13 +207,13 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 					t.position = dir1;
 				}
 			} else if (primeiraTroca) {
-				print ("inicio1");
+				////print ("inicio1");
 				t.position = upPlataform;
 				primeiraTroca = false;
 			}
 			break;
 		case 2:
-			print ("rolando2");
+			////print ("rolando2");
 			Vector3 dir2 = Vector3.zero;
 			upPlataform = originalPosition;
 			upPlataform.y += 4.0f;
@@ -217,13 +231,13 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 					t.position = dir2;
 				}
 			} else if (primeiraTroca) {
-				print ("inicio2");
+				////print ("inicio2");
 				t.position = upPlataform;
 				primeiraTroca = false;
 			}
 			break;
 		case 3:
-			print ("rolando3");
+			////print ("rolando3");
 			Vector3 dir3 = Vector3.zero;
 			upPlataform = originalPosition;
 			upPlataform.y += 8.0f;
@@ -240,7 +254,7 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 					t.position = dir3;
 				}
 			} else if (primeiraTroca) {
-				print ("inicio3");
+				////print ("inicio3");
 				t.position = upPlataform;
 				primeiraTroca = false;
 			}
@@ -248,7 +262,7 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 			//plantaTransform.position = Vector3.MoveTowards (originalPosition, upPlataform, velocidade*Time.deltaTime);
 			break;
 		case 4:
-			print ("rolando4");
+			////print ("rolando4");
 			Vector3 dir4 = Vector3.zero;
 			upPlataform = originalPosition;
 			upPlataform.y += 12.0f;
@@ -271,21 +285,38 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 			break;
 
 		default:
-			print ("rolando0");
+			////print ("rolando0");
 			break;
 		}
 	}
 
-//	protected override void OnTriggerEnter(Collider colisor){
-//		if(colisor.CompareTag("Player")){
-//			colisor.transform.parent.SetParent (this.transform);
-//		}
-//	}
-//
-//	protected override void OnTriggerExit(Collider colisor){
-//		if (colisor.CompareTag ("Player")) {
-//			colisor.transform.parent.SetParent (null);
-//		}
-//	}
+	protected override void OnTriggerEnter(Collider colisor){
+		base.OnTriggerEnter (colisor);
+
+		if(colisor.CompareTag("Player")){
+			colisor.transform.parent.parent = t;
+		}
+	}
+
+	protected override void OnTriggerExit(Collider colisor){
+		base.OnTriggerExit (colisor);
+
+		if (colisor.CompareTag ("Player")) {
+			colisor.transform.parent.parent = null;
+		}
+
+		if(colisor.GetComponent<NPC_Kiwi>() != null){
+			colisor.GetComponent<NPC_Kiwi> ().OnMovingPlat (true, null);
+		}
+	}
+
+	protected override void OnTriggerStay (Collider col)
+	{
+		base.OnTriggerStay (col);
+
+		if(col.GetComponent<NPC_Kiwi>() != null){
+			col.GetComponent<NPC_Kiwi> ().OnMovingPlat (acaoTerminada, t);
+		}
+	}
 
 }

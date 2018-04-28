@@ -39,7 +39,7 @@ public class Npc_BeijaFlor : NPCBehaviour {
 			podePegarObj = true;
 		}
 
-		//print (estado);
+		//////print (estado);
 	}
 
 	public enum EstadosBeijaFro{
@@ -160,7 +160,7 @@ public class Npc_BeijaFlor : NPCBehaviour {
 			}
 		}
 		if (colisor.CompareTag("TerraFertil")) {
-			print ("colidiu");
+			////print ("colidiu");
 			SoltarObjeto ();
 		}//TO DO(Mudar o jeito de procurar pelo kiwi pelo codigo do fabio)
 	}

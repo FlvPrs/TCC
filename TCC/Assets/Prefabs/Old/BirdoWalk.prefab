@@ -2032,6 +2032,11 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
+  singleNoteCollider: {fileID: 0}
+  partituraCollider: {fileID: 0}
+  staccatoSounds: []
+  noteIndexes: 
+  playerMat: {fileID: 0}
 --- !u!114 &114634990421066408
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2063,6 +2068,7 @@ MonoBehaviour:
   minStature: 0.5
   maxStature: 1.5
   currentHeightState: 0
+  coll: {fileID: 0}
 --- !u!114 &114723897083650212
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2078,6 +2084,7 @@ MonoBehaviour:
   windForce: 30
   windcurrentForce: 400
   blackScrn: {fileID: 0}
+  spawnPoints: []
 --- !u!114 &114745451821563236
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2089,15 +2096,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d63d2256e774494bb60dd19eedcf254, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  presentWhenInactive: 0
-  externalForceAdded: 0
-  walkSpeed: 6
-  jumpSpeed: 8.3
-  interactDuration: 0.1
-  attackDamage: 5
-  gravity: 10
-  fallMultiplier: 2.5
-  lowJumpMultiplier: 2
+  maxJumpHeight: 4
+  minJumpHeight: 1
+  timeToJumpApex: 0.4
+  moveSpeed: 10
+  TimeToFall: 0.5
+  wallSlideSpeedMax: 3
+  fruitJumpPower: 0
+  hasBonusJump_2: 0
+  velocity: {x: 0, y: 0, z: 0}
+  automaticOrientation: 0
+  orientation: {fileID: 0}
+  collTransform: {fileID: 0}
+  coll: {fileID: 0}
+  animCtrl: {fileID: 0}
+  singHoldTreshold: 0.2
+  singHoldTime: 0
+  canStartSing: 1
   glideStrength: 5
   aerialCtrl: 0.1
   maxFlyStamina: 0
@@ -2106,6 +2121,18 @@ MonoBehaviour:
   raycastMask:
     serializedVersion: 2
     m_Bits: 1
+  asas: {fileID: 0}
+  bonusJumpParticle: {fileID: 0}
+  hasBonusJump: 0
+  playerInputStartGame: 0
+  playerCanMove: 0
+  holdHeight: 0
+  isFallingToDeath: 0
+  secondJumpStrengthMultiplier: 0.9
+  maxSlopeAngle: 50
+  TOCANDO: 0
+  SEGURANDO: 0
+  eatenByCarnivora: 0
 --- !u!114 &114992658350338514
 MonoBehaviour:
   m_ObjectHideFlags: 1

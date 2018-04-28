@@ -56,9 +56,9 @@ public class MenuControllerInGame : MonoBehaviour {
 								TrocaMenus (6);
 								inGame = true;
 								player.playerInputStartGame = true;
-								print ("acionei");
+								////print ("acionei");
 							} else {
-								print ("ja tem save");
+								////print ("ja tem save");
 							}
 						} else if (opcaoMenu2 == 2) {
 							if (saveSlot2 == 0) {
@@ -210,11 +210,11 @@ public class MenuControllerInGame : MonoBehaviour {
 			if (inGame) {
 				if (onPause) {
 					TrocaMenus (6);
-					print ("jogando");
+					////print ("jogando");
 				}
 				else if (jogando) {
 					TrocaMenus (0);
-					print ("pause");
+					////print ("pause");
 				}
 			}
 			if (onMenu2) {
@@ -243,11 +243,11 @@ public class MenuControllerInGame : MonoBehaviour {
 			if (inGame) {
 				if (onPause) {
 					TrocaMenus (6);
-					print ("jogando");
+					////print ("jogando");
 				}
 				else if (jogando) {
 					TrocaMenus (0);
-					print ("pause");
+					////print ("pause");
 				}
 			}
 		}
@@ -269,7 +269,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	}
 
 	IEnumerator TrocaOpcaoEixo(){
-		print ("negativo");
+		////print ("negativo");
 		controleOpcaoEixo = false;
 		yield return new WaitForSecondsRealtime (0.2f);
 		controleOpcaoEixo = true;

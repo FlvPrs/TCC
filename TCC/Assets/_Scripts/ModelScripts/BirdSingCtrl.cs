@@ -118,7 +118,7 @@ public class BirdSingCtrl : MonoBehaviour {
 
 		UpdateColor ();
 
-		//print (partituraAtual);
+		//////print (partituraAtual);
 		#region Debug_SingPartitura
 		if (Input.GetKey(KeyCode.Alpha4)) {
 			Debug_TocaPartitura(4);
@@ -187,7 +187,7 @@ public class BirdSingCtrl : MonoBehaviour {
 //			//StopCoroutine ("StopSingleNote");
 //			repeatTimer = 0f;
 //			//repeatIndex = noteIndexes [(int)oldState] - 1;
-//			//print (noteIndexes [(int)oldState] - 1);
+//			//////print (noteIndexes [(int)oldState] - 1);
 //			SingNote (repeatIndex);
 //		}
 		isRepeating = true;
@@ -336,14 +336,14 @@ public class BirdSingCtrl : MonoBehaviour {
 				break;
 			}
 		}
-		print (num);
+		////print (num);
 	}
 
 	void TocarPartitura(int partitura){
 		CancelInvoke ("CancelaPartitura");
 
 		tocouPartitura = true;
-		print ("YAYYY " + partitura);
+		////print ("YAYYY " + partitura);
 
 //		666, //Irritar
 //		1221, //Acalmar

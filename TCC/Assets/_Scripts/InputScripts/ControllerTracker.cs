@@ -78,7 +78,7 @@ public class ControllerTracker : DeviceTracker {
 			float val = 0f;
 			if(Mathf.Abs(Input.GetAxis(axisName[i])) >= 0.1f){
 				val += Input.GetAxis (axisName [i]);
-				//print (val + " " + axisName [i]);
+				//////print (val + " " + axisName [i]);
 				newData = true;
 			}
 			data.axes [i] = val;

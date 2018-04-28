@@ -12,6 +12,7 @@ public class CogumeloJumpCtrl : MonoBehaviour {
 
 	void Awake(){
 		mushAnimCtrl = GetComponentInParent<Animator> ();
+		player = FindObjectOfType<WalkingController> ();
 	}
 
 	void OnTriggerEnter(Collider col){
