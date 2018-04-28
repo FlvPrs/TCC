@@ -47,8 +47,7 @@ public class MenuControllerInGame : MonoBehaviour {
 					} else if (opcaoMenu1 == 4) {
 						Application.Quit ();
 					}
-				}
-				else if (onMenu2) {
+				} else if (onMenu2) {
 					if (!deleteSave) {
 						if (opcaoMenu2 == 1) {
 							if (saveSlot1 == 0) {
@@ -89,25 +88,33 @@ public class MenuControllerInGame : MonoBehaviour {
 							}
 						}
 					}
-				}
-				else if (onMenu3) {
+				} else if (onMenu3) {
 					if (opcaoMenu3 == 1) {
 						controlandoVolume = true;
 					}
-				}
-				else if (onPause) {
+				} else if (onPause) {
 					if (opcaoMenuPause == 1) {
 						TrocaMenus (6);
 					} else if (opcaoMenuPause == 2) {
 						TrocaMenus (3);
-					}else if (opcaoMenuPause == 3) {
+					} else if (opcaoMenuPause == 3) {
 						TrocaMenus (7);
-					}else if (opcaoMenuPause == 4) {
+					} else if (opcaoMenuPause == 4) {
 						TrocaMenus (4);
-					}else if (opcaoMenuPause == 5) {
+					} else if (opcaoMenuPause == 5) {
 						TrocaMenus (1);
 						inGame = false;
-					}else if (opcaoMenuPause == 6) {
+					} else if (opcaoMenuPause == 6) {
+						Application.Quit ();
+					}
+				} 
+				else if (onMenuDeath) {
+					if (opcaoMenuMorte == 1) {
+						//continuar o jogo
+					} else if (opcaoMenuMorte == 2) {
+						TrocaMenus (1);
+						//ou carregar a mesma cena
+					} else if (opcaoMenuMorte == 3) {
 						Application.Quit ();
 					}
 				}
@@ -134,6 +141,10 @@ public class MenuControllerInGame : MonoBehaviour {
 					}
 				} else if (onMenu2) {
 					deleteSave = !deleteSave;
+				} else if (onMenuDeath) {
+					if (opcaoMenuMorte > 1) {
+						opcaoMenuMorte--;
+					}
 				}
 			}
 			StartCoroutine ("TrocaOpcaoEixo");
@@ -158,6 +169,10 @@ public class MenuControllerInGame : MonoBehaviour {
 					}
 				}else if (onMenu2) {
 					deleteSave = !deleteSave;
+				}else if (onMenuDeath) {
+					if (opcaoMenuMorte < 2) {
+						opcaoMenuMorte++;
+					}
 				}
 			}
 			StartCoroutine ("TrocaOpcaoEixo");
@@ -237,6 +252,8 @@ public class MenuControllerInGame : MonoBehaviour {
 				}
 			} else if (onMenu5) {
 				TrocaMenus (0);
+			} else if (onMenuDeath) {
+				TrocaMenus (6);
 			}
 		}
 		if (Input.GetKeyDown (KeyCode.JoystickButton7)) {
