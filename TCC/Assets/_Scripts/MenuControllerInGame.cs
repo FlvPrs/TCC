@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuControllerInGame : MonoBehaviour {
 
@@ -14,6 +15,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	public GameObject VM1, VM2, VM3, VM4, VM5, VM6, VM7, VM8;
 	public GameObject VE1, VE2, VE3, VE4, VE5, VE6, VE7, VE8;
 	public static SaveInformations save;
+	public int faseAtual;
 
 	// Use this for initialization
 	void Start () {
@@ -24,7 +26,7 @@ public class MenuControllerInGame : MonoBehaviour {
 		}
 
 		imagensVolume ();
-		TrocaMenus (1);
+		TrocaMenus (faseAtual);
 		onPause = false;
 		inGame = false;
 
@@ -110,10 +112,10 @@ public class MenuControllerInGame : MonoBehaviour {
 				} 
 				else if (onMenuDeath) {
 					if (opcaoMenuMorte == 1) {
-						//continuar o jogo
+						Time.timeScale = 1f;
+						TrocaMenus (6);
 					} else if (opcaoMenuMorte == 2) {
-						TrocaMenus (1);
-						//ou carregar a mesma cena
+						SceneManager.LoadScene (1);
 					} else if (opcaoMenuMorte == 3) {
 						Application.Quit ();
 					}
@@ -512,6 +514,7 @@ public class MenuControllerInGame : MonoBehaviour {
 
 			opcaoMenuMorte = 1;
 			player.playerCanMove = false;
+			Time.timeScale = 0f;
 			break;
 
 		case 6://Nenhum
