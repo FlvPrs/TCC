@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4892296935221382}
   - component: {fileID: 64718509295400624}
+  - component: {fileID: 114087291690812940}
   m_Layer: 2
   m_Name: MeshCollider
   m_TagString: Cogumelo
@@ -86,7 +87,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1510519732104388}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -24.10424, y: 0.72834396, z: 43.207207}
+  m_LocalPosition: {x: 246.93422, y: 35.8, z: 272.8141}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4580465614070264}
@@ -271,3 +272,16 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114087291690812940
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1077074619223498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f1e097b969bc8d4fbf0e5edae47b398, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpForce: 30
+  player: {fileID: 0}
