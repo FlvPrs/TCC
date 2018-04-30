@@ -34,6 +34,8 @@ public class RoteiroPai : MonoBehaviour {
 	}
 
 	IEnumerator UpdateRoteiro (int index){
+		yield return new WaitForSeconds (0.1f);
+
 		for (int i = index; i < roteiro.Count; i++) {
 
 			currentState = i;
