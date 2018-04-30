@@ -147,15 +147,29 @@ public class Planta_Ventilador : PlantaBehaviour {
 		ventiladorCooldown = 0f;
 	}
 
-	protected override void OnTriggerEnter (Collider col)
+//	protected override void OnTriggerEnter (Collider col)
+//	{
+//		base.OnTriggerEnter (col);
+//
+//		if((layerMask.value & 1<<col.gameObject.layer) == 0){
+//			return;
+//		}
+//
+//		if (col.CompareTag ("Player") && (!ventiladorAutomatico || currentState == Planta_CurrentState.Seguindo)) {
+//			StopCoroutine ("Close");
+//			fechada = false;
+//		}
+//	}
+
+	protected override void OnTriggerStay (Collider col)
 	{
-		base.OnTriggerEnter (col);
+		base.OnTriggerStay (col);
 
 		if((layerMask.value & 1<<col.gameObject.layer) == 0){
 			return;
 		}
 
-		if(col.CompareTag("Player") && !ventiladorAutomatico){
+		if (col.CompareTag ("Player") && (!ventiladorAutomatico || currentState == Planta_CurrentState.Seguindo)) {
 			StopCoroutine ("Close");
 			fechada = false;
 		}

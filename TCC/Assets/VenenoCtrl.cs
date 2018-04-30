@@ -18,6 +18,10 @@ public class VenenoCtrl : MonoBehaviour {
 
 	public bool collideWithWind = true;
 
+	public bool canDisable = false;
+
+	public int yIndex = 0;
+
 	void Awake () {
 		t = GetComponent<Transform> ();
 		rb = GetComponent<Rigidbody> ();
@@ -29,6 +33,8 @@ public class VenenoCtrl : MonoBehaviour {
 
 	void StartUpdate (){
 		t.localScale = new Vector3 (initialRadius * 2f, t.localScale.y, initialRadius * 2f);
+		if(yIndex != 0)
+			t.localPosition = Vector3.up * 5f * yIndex;
 
 		if (canDissipate) {
 			//Destroy (gameObject, dissipateTimer);
@@ -41,6 +47,9 @@ public class VenenoCtrl : MonoBehaviour {
 		if (carveNavMesh)
 			GetComponent<UnityEngine.AI.NavMeshObstacle> ().enabled = true;
 
+		if (!collideWithWind)
+			rb.isKinematic = true;
+
 		startUpdate = true;
 	}
 
@@ -50,8 +59,13 @@ public class VenenoCtrl : MonoBehaviour {
 
 		if (canGrow) {
 			t.localScale += new Vector3 (growAmount * Time.deltaTime, 0, growAmount * Time.deltaTime);
-			if (t.localScale.x >= maxRadius)
+			if (t.localScale.x >= maxRadius) {
 				startUpdate = false;
+				if (canDisable)
+					enabled = false;
+			}
+		} else if (canDisable) {
+			enabled = false;
 		}
 	}
 
@@ -62,7 +76,7 @@ public class VenenoCtrl : MonoBehaviour {
 
 	public void ResetVeneno (){
 		rb.velocity = Vector3.zero;
-		t.localPosition = Vector3.zero;
+		//t.localPosition = Vector3.zero;
 		StartUpdate ();
 	}
 

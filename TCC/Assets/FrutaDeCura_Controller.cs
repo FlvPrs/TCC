@@ -30,7 +30,7 @@ public class FrutaDeCura_Controller : MonoBehaviour, ICarnivoraEdible {
 			forceDir = Vector3.forward;
 		rb.useGravity = true;
 		rb.isKinematic = false;
-		rb.AddForce (forceDir.normalized * 60f);
+		rb.AddForce (forceDir.normalized * 90f);
 		Invoke ("Freeze", 2f);
 	}
 
