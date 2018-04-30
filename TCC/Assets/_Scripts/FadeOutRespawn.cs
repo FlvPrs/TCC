@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class FadeOutRespawn : MonoBehaviour {
 
 	public bool fadeToEndLevel;
+	public bool fatherRetunsPlayer = true;
 
 	[Range(0f, 5f)]
 	public float fadeToBlack_Duration = 1f;
@@ -70,11 +71,20 @@ public class FadeOutRespawn : MonoBehaviour {
 
 		if (fadeToEndLevel) {
 			yield return new WaitForSeconds (3f);
-			EndGame.Restart ();
+			//EndGame.Restart ();
+			EndGame.ChangeLevel ();
+			yield return null;
 		}
 
+		FindObjectOfType<MenuControllerInGame> ().TrocaMenus (5);
+
+		player.GetComponent<PlayerCollisionsCtrl> ().RestartVenenoTimer ();
+
 		//player.position = respawnPosition;
-		StartCoroutine(playerRespawn.ReturnToSpawn (respawnPosition));
+		if(fatherRetunsPlayer)
+			StartCoroutine(playerRespawn.ReturnToSpawn (respawnPosition));
+		else
+			playerRespawn.ReturnToSpawnAlone (respawnPosition);
 
 		yield return new WaitForSeconds (1f);
 		fadeIn_FromBlack = true;
@@ -87,7 +97,10 @@ public class FadeOutRespawn : MonoBehaviour {
 		fadeOut_ToBlack = false;
 		fadeIn_FromBlack = false;
 
-		yield return new WaitForSeconds (3f);
-		camCtrl.ChangeCameraTo (spawnCamIndex[spawnIndex]);
+
+		if (fatherRetunsPlayer) {
+			yield return new WaitForSeconds (3f);
+			camCtrl.ChangeCameraTo (spawnCamIndex [spawnIndex]);
+		}
 	}
 }

@@ -13,6 +13,8 @@ public class PlayerRespawnCtrl : MonoBehaviour {
 	public Transform paiRespawnPoint;
 	private Vector3 fatherOldPos;
 
+	public bool fatherRetunsPlayer = true;
+
 	private bool isReturning;
 	private bool goUp;
 	private bool goDown;
@@ -20,24 +22,28 @@ public class PlayerRespawnCtrl : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		anim.SetBool ("IsReturningPlayer", true);
-		flyingPai.SetActive(false);
-		paiCanShow = true;
+		if (fatherRetunsPlayer) {
+			anim.SetBool ("IsReturningPlayer", true);
+			flyingPai.SetActive (false);
+			paiCanShow = true;
+		}
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		if(isReturning){
-			player.localPosition = Vector3.zero;
-		}
-		if (!paiCanShow) {
-			actualPai.position = paiRespawnPoint.position;
-		}
-		if(goUp){
-			transform.Translate (Vector3.up * 0.5f);
-		}
-		if(goDown){
-			transform.Translate (Vector3.down * 0.1f);
+		if (fatherRetunsPlayer) {
+			if (isReturning) {
+				player.localPosition = Vector3.zero;
+			}
+			if (!paiCanShow) {
+				actualPai.position = paiRespawnPoint.position;
+			}
+			if (goUp) {
+				transform.Translate (Vector3.up * 0.5f);
+			}
+			if (goDown) {
+				transform.Translate (Vector3.down * 0.1f);
+			}
 		}
 	}
 
@@ -67,5 +73,10 @@ public class PlayerRespawnCtrl : MonoBehaviour {
 		yield return new WaitForSeconds (3f);
 		flyingPai.SetActive (false);
 		goUp = false;
+	}
+
+	public void ReturnToSpawnAlone(Vector3 pos){
+		player.GetComponent<WalkingController> ().SetVelocityTo (Vector3.zero, false);
+		player.position = pos + Vector3.up * 2f;
 	}
 }

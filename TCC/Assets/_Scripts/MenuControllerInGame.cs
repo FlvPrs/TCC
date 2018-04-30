@@ -118,10 +118,7 @@ public class MenuControllerInGame : MonoBehaviour {
 						Time.timeScale = 1f;
 						TrocaMenus (6);
 						}else if(fakeDeathMenu){
-							entersToSavePlayer--;
-							if(entersToSavePlayer <= 0){
-								MortePai ();
-							}
+							PaiCaminhandoParaMorte ();
 						}
 					} else if (opcaoMenuMorte == 2) {
 						SceneManager.LoadScene (1);
@@ -303,9 +300,19 @@ public class MenuControllerInGame : MonoBehaviour {
 		controleOpcaoEixo = true;
 	}
 
-	void MortePai(){
-		//ToDo
+
+	void PaiCaminhandoParaMorte (){
+		entersToSavePlayer--;
+		if(entersToSavePlayer <= 0){
+			MortePai ();
+		}
 	}
+
+	void MortePai(){
+		//TODO
+	}
+
+
 	void GetSaveVariables(){
 		saveSlot1 = PlayerPrefs.GetInt ("saveSlot1");
 		saveSlot2 = PlayerPrefs.GetInt ("saveSlot2");

@@ -33,6 +33,8 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 	[SerializeField]
 	private float poisoningTimer = 0f;
 	private bool venenoDecay, venenoIncrease;
+	private bool iminentFakeDeath = false;
+	private bool diedByVeneno = false;
 
 	void Awake(){
 		playerCtrl = GetComponent<WalkingController> ();
@@ -61,7 +63,7 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 //	}
 
 	void Update (){
-		if(poisoningTimer >= 0f){
+		if(poisoningTimer >= 0f && !diedByVeneno){
 			if(venenoDecay)
 				poisoningTimer -= Time.deltaTime;
 			else if (venenoIncrease)
@@ -69,10 +71,21 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 
 			if(poisoningTimer > timeToDieByVeneno){
 				//TODO Die Birdo Die
+				diedByVeneno = true;
+				if(iminentFakeDeath){
+					FindObjectOfType<MenuControllerInGame> ().TrocaMenus (8);
+				} else {
+					FindObjectOfType<FadeOutRespawn> ().StartFade (transform, spawnPoints[currentSpawnPoint].position, currentSpawnPoint);
+				}
 			}
 		} else {
 			poisoningTimer = 0f;
 		}
+	}
+
+	public void RestartVenenoTimer (){
+		poisoningTimer = 0;
+		diedByVeneno = venenoDecay = venenoIncrease = false;
 	}
 
 	IEnumerator FallThroughCollider(Collider col){
@@ -189,6 +202,10 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 		if(col.CompareTag("Veneno")){
 			venenoDecay = false;
 			venenoIncrease = true;
+		} else if (col.CompareTag("VenenoFakeDeath")) {
+			venenoDecay = false;
+			venenoIncrease = true;
+			iminentFakeDeath = true;
 		}
 	}
 
@@ -211,8 +228,9 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			playerCtrl.holdHeight = false;
 		}
 
-		if(col.CompareTag("Veneno")){
+		if(col.CompareTag("Veneno") || col.CompareTag("VenenoFakeDeath")){
 			StartCoroutine (ClearPoison ());
+			iminentFakeDeath = false;
 		}
 	}
 

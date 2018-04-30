@@ -13,6 +13,20 @@ public class EndGame : MonoBehaviour {
 ////			Quit ();
 //	}
 
+	public static void ChangeLevel (int lvlIndex = -1){
+		if(lvlIndex == -1){
+			int index = SceneManager.GetActiveScene ().buildIndex;
+			if (index < SceneManager.sceneCount)
+				index++;
+			else
+				index = 0;
+			SceneManager.LoadScene (index);
+		} else {
+			SceneManager.LoadScene (lvlIndex);
+		}
+
+	}
+
 	public static void Restart(){
 		SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
 	}
