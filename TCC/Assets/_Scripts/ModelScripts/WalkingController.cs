@@ -394,7 +394,9 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 
 		startCDBonusJump = true;
 
-		if(isGrounded)	//------ Se eu estou no chão ----------------------------------------------------------------------------------------------
+		if (isFallingToDeath) {	//------ Se eu estou caindo sem chance de recuperar -------------------------------------------------------
+			animCtrl.SetTrigger ("FakeFly");
+		}else if(isGrounded)	//------ Se eu estou no chão ----------------------------------------------------------------------------------------------
 		{
 			//			if(controller.collisions.slidingDownMaxSlope){
 			//				if(directionalInput.x != -Mathf.Sign(controller.collisions.slopeNormal.x)){ // not jumping against max slope
@@ -431,9 +433,6 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			} else {
 				hasBonusJump = false;
 			} */
-		}
-		else if (isFallingToDeath) {	//------ Se eu estou caindo sem chance de recuperar -------------------------------------------------------
-			animCtrl.SetTrigger ("FakeFly");
 		}
 
 		animCtrl.SetBool ("IsFlying", startedFly);

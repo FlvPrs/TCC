@@ -10,6 +10,8 @@ public class Npc_BeijaFlor : NPCBehaviour {
 	private bool dentroVeneno, podePegarObj, seguindo;
 	float timer_PegarObjeto = 0;
 
+	private bool stopUpdate = false;
+
 	List<Transform> collObjects = new List<Transform>();
 	Transform objetoCarregado;
 
@@ -20,6 +22,9 @@ public class Npc_BeijaFlor : NPCBehaviour {
 	}
 
 	protected override void Update(){
+		if (stopUpdate)
+			return;
+		
 		base.Update ();
 		distToPlayer = Vector3.Distance (player.position, npcTransform.position);
 
@@ -121,6 +126,15 @@ public class Npc_BeijaFlor : NPCBehaviour {
 			mudancaEstado (0);
 		}
 	}
+
+
+	public void OnMovingPlat (bool enableNavMesh, Transform plat){
+		nmAgent.enabled = enableNavMesh;
+		npcTransform.parent = plat;
+		//rb.isKinematic = enableNavMesh;
+		stopUpdate = !enableNavMesh;
+	}
+
 
 	void OnTriggerStay(Collider colisor){
 		if (colisor.name == "PlayerCollider") {

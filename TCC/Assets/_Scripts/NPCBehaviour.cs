@@ -33,6 +33,7 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 	[SerializeField]
 	protected NPC_CurrentState currentState;
 
+	protected Transform oldInteractionAgent;
 	protected Transform currentInteractionAgent; //Player ou Pai
 
 	public float timer = 0f;
@@ -122,17 +123,20 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 	}
 
 	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false){
-		if (isFather && currentInteractionAgent != player) {
+		if (isFather && (currentInteractionAgent != player || (currentInteractionAgent == player && currentSong == PlayerSongs.Empty))) {
 			currentInteractionAgent = father;
 			timer = 0f;
 			currentSong = song;
 			playerIsMakingNoise = isSingingSomething;
-		} else if (!isFather) {
+		} else if (!isFather && (currentInteractionAgent != father || (currentInteractionAgent == father && currentSong == PlayerSongs.Empty))) {
 			currentInteractionAgent = player;
 			timer = 0f;
 			currentSong = song;
 			playerIsMakingNoise = isSingingSomething;
 		}
+
+		if (song == PlayerSongs.Amizade)
+			oldInteractionAgent = currentInteractionAgent;
 	}
 
 	//======================================================================================================================
@@ -150,7 +154,7 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 
 		currentState = NPC_CurrentState.Seguindo;
 
-		nmAgent.SetDestination (currentInteractionAgent.position);
+		nmAgent.SetDestination (oldInteractionAgent.position);
 	}
 	protected virtual void PararDeSeguir (){
 		if (currentState == NPC_CurrentState.DefaultState)

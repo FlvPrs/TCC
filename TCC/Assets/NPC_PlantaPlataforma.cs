@@ -308,6 +308,10 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 		if(colisor.GetComponent<NPC_Kiwi>() != null){
 			colisor.GetComponent<NPC_Kiwi> ().OnMovingPlat (true, null);
 		}
+
+		if(colisor.GetComponent<Npc_BeijaFlor>() != null){
+			colisor.GetComponent<Npc_BeijaFlor> ().OnMovingPlat (true, null);
+		}
 	}
 
 	protected override void OnTriggerStay (Collider col)
@@ -316,6 +320,10 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 
 		if(col.GetComponent<NPC_Kiwi>() != null){
 			col.GetComponent<NPC_Kiwi> ().OnMovingPlat (acaoTerminada, t);
+		}
+
+		if(col.GetComponent<Npc_BeijaFlor>() != null){
+			col.GetComponent<Npc_BeijaFlor> ().OnMovingPlat (acaoTerminada, t);
 		}
 	}
 
