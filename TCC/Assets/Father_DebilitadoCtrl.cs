@@ -6,6 +6,10 @@ public enum FatherConditions { Disposto, Debilitado, Machucado, MuitoMachucado }
 
 public class Father_DebilitadoCtrl : MonoBehaviour {
 
+	bool isInverno;
+
+	BoxCollider dadColl;
+
 	FatherActions fatherActions;
 	UnityEngine.AI.NavMeshAgent nmAgent;
 
@@ -21,6 +25,10 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 	void Start () {
 		fatherActions = GetComponent<FatherActions> ();
 		nmAgent = GetComponent<UnityEngine.AI.NavMeshAgent> ();
+		dadColl = GetComponent<BoxCollider> ();
+
+		if (UnityEngine.SceneManagement.SceneManager.GetActiveScene ().name == "Ato4")
+			isInverno = true;
 	}
 	
 	// Update is called once per frame
@@ -43,7 +51,10 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 				tag = "NPC_Pai";
 				StopCarriedByKiwis ();
 			}
-			AskForFruit (3);
+			if(isInverno)
+				AskForFruit (3);
+			else
+				AskForFruit ();
 			break;
 		default:
 			break;
@@ -84,7 +95,10 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 			//Se for MuitoMachucado, o balão nunca some.
 		if(frutasComidas >= numberOfFruits){
 			frutasComidas = 0;
-			currentDisposition 	= FatherConditions.Debilitado;
+			if(currentDisposition != FatherConditions.Debilitado)
+				currentDisposition = FatherConditions.Debilitado;
+			else
+				currentDisposition = FatherConditions.Disposto;
 		}
 	}
 
@@ -96,6 +110,14 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 			currentDisposition = FatherConditions.Disposto;
 			Destroy (fruta);
 		}
+
+		StartCoroutine ("BlinkCollider");
+	}
+
+	IEnumerator BlinkCollider (){
+		dadColl.enabled = false;
+		yield return new WaitForSeconds (0.25f);
+		dadColl.enabled = true;
 	}
 
 	void OnTriggerStay (Collider col){

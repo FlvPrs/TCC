@@ -232,7 +232,7 @@ public class NPC_Kiwi : NPCBehaviour {
 		}
 
 		objetoCarregado.SetParent (npcTransform);
-		objetoCarregado.localPosition = new Vector3 (0, 2, 0);
+		objetoCarregado.localPosition = new Vector3 (0, 0.3f, 0);
 	}
 
 	void SoltarObjeto (){
