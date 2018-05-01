@@ -233,21 +233,21 @@ public class FatherActions : AgentFather {
 		switch (height) {
 		case HeightState.High:
 			//TODO: Delete this. Apenas para teste
-			clarinetHigh.TransitionTo (0.01f);
+			//clarinetHigh.TransitionTo (0.01f);
 			//endTODO
 
 			animCtrl.SetFloat ("Height", 0.9f);
 			break;
 		case HeightState.Default:
 			//TODO: Delete this. Apenas para teste
-			clarinetDefault.TransitionTo (0.01f);
+			//clarinetDefault.TransitionTo (0.01f);
 			//endTODO
 
 			animCtrl.SetFloat ("Height", 0f);
 			break;
 		case HeightState.Low:
 			//TODO: Delete this. Apenas para teste
-			clarinetLow.TransitionTo (0.01f);
+			//clarinetLow.TransitionTo (0.01f);
 			//endTODO
 
 			animCtrl.SetFloat ("Height", -0.9f);
@@ -271,7 +271,7 @@ public class FatherActions : AgentFather {
 		currentState = HeightState.Default;
 
 		//TODO: Delete this. Apenas para teste
-		clarinetDefault.TransitionTo (0.01f);
+		//clarinetDefault.TransitionTo (0.01f);
 		//end TODO
 
 		animCtrl.SetFloat ("Height", 0f);
@@ -398,7 +398,13 @@ public class FatherActions : AgentFather {
 		switch (song) {
 		case FatherSongSimple.Alegria: //DISTRAIR
 			currentSong = PlayerSongs.Alegria;
-			//TODO: Definir melodia especifica
+			PartituraInfo[] alegria = new PartituraInfo[] {
+				new PartituraInfo (HeightState.Default),
+				new PartituraInfo (HeightState.Default),
+				new PartituraInfo (HeightState.High),
+				new PartituraInfo (HeightState.Default),
+			};
+			Sing_Partitura (alegria);
 			break;
 		case FatherSongSimple.Estorvo: //IRRITAR
 			currentSong = PlayerSongs.Estorvo;
@@ -407,11 +413,23 @@ public class FatherActions : AgentFather {
 			break;
 		case FatherSongSimple.Serenidade: //ACALMAR
 			currentSong = PlayerSongs.Serenidade;
-			//TODO: Definir melodia especifica
+			PartituraInfo[] serenidade = new PartituraInfo[] {
+				new PartituraInfo(HeightState.Low),
+				new PartituraInfo(HeightState.Default),
+				new PartituraInfo(HeightState.Default),
+				new PartituraInfo(HeightState.Low),
+			};
+			Sing_Partitura (serenidade);
 			break;
 		case FatherSongSimple.Ninar: //DORMIR
 			currentSong = PlayerSongs.Ninar;
-			//TODO: Definir melodia especifica
+			PartituraInfo[] ninar = new PartituraInfo[] {
+				new PartituraInfo(HeightState.Default),
+				new PartituraInfo(HeightState.Default),
+				new PartituraInfo(HeightState.Low),
+				new PartituraInfo(HeightState.Low),
+			};
+			Sing_Partitura (ninar);
 			break;
 		default:
 			Debug.LogWarning("BUG: O pai não conhece essa musica simples");
@@ -426,18 +444,39 @@ public class FatherActions : AgentFather {
 		switch (song) {
 		case FatherSongSustain.Amizade: //SEGUIR
 			currentSong = PlayerSongs.Amizade;
-			ChangeHeight (HeightState.Default);
-			Sing_SustainedNote (duration);
+//			ChangeHeight (HeightState.Default);
+//			Sing_SustainedNote (duration);
+			PartituraInfo[] amizade = new PartituraInfo[] {
+				new PartituraInfo(HeightState.Low),
+				new PartituraInfo(HeightState.Default),
+				new PartituraInfo(HeightState.Low),
+				new PartituraInfo(HeightState.Default),
+			};
+			Sing_Partitura (amizade);
 			break;
 		case FatherSongSustain.Crescimento: //CRESCER
 			currentSong = PlayerSongs.Crescimento;
-			ChangeHeight (HeightState.High);
-			Sing_SustainedNote (duration);
+//			ChangeHeight (HeightState.High);
+//			Sing_SustainedNote (duration);
+			PartituraInfo[] crescimento = new PartituraInfo[] {
+				new PartituraInfo(HeightState.High),
+				new PartituraInfo(HeightState.High),
+				new PartituraInfo(HeightState.High),
+				new PartituraInfo(HeightState.High),
+			};
+			Sing_Partitura (crescimento);
 			break;
 		case FatherSongSustain.Encolhimento: //ENCOLHER
 			currentSong = PlayerSongs.Encolhimento;
-			ChangeHeight (HeightState.Low);
-			Sing_SustainedNote (duration);
+//			ChangeHeight (HeightState.Low);
+//			Sing_SustainedNote (duration);
+			PartituraInfo[] encolhimento = new PartituraInfo[] {
+				new PartituraInfo(HeightState.Low),
+				new PartituraInfo(HeightState.Low),
+				new PartituraInfo(HeightState.Low),
+				new PartituraInfo(HeightState.Low),
+			};
+			Sing_Partitura (encolhimento);
 			break;
 		default:
 			Debug.LogWarning("BUG: O pai não conhece essa musica com sustain");
