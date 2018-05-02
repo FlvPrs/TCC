@@ -17,7 +17,7 @@ public class EndGame : MonoBehaviour {
 		if(lvlIndex == -1){
 			int index = SceneManager.GetActiveScene ().buildIndex;
 
-			if (index < SceneManager.sceneCountInBuildSettings)
+			if (index + 1 < SceneManager.sceneCountInBuildSettings)
 				index++;
 			else
 				index = 0;

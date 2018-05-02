@@ -82,7 +82,7 @@ public class FatherFSM : MonoBehaviour {
 				checkTimer -= Time.deltaTime;
 			} else {
 				checkTimer = 0f;
-				RoteiroPai.RestartRoteiroAt ();
+				RoteiroPai.RestartRoteiroAt (8);
 				break;
 			}
 

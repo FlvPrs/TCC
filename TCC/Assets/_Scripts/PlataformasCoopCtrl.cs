@@ -40,7 +40,7 @@ public class PlataformasCoopCtrl : MonoBehaviour, ISongListener, IFatherSustainI
 			dad_deltaY [i] = Vector3.zero;
 		}
 
-		fatherExternalTrigger.SetActive (false);
+		//fatherExternalTrigger.SetActive (false);
 	}
 
 	void Update(){
@@ -104,7 +104,7 @@ public class PlataformasCoopCtrl : MonoBehaviour, ISongListener, IFatherSustainI
 				}
 
 				if (chegou >= plataformas.Length) {
-					fatherExternalTrigger.SetActive (true);
+					//fatherExternalTrigger.SetActive (true);
 					enabled = false;
 				}
 			}
