@@ -47,13 +47,20 @@ public class PlayerRespawnCtrl : MonoBehaviour {
 		}
 	}
 
-	public IEnumerator ReturnToSpawn(Vector3 pos){
+	public IEnumerator ReturnToSpawn(Vector3 pos, bool isFatherSuiciding = false){
 		player.GetComponent<WalkingController> ().SetVelocityTo (Vector3.zero, true);
 		fatherOldPos = actualPai.position;
 		actualPai.position = paiRespawnPoint.position;
 		paiCanShow = false;
-		actualPai.GetComponent<UnityEngine.AI.NavMeshAgent> ().enabled = false;
-		actualPai.GetComponent<FatherFSM> ().StartRespawn ();
+		if (!isFatherSuiciding) {
+			actualPai.GetComponent<UnityEngine.AI.NavMeshAgent> ().enabled = false;
+			actualPai.GetComponent<FatherFSM> ().StartRespawn ();
+		} else {
+			Renderer rend = actualPai.GetChild(1).GetChild(0).GetComponent<Renderer>();
+			rend.material.SetColor ("_Color", new Color (0.392f, 0.862f, 0.862f));
+			actualPai.GetChild(1).Find("l_wing").gameObject.SetActive(false);
+			actualPai.GetChild(1).Find("r_wing").gameObject.SetActive(false);
+		}
 		isReturning = true;
 		flyingPai.SetActive (true);
 		player.SetParent (transform);
@@ -65,12 +72,16 @@ public class PlayerRespawnCtrl : MonoBehaviour {
 		goDown = false;
 		goUp = true;
 		isReturning = false;
-		actualPai.GetComponent<UnityEngine.AI.NavMeshAgent> ().enabled = true;
+		if (!isFatherSuiciding) {
+			actualPai.GetComponent<UnityEngine.AI.NavMeshAgent> ().enabled = true;
+		}
 		player.GetComponent<WalkingController> ().SetVelocityTo (Vector3.zero, false);
 		yield return new WaitForSeconds (1f);
 		paiCanShow = true;
-		actualPai.GetComponent<FatherFSM> ().ReturnToPosAfterRespawn (fatherOldPos);
-		yield return new WaitForSeconds (3f);
+		if (!isFatherSuiciding) {
+			actualPai.GetComponent<FatherFSM> ().ReturnToPosAfterRespawn (fatherOldPos);
+			yield return new WaitForSeconds (3f);
+		}
 		flyingPai.SetActive (false);
 		goUp = false;
 	}

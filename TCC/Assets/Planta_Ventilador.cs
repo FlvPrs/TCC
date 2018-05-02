@@ -50,6 +50,11 @@ public class Planta_Ventilador : PlantaBehaviour {
 
 	protected override void DefaultState ()
 	{
+		if(currentState == Planta_CurrentState.Irritado){
+			Irritar ();
+			return;
+		}
+
 		base.DefaultState ();
 
 		//headJoint.rotation = Quaternion.Slerp(headJoint.rotation, originalOrientation, Time.deltaTime * angularSpeed);
@@ -81,10 +86,11 @@ public class Planta_Ventilador : PlantaBehaviour {
 			return;
 		}
 
-		if (Vector3.Dot (-Vector3.up, (currentInteractionAgent.position - headJoint.position).normalized) < 0f) {
-			headJoint.rotation = Quaternion.Slerp (headJoint.rotation, Quaternion.LookRotation (currentInteractionAgent.position - headJoint.position), Time.deltaTime * angularSpeed);
+		Vector3 dir = currentInteractionAgent.position - headJoint.position;
+
+		if (Vector3.Dot (-Vector3.up, dir.normalized) < 0f) {
+			headJoint.rotation = Quaternion.Slerp (headJoint.rotation, Quaternion.LookRotation (dir), Time.deltaTime * angularSpeed);
 		} else {
-			Vector3 dir = currentInteractionAgent.position - headJoint.position;
 			dir.y = 0;
 			headJoint.rotation = Quaternion.Slerp (headJoint.rotation, Quaternion.LookRotation (dir), Time.deltaTime * angularSpeed);
 		}
@@ -115,11 +121,30 @@ public class Planta_Ventilador : PlantaBehaviour {
 
 	protected override void Irritar ()
 	{
-		base.Irritar ();
+		currentState = Planta_CurrentState.Irritado;
+		//base.Irritar ();
 
 		vento.tag = "Wind2";
 
-		DefaultState ();
+		//DefaultState ();
+
+		StopCoroutine ("ReturnToOriginalOrientation");
+
+		canStartVentiladorAutomatico = false;
+
+		if (playerIsMakingNoise) {
+			PararDeSeguir ();
+			return;
+		}
+
+		Vector3 dir = headJoint.position - currentInteractionAgent.position;
+
+		if (Vector3.Dot (-Vector3.up, dir.normalized) < 0f) {
+			headJoint.rotation = Quaternion.Slerp (headJoint.rotation, Quaternion.LookRotation (dir), Time.deltaTime * angularSpeed);
+		} else {
+			dir.y = 0;
+			headJoint.rotation = Quaternion.Slerp (headJoint.rotation, Quaternion.LookRotation (dir), Time.deltaTime * angularSpeed);
+		}
 	}
 	protected override void Acalmar ()
 	{
@@ -169,7 +194,7 @@ public class Planta_Ventilador : PlantaBehaviour {
 			return;
 		}
 
-		if (col.CompareTag ("Player") && (!ventiladorAutomatico || currentState == Planta_CurrentState.Seguindo)) {
+		if (col.CompareTag ("Player") && (!ventiladorAutomatico || currentState == Planta_CurrentState.Seguindo || currentState == Planta_CurrentState.Irritado)) {
 			StopCoroutine ("Close");
 			fechada = false;
 		}

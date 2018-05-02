@@ -17,7 +17,9 @@ public class MenuControllerInGame : MonoBehaviour {
 	public static SaveInformations save;
 	public int faseAtual;
 	private bool fakeDeathMenu;
-	public int entersToSavePlayer;
+	int entersToSavePlayer = 0;
+
+	private FatherSacrifice_Ctrl fatherSacrificeCtrl;
 
 	// Use this for initialization
 	void Start () {
@@ -302,10 +304,17 @@ public class MenuControllerInGame : MonoBehaviour {
 
 
 	void PaiCaminhandoParaMorte (){
-		entersToSavePlayer--;
-		if(entersToSavePlayer <= 0){
-			MortePai ();
+		print ("Morreu");
+		if(entersToSavePlayer == 0){
+			fatherSacrificeCtrl.StartSacrifice ();
+			entersToSavePlayer++;
+			return;
 		}
+		//entersToSavePlayer++;
+		fatherSacrificeCtrl.ContinueAVoar ();
+//		if(entersToSavePlayer <= 0){
+//			MortePai ();
+//		}
 	}
 
 	void MortePai(){
@@ -595,7 +604,9 @@ public class MenuControllerInGame : MonoBehaviour {
 			break;
 
 		case 8://fakeDeath
-			
+
+			fatherSacrificeCtrl = FindObjectOfType<FatherSacrifice_Ctrl> ();
+
 			menu1.SetActive (false);
 			menu2.SetActive (false);
 			menu3.SetActive (false);
@@ -616,6 +627,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			jogando = false;
 			fakeDeathMenu = true;
 
+			opcaoMenuMorte = 1;
 			player.playerCanMove = false;
 			break;
 
