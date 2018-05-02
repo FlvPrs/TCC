@@ -43,7 +43,7 @@ public class FatherSacrifice_Ctrl : MonoBehaviour {
 		if (wpInformation [currentWayPoint].next != null) {
 			Vector3 dir = wpInformation [currentWayPoint].next.position - sacrifice_Pai.position;
 
-			sacrifice_Pai.rotation = Quaternion.Slerp (sacrifice_Pai.rotation, Quaternion.LookRotation (dir, Vector3.up), Time.deltaTime * 2f);
+			sacrifice_Pai.rotation = Quaternion.Slerp (sacrifice_Pai.rotation, Quaternion.LookRotation (dir, Vector3.up), Time.deltaTime * 4f);
 			sacrifice_Pai.eulerAngles = new Vector3 (0, sacrifice_Pai.eulerAngles.y, 0);
 
 			if (vooCooldown > 0f) {
