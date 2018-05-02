@@ -16,10 +16,12 @@ public class EndGame : MonoBehaviour {
 	public static void ChangeLevel (int lvlIndex = -1){
 		if(lvlIndex == -1){
 			int index = SceneManager.GetActiveScene ().buildIndex;
-			if (index < SceneManager.sceneCount)
+
+			if (index < SceneManager.sceneCountInBuildSettings)
 				index++;
 			else
 				index = 0;
+		
 			SceneManager.LoadScene (index);
 		} else {
 			SceneManager.LoadScene (lvlIndex);
