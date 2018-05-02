@@ -75,7 +75,13 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 				if(iminentFakeDeath){
 					FindObjectOfType<MenuControllerInGame> ().TrocaMenus (8);
 				} else {
-					FindObjectOfType<FadeOutRespawn> ().StartFade (transform, spawnPoints[currentSpawnPoint].position, currentSpawnPoint);
+					FadeOutRespawn[] respawn = FindObjectsOfType<FadeOutRespawn> ();
+					for (int i = 0; i < respawn.Length; i++) {
+						if(!respawn[i].fadeToEndLevel){
+							respawn [i].StartFade (transform, spawnPoints [currentSpawnPoint].position, currentSpawnPoint);
+							break;
+						}
+					}
 				}
 			}
 		} else {
