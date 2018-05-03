@@ -111,7 +111,8 @@ public class Npc_BeijaFlor : NPCBehaviour {
 	}
 
 	void SoltarObjeto(Transform obj){
-		objetoCarregado.SetParent (obj);
+		if(objetoCarregado != null)
+			objetoCarregado.SetParent (obj);
 		//objetoCarregado.transform = obj.transform;
 		objetoCarregado = null;
 		timer_PegarObjeto = 2f;
@@ -200,8 +201,8 @@ public class Npc_BeijaFlor : NPCBehaviour {
 		}
 		if (colisor.name == "PlayerCollider") {
 			playerPerto = false;
-			seguindo = false;
-			mudancaEstado (0);
+			//seguindo = false;
+			//mudancaEstado (0);
 		}
 	}
 }

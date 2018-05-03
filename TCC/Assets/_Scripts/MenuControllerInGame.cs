@@ -30,9 +30,11 @@ public class MenuControllerInGame : MonoBehaviour {
 		}
 
 		imagensVolume ();
-		TrocaMenus (faseAtual);
+
 		onPause = false;
 		inGame = false;
+		TrocaMenus (faseAtual);
+
 
 		podeEnter = true;
 		controleOpcaoEixo = true;
@@ -409,7 +411,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenuDeath = false;
 			jogando = false;
 			fakeDeathMenu = false;
-			//inGame = true;
+			inGame = true;
 
 			opcaoMenuPause = 1;
 			player.playerCanMove = false;
@@ -437,7 +439,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenuDeath = false;
 			jogando = false;
 			fakeDeathMenu = false;
-			//inGame = false;
+			inGame = false;
 
 			opcaoMenu1 = 1;
 			player.playerCanMove = false;
@@ -464,7 +466,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			jogando = false;
 			deleteSave = false;
 			fakeDeathMenu = false;
-			//inGame = false;
+			inGame = false;
 
 			opcaoMenu2 = 1;
 			player.playerCanMove = false;
@@ -491,7 +493,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenuDeath = false;
 			jogando = false;
 			fakeDeathMenu = false;
-			//inGame = false;
+			inGame = false;
 
 			opcaoMenu3 = 1;
 			player.playerCanMove = false;
@@ -519,7 +521,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenuDeath = false;
 			jogando = false;
 			fakeDeathMenu = false;
-			//inGame = false;
+			inGame = false;
 
 			player.playerCanMove = false;
 			break;
@@ -544,7 +546,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenuDeath = true;
 			jogando = false;
 			fakeDeathMenu = false;
-			//inGame = false;
+			inGame = false;
 
 			opcaoMenuMorte = 1;
 			player.playerCanMove = false;
@@ -571,7 +573,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenuDeath = false;
 			jogando = true;
 			fakeDeathMenu = false;
-			//inGame = true;
+			inGame = true;
 
 			player.playerCanMove = true;
 
