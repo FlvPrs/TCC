@@ -49,7 +49,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 		case FatherConditions.MuitoMachucado: //Parado quase morto
 			if (carregadoPorKiwis) {
 				tag = "NPC_Pai";
-				StopCarriedByKiwis ();
+				transform.GetComponentInParent<NPC_Kiwi> ().SoltarObjeto ();
 			}
 			if(isInverno)
 				AskForFruit (3);
@@ -84,7 +84,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 	public void StopCarriedByKiwis (){
 		carregadoPorKiwis = false;
 		numeroDeKiwis = 0;
-		transform.SetParent (null);
+		//transform.SetParent (null);
 		nmAgent.enabled = true;
 	}
 

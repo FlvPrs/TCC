@@ -235,7 +235,7 @@ public class NPC_Kiwi : NPCBehaviour {
 		objetoCarregado.localPosition = new Vector3 (0, 0.3f, 0);
 	}
 
-	void SoltarObjeto (){
+	public void SoltarObjeto (){
 		if(isCarregandoPai){
 			objetoCarregado.GetComponent<Father_DebilitadoCtrl> ().StopCarriedByKiwis ();
 		} else {
