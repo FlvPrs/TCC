@@ -25,6 +25,9 @@ public class AgentFather : MonoBehaviour {
 	[HideInInspector]
 	public FatherConditions currentDisposition;
 
+	public NoteParts[] staccatoSounds; //0 Default, 1 High, 2 Low
+	protected int[] noteIndexes;
+
 	#region ========== Debug Variables ==========
 	public Transform targetReference;
 	protected AudioSource sing;
@@ -43,6 +46,8 @@ public class AgentFather : MonoBehaviour {
 		animCtrl = GetComponentInChildren<Animator> ();
 		coll = GetComponent<BoxCollider> ();
 		balaoNotasCtrl = GetComponentInChildren<BalaoController> ();
+
+		noteIndexes = new int[3];
 
 		//staccatoColl.SetActive (false);
 		//sustainColl.SetActive (false);

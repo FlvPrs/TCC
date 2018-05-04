@@ -284,13 +284,26 @@ public class FatherActions : AgentFather {
 		if(!isCarregadoPorKiwis)
 			songInteractionCollider.isSingingSomething = false;
 	}
-
-	public void Sing_SingleNote (){
+		
+	public void Sing_SingleNote (bool repeatNote = false, int index = 0){
+		if (!repeatNote) {
+			sing.clip = staccatoSounds [(int)currentState].clip [noteIndexes [(int)currentState]];
+			noteIndexes [(int)currentState]++;
+			if (noteIndexes [(int)currentState] > 3 || noteIndexes [(int)currentState] < 0) {
+				noteIndexes [(int)currentState] = 0;
+			}
+		} else {
+			sing.clip = staccatoSounds [(int)currentState].clip [index];
+		}
 		sing.Play ();
 		balaoNotasCtrl.Show_BalaoNotas (currentState);
 		//staccatoColl.SetActive (true);
 		if(!isCarregadoPorKiwis)
 			songInteractionCollider.isSingingSomething = true;
+
+		CancelInvoke("ResetNoteIndex");
+		Invoke ("ResetNoteIndex", 2f);
+
 		CancelInvoke("HideStaccatoColl");
 		Invoke ("HideStaccatoColl", 0.4f);
 	}
@@ -300,6 +313,12 @@ public class FatherActions : AgentFather {
 		currentSong = PlayerSongs.Empty;
 		if(!isCarregadoPorKiwis)
 			songInteractionCollider.isSingingSomething = false;
+	}
+
+	void ResetNoteIndex (){
+		for (int i = 0; i < noteIndexes.Length; i++) {
+			noteIndexes [i] = 0;
+		}
 	}
 
 	//--- Após ser chamada uma vez, enquanto isRepeatingNote for true, esta função roda ~automaticamente~ uma vez a cada <singleNoteMinimumDuration> segundos ---
@@ -326,7 +345,7 @@ public class FatherActions : AgentFather {
 		}
 	}
 	IEnumerator RepeatNote (int times){
-		Sing_SingleNote ();
+		Sing_SingleNote (true);
 
 		yield return new WaitForSeconds (singleNoteMinimumDuration);
 		Sing_SingleNoteRepeat (times);

@@ -636,23 +636,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1537035693681568
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4559662627938784}
-  - component: {fileID: 135164970661891918}
-  - component: {fileID: 114345777201956980}
-  m_Layer: 19
-  m_Name: DELETAR
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
 --- !u!1 &1544941292631752
 GameObject:
   m_ObjectHideFlags: 1
@@ -1177,7 +1160,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4522585816957696}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4091728031629346
 Transform:
@@ -1369,7 +1352,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4522585816957696}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!4 &4270763618105450
 Transform:
@@ -1645,7 +1628,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4522585816957696}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4495546201151850
 Transform:
@@ -1663,7 +1646,7 @@ Transform:
   - {fileID: 4325283771587314}
   - {fileID: 4877759848977404}
   m_Father: {fileID: 4522585816957696}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4500361634115818
 Transform:
@@ -1690,7 +1673,6 @@ Transform:
   m_Children:
   - {fileID: 4126878001983204}
   - {fileID: 4994874374363160}
-  - {fileID: 4559662627938784}
   - {fileID: 4869829622949730}
   - {fileID: 4267396055643310}
   - {fileID: 4588399478705516}
@@ -1755,19 +1737,6 @@ Transform:
   m_Father: {fileID: 4993432919755774}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4559662627938784
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1537035693681568}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4522585816957696}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4583421136723486
 Transform:
   m_ObjectHideFlags: 1
@@ -1800,7 +1769,7 @@ Transform:
   - {fileID: 4808072847801920}
   - {fileID: 4492459264367016}
   m_Father: {fileID: 4522585816957696}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4595261912283358
 Transform:
@@ -2017,7 +1986,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4522585816957696}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4877759848977404
 Transform:
@@ -2167,8 +2136,7 @@ AudioSource:
   m_GameObject: {fileID: 1453791695472244}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 243087120694935910, guid: 33da73c7db00cb1418368592c96aba19,
-    type: 2}
+  OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: b258ba5dee216f24a955eb1f1e778162, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.4
@@ -2248,8 +2216,7 @@ AudioSource:
   m_GameObject: {fileID: 1434061191121716}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 243087120694935910, guid: 33da73c7db00cb1418368592c96aba19,
-    type: 2}
+  OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 230209b0c70f1b94f848eaa92427bfac, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.5
@@ -2429,19 +2396,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6667e0a82109871489616881e9ff3ad9, type: 3}
   - {fileID: 21300000, guid: 4c0485b26b314144ab293be65216b548, type: 3}
   notaFim: {fileID: 21300000, guid: 29452c76c53bfb84da109560f6ba6f89, type: 3}
---- !u!114 &114345777201956980
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1537035693681568}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af7c9581408a24b49bdd36804df6a003, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isSingingSomething: 0
-  currentSong: 0
 --- !u!114 &114566210941735938
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2492,6 +2446,22 @@ MonoBehaviour:
   maxStamina: 300
   currentStamina: 0
   currentDisposition: 0
+  staccatoSounds:
+  - clip:
+    - {fileID: 8300000, guid: b92508fc749398840b4beab5bb9504f2, type: 3}
+    - {fileID: 8300000, guid: fd89f6383e2707d408216bf2521908c5, type: 3}
+    - {fileID: 8300000, guid: fdeaf7cfb80988342802049cff8ff6d7, type: 3}
+    - {fileID: 8300000, guid: 4c642bee791b66b478b5870a640a82cd, type: 3}
+  - clip:
+    - {fileID: 8300000, guid: e68a332a9d1ba3a4999a7fc7cd883f01, type: 3}
+    - {fileID: 8300000, guid: b7a212bba8c5f9a47bf5af2158daec9f, type: 3}
+    - {fileID: 8300000, guid: 3aecc75ecf4d7d34fbd716334918f875, type: 3}
+    - {fileID: 8300000, guid: b239839e187c4f543bd052963f7c26ad, type: 3}
+  - clip:
+    - {fileID: 8300000, guid: cb09284ece3a1d64db9245f2c0c19a0c, type: 3}
+    - {fileID: 8300000, guid: 0034db3d621eaf643968e5143ac3a3ff, type: 3}
+    - {fileID: 8300000, guid: 5d616ea823ed92d42b868f5821567153, type: 3}
+    - {fileID: 8300000, guid: fcf3e81acf0550b41b7f22a700c92c65, type: 3}
   targetReference: {fileID: 4869829622949730}
   singSustain: {fileID: 82410892114432066}
   clarinetDefault: {fileID: 24500006, guid: 33da73c7db00cb1418368592c96aba19, type: 2}
@@ -2568,18 +2538,6 @@ Projector:
   m_IgnoreLayers:
     serializedVersion: 2
     m_Bits: 20480
---- !u!135 &135164970661891918
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1537035693681568}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Radius: 10
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!135 &135205004969558206
 SphereCollider:
   m_ObjectHideFlags: 1
