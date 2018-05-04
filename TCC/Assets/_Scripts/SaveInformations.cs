@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SaveInformations : MonoBehaviour {
 	public static SaveInformations instance;
 	public static int saveSlot1, saveSlot2, saveSlot3, volumeMusicaS, volumeEfeitosS, volumeAlterado;
+	public static int SlotAtual;
+
 	// Use this for initialization
 	void Awake() 
 	{
@@ -20,10 +23,27 @@ public class SaveInformations : MonoBehaviour {
 				DontDestroyOnLoad (instance);
 			}
 		}
+
+	}
+
+	void Update(){
+		print (SlotAtual);
+		if (Input.GetKeyDown (KeyCode.J)) {
+			SceneManager.LoadScene (1);
+		}
+		if (Input.GetKeyDown (KeyCode.K)) {
+			SceneManager.LoadScene (2);
+		}
+		if (Input.GetKeyDown (KeyCode.L)) {
+			SceneManager.LoadScene (3);
+		}
+
 	}
 
 	public static void SaveSlot(int slot, int fase ) {
-		if (slot == 1) {
+		if (slot == 0) {
+			return;
+		} else if (slot == 1) {
 			PlayerPrefs.SetInt ("saveSlot1", fase);
 		} else if (slot == 2) {
 			PlayerPrefs.SetInt ("saveSlot2", fase);
@@ -41,4 +61,16 @@ public class SaveInformations : MonoBehaviour {
 	public static void VolumeAlteradoF(){
 		PlayerPrefs.SetInt ("volumeAlterado", 2);
 	}
+
+	public static void EscolhendoSlot(int slot){
+		SlotAtual = slot;
+	}
+
+	public static void SalvaCena(int faseAtual){
+		if (faseAtual != 1) {
+			SaveSlot (SlotAtual, faseAtual);
+		}
+	}
+
+
 }

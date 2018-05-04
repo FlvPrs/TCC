@@ -17,6 +17,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	public static SaveInformations save;
 	public int faseAtual;
 	private bool fakeDeathMenu;
+	public int faseAtualSave;
 	int entersToSavePlayer = 0;
 
 	private FatherSacrifice_Ctrl fatherSacrificeCtrl;
@@ -24,6 +25,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		GetSaveVariables ();
+		SaveInformations.SalvaCena (faseAtualSave);
 		if (volumeAlterado != 2) {
 			volumeMusica = 8;
 			volumeEfeitos = 8;
@@ -58,42 +60,62 @@ public class MenuControllerInGame : MonoBehaviour {
 				} else if (onMenu2) {
 					if (!deleteSave) {
 						if (opcaoMenu2 == 1) {
-							if (saveSlot1 == 0) {
+							SaveInformations.EscolhendoSlot (1);
+							if (saveSlot1 == 0 || saveSlot1 == 1) {
 								SaveInformations.SaveSlot (1, 1);
 								TrocaMenus (6);
 								inGame = true;
 								player.playerInputStartGame = true;
-								////print ("acionei");
-							} else {
+
+								print ("acionei");
+							} else if (saveSlot1 == 3) {
+								SceneManager.LoadScene (2);
 								////print ("ja tem save");
+							} else if (saveSlot1 == 4) {
+								SceneManager.LoadScene (3);
 							}
 						} else if (opcaoMenu2 == 2) {
-							if (saveSlot2 == 0) {
+							SaveInformations.EscolhendoSlot (2);
+							if (saveSlot2 == 0 || saveSlot2 == 1) {
 								SaveInformations.SaveSlot (2, 1);
 								TrocaMenus (6);
+								inGame = true;
+								player.playerInputStartGame = true;
+								////print ("acionei");
+							} else if (saveSlot2 == 3) {
+								SceneManager.LoadScene (2);
+								////print ("ja tem save");
+							} else if (saveSlot2 == 4) {
+								SceneManager.LoadScene (3);
 							}
 						} else if (opcaoMenu2 == 3) {
-							if (saveSlot3 == 0) {
+							SaveInformations.EscolhendoSlot (3);
+							if (saveSlot3 == 0 || saveSlot3 == 1) {
 								SaveInformations.SaveSlot (3, 1);
 								TrocaMenus (6);
+								inGame = true;
+								player.playerInputStartGame = true;
+								////print ("acionei");
+							} else if (saveSlot3 == 3) {
+								SceneManager.LoadScene (2);
+								////print ("ja tem save");
+							} else if (saveSlot3 == 4) {
+								SceneManager.LoadScene (3);
 							}
 						}
 					} else if (deleteSave) {
 						if (opcaoMenu2 == 1) {
-							if (SaveInformations.saveSlot1 == 0) {
-								SaveInformations.SaveSlot (1, 0);
-								TrocaMenus (2);
-							}
+							SaveInformations.SaveSlot (1, 0);
+							saveSlot1 = PlayerPrefs.GetInt ("saveSlot1");
+							TrocaMenus (2);
 						} else if (opcaoMenu2 == 2) {
-							if (SaveInformations.saveSlot2 == 0) {
-								SaveInformations.SaveSlot (2, 0);
-								TrocaMenus (2);
-							}
+							SaveInformations.SaveSlot (2, 0);
+							saveSlot2 = PlayerPrefs.GetInt ("saveSlot2");
+							TrocaMenus (2);
 						} else if (opcaoMenu2 == 3) {
-							if (SaveInformations.saveSlot3 == 0) {
-								SaveInformations.SaveSlot (3, 0);
-								TrocaMenus (2);
-							}
+							SaveInformations.SaveSlot (3, 0);
+							saveSlot3 = PlayerPrefs.GetInt ("saveSlot3");
+							TrocaMenus (2);
 						}
 					}
 				} else if (onMenu3) {
@@ -110,8 +132,7 @@ public class MenuControllerInGame : MonoBehaviour {
 					} else if (opcaoMenuPause == 4) {
 						TrocaMenus (4);
 					} else if (opcaoMenuPause == 5) {
-						TrocaMenus (1);
-						inGame = false;
+						SceneManager.LoadScene (1);
 					} else if (opcaoMenuPause == 6) {
 						Application.Quit ();
 					}
