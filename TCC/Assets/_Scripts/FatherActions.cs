@@ -287,6 +287,7 @@ public class FatherActions : AgentFather {
 
 	public void Sing_SingleNote (){
 		sing.Play ();
+		balaoNotasCtrl.Show_BalaoNotas (currentState);
 		//staccatoColl.SetActive (true);
 		if(!isCarregadoPorKiwis)
 			songInteractionCollider.isSingingSomething = true;

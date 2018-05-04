@@ -12,6 +12,7 @@ public class AgentFather : MonoBehaviour {
 	protected Rigidbody rb;
 	protected Animator animCtrl;
 	protected BoxCollider coll;
+	protected BalaoController balaoNotasCtrl;
 	//public GameObject staccatoColl, sustainColl;
 	[SerializeField]
 	GameObject l_wing, r_wing;
@@ -41,6 +42,7 @@ public class AgentFather : MonoBehaviour {
 		rb = GetComponent<Rigidbody> ();
 		animCtrl = GetComponentInChildren<Animator> ();
 		coll = GetComponent<BoxCollider> ();
+		balaoNotasCtrl = GetComponentInChildren<BalaoController> ();
 
 		//staccatoColl.SetActive (false);
 		//sustainColl.SetActive (false);
