@@ -21,6 +21,8 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 
 	int frutasComidas = 0;
 
+	float askHealingCooldown = 0f;
+
 	// Use this for initialization
 	void Start () {
 		fatherActions = GetComponent<FatherActions> ();
@@ -48,6 +50,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 			break;
 		case FatherConditions.MuitoMachucado: //Parado quase morto
 			if (carregadoPorKiwis) {
+				askHealingCooldown = 0f;
 				tag = "NPC_Pai";
 				transform.GetComponentInParent<NPC_Kiwi> ().SoltarObjeto ();
 			}
@@ -62,6 +65,8 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 
 		if (carregadoPorKiwis)
 			fatherActions.LookAtPlayer ();
+
+		fatherActions.animCtrl.SetBool ("beingCarriedByKiwis", carregadoPorKiwis);
 	}
 
 	public bool CanBeCarriedByKiwis (){
@@ -84,7 +89,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 	public void StopCarriedByKiwis (){
 		carregadoPorKiwis = false;
 		numeroDeKiwis = 0;
-		//transform.SetParent (null);
+		transform.SetParent (null);
 		nmAgent.enabled = true;
 	}
 
@@ -93,6 +98,16 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 			//Se for Debilitado, o balão some depois de um tempo.
 			//Se for Machucado, o balão some depois de um tempo, depois aparece de novo,...
 			//Se for MuitoMachucado, o balão nunca some.
+
+		CancelInvoke("ResetHealingCooldown");
+
+		if(askHealingCooldown > 0f){
+			askHealingCooldown -= Time.deltaTime;
+		} else {
+			fatherActions.animCtrl.SetTrigger ("askForHealing");
+			askHealingCooldown = (currentDisposition == FatherConditions.MuitoMachucado) ? 8f : (currentDisposition == FatherConditions.Machucado) ? 15f : 60f;
+		}
+
 		if(frutasComidas >= numberOfFruits){
 			frutasComidas = 0;
 			if(currentDisposition != FatherConditions.Debilitado)
@@ -100,6 +115,12 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 			else
 				currentDisposition = FatherConditions.Disposto;
 		}
+
+		Invoke ("ResetHealingCooldown", 0.1f);
+	}
+
+	void ResetHealingCooldown (){
+		askHealingCooldown = 0f;
 	}
 
 	public void Revigorar (GameObject fruta){

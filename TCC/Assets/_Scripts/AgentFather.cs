@@ -10,10 +10,12 @@ public class AgentFather : MonoBehaviour {
 	protected NavMeshAgent nmAgent;
 	protected Transform agentTransform;
 	protected Rigidbody rb;
-	protected Animator animCtrl;
+	[HideInInspector]
+	public Animator animCtrl;
 	protected BoxCollider coll;
 	protected BalaoController balaoNotasCtrl;
 	//public GameObject staccatoColl, sustainColl;
+	float navMeshSpeed;
 	[SerializeField]
 	GameObject l_wing, r_wing;
 	[HideInInspector]
@@ -46,6 +48,7 @@ public class AgentFather : MonoBehaviour {
 		animCtrl = GetComponentInChildren<Animator> ();
 		coll = GetComponent<BoxCollider> ();
 		balaoNotasCtrl = GetComponentInChildren<BalaoController> ();
+		navMeshSpeed = nmAgent.speed;
 
 		noteIndexes = new int[3];
 
@@ -85,25 +88,33 @@ public class AgentFather : MonoBehaviour {
 			}
 		}
 
-		string walkAnim = "isWalking";
-		switch (currentDisposition) {
-		case FatherConditions.Debilitado:
-			//TODO trocar animação
-			break;
-		case FatherConditions.Machucado:
-			//TODO trocar animação
-			break;
-		case FatherConditions.MuitoMachucado:
-			//TODO trocar animação
-			break;
-		default:
-			break;
+//		switch (currentDisposition) {
+//		case FatherConditions.Debilitado:
+//			walkAnim = "isDebilitado";
+//			break;
+//		case FatherConditions.Machucado:
+//			//TODO: trocar animação de walk
+//			walkAnim = "isDebilitado";
+//			break;
+//		case FatherConditions.MuitoMachucado:
+//			//TODO: trocar animação de walk
+//			walkAnim = "isDebilitado";
+//			break;
+//		default:
+//			break;
+//		}
+		if (currentDisposition != FatherConditions.Disposto) {
+			animCtrl.SetBool ("isDebilitado", true);
+			nmAgent.speed = 6;
+		} else {
+			animCtrl.SetBool ("isDebilitado", false);
+			nmAgent.speed = navMeshSpeed;
 		}
 
 		if (rb.isKinematic) {
-			animCtrl.SetBool (walkAnim, (nmAgent.enabled && !nmAgent.isStopped)? isWalking : false);
+			animCtrl.SetBool ("isWalking", (nmAgent.enabled && !nmAgent.isStopped) ? isWalking : false);
 		} else {
-			animCtrl.SetBool (walkAnim, isWalking);
+			animCtrl.SetBool ("isWalking", isWalking);
 		}
 	}
 

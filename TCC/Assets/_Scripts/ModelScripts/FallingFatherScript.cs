@@ -14,6 +14,7 @@ public class FallingFatherScript : MonoBehaviour {
 	public GameObject fallingTrigger;
 	public WalkingController filho;
 	public DistanceMeasure distSonToFloor;
+	float myDistToFloor;
 
 	private bool saveSon = false;
 	private bool underTheSon = false; //(Under the Son!)
@@ -31,50 +32,42 @@ public class FallingFatherScript : MonoBehaviour {
 
 		rb = GetComponent<Rigidbody> ();
 		myDistToSon = GetComponent<DistanceMeasure> ();
-		downForce = filho.maxFallVelocity * 2f;
+		downForce = 0;
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		if (!fallingTrigger.activeSelf) {
-			
 			return;
 		}
+
+		myDistToFloor = Vector3.Distance (distSonToFloor.transform.position, transform.position);
 
 		if (distSonToFloor.vectorDistance < 400f){
 			saveSon = true;
 		}
 
-		if(!underTheSon) {
-			if (saveSon) {
+		if (saveSon && !underTheSon) {
 
-				if (tocou ) {
-					fatherFall.start ();
-					tocou = false;
-					af = true;
-				}
-
-				
-				if (myDistToSon.distAxis.y < 0) { //Se o pai estiver acima de (20 unidade abaixo do filho)
-					underTheSon = false;
-					float son_TimeTillCrash = distSonToFloor.vectorDistance / filho.currentFallVelocity;
-					float dad_TimeTillSon = myDistToSon.vectorDistance / downForce;
-
-					if (dad_TimeTillSon > son_TimeTillCrash + 2f) { //O +3 garante que o pai vai chegar 3s antes do filho
-						downForce++;
-					} else if (dad_TimeTillSon < son_TimeTillCrash + 2f) {
-						downForce--;
-					}
-				} else {
-					underTheSon = true;
-				}
-			} else {
-				downForce = filho.currentFallVelocity;
+			if (tocou) {
+				fatherFall.start ();
+				tocou = false;
+				af = true;
 			}
+
+			
+			if (myDistToFloor > distSonToFloor.vectorDistance + 5f) { //Se o pai estiver acima do player
+				underTheSon = false;
+				downForce += 0.1f;
+			} else {
+				underTheSon = true;
+			}
+		} else {
+			downForce = 0f;
 		}
 
 		if(underTheSon){
-			downForce ++;
+			downForce = Time.deltaTime;
 
 			float xAmount = Mathf.Sign (myDistToSon.distAxis.x);
 			float zAmount = Mathf.Sign (myDistToSon.distAxis.z);
@@ -82,6 +75,6 @@ public class FallingFatherScript : MonoBehaviour {
 			transform.Translate (xAmount * 0.35f, 0, zAmount * 0.35f, Space.World);
 		}
 
-		rb.velocity = Vector3.up * downForce;
+		rb.velocity = Vector3.up * (filho.currentFallVelocity - downForce);
 	}
 }

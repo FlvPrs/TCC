@@ -233,7 +233,12 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		if(!holdVelocity)
 			CalculateVelocity ();
 
+		bool lastFrameWasGrounded = isGrounded;
 		isGrounded = Grounded (out collisionAbove);
+
+		if(lastFrameWasGrounded && !isGrounded){
+			secondJumpStrengthMultiplier = fruitJumpPower;
+		}
 
 		if (velocity.y <= 0 && isGrounded) {
 			if(isPressingDirInput)
@@ -408,7 +413,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			//				velocity.y = maxJumpVelocity;
 			//			}
 
-			secondJumpStrengthMultiplier = fruitJumpPower;
+			//secondJumpStrengthMultiplier = fruitJumpPower;
 			velocity.y = maxJumpVelocity;
 			jumpInertia = velocity;
 

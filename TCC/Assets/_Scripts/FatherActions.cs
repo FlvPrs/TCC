@@ -236,7 +236,7 @@ public class FatherActions : AgentFather {
 			//clarinetHigh.TransitionTo (0.01f);
 			//endTODO
 
-			animCtrl.SetFloat ("Height", 0.9f);
+			animCtrl.SetFloat ("Height", 1f);
 			break;
 		case HeightState.Default:
 			//TODO: Delete this. Apenas para teste
@@ -250,7 +250,7 @@ public class FatherActions : AgentFather {
 			//clarinetLow.TransitionTo (0.01f);
 			//endTODO
 
-			animCtrl.SetFloat ("Height", -0.9f);
+			animCtrl.SetFloat ("Height", -1f);
 			break;
 		default:
 			break;
@@ -306,6 +306,8 @@ public class FatherActions : AgentFather {
 
 		CancelInvoke("HideStaccatoColl");
 		Invoke ("HideStaccatoColl", 0.4f);
+
+		animCtrl.SetTrigger ("sing");
 	}
 
 	void HideStaccatoColl (){
