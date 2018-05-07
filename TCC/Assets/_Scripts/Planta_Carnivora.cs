@@ -70,7 +70,7 @@ public class Planta_Carnivora : PlantaBehaviour {
 		//Debug.DrawRay (transform.position, plantaTransform.up * 10f);
 
 		#region DELETAR
-		if(currentState != Planta_CurrentState.Dormindo){
+		if(currentState != Planta_CurrentState.Dormindo && !fechada){
 			indicadorDeSono.SetActive (false);
 		} else {
 			indicadorDeSono.SetActive (true);
@@ -111,7 +111,8 @@ public class Planta_Carnivora : PlantaBehaviour {
 	}
 
 	void ReleaseFood (){
-		fechada = comendo = false;
+		fechada = true;
+		comendo = false;
 		currentFood.Carnivora_Release ();
 		currentFood = null;
 	}
@@ -179,6 +180,13 @@ public class Planta_Carnivora : PlantaBehaviour {
 		base.Acordar ();
 	}
 
+//	protected override void ChamarAtencao ()
+//	{
+//		base.ChamarAtencao ();
+//
+//		fechada = false;
+//	}
+
 	protected override void Irritar ()
 	{
 		if(currentState == Planta_CurrentState.Dormindo){
@@ -205,6 +213,7 @@ public class Planta_Carnivora : PlantaBehaviour {
 		coll.radius = attackRange_default;
 
 		if(comendo){
+			print ("Comeu");
 			ReleaseFood ();
 		}
 	}

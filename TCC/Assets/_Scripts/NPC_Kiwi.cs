@@ -64,6 +64,12 @@ public class NPC_Kiwi : NPCBehaviour {
 		if(!isOnArbusto){
 			nmAgent.stoppingDistance = defaultStopDist;
 		}
+
+		if (!podePegarObj && objetoCarregado == null){
+			SoltarObjeto ();
+			collObjects.Capacity = 0;
+			timer_PegarObjeto = 0f;
+		}
 	}
 
 	protected override void DefaultState ()
@@ -212,6 +218,11 @@ public class NPC_Kiwi : NPCBehaviour {
 		float dist = 1000f;
 		int index = 0;
 		for (int i = 0; i < collObjects.Count; i++) {
+			if(collObjects [i] == null){
+				collObjects.RemoveAt (i);
+				collObjects.Capacity--;
+				continue;
+			}
 			float temp = Vector3.Distance (npcTransform.position, collObjects [i].position);
 			if(temp < dist){
 				dist = temp;
@@ -238,12 +249,14 @@ public class NPC_Kiwi : NPCBehaviour {
 	public void SoltarObjeto (){
 		if(isCarregandoPai){
 			objetoCarregado.GetComponent<Father_DebilitadoCtrl> ().StopCarriedByKiwis ();
-		} else {
+		} else if (objetoCarregado != null) {
 			objetoCarregado.SetParent (null);
 		}
 		objetoCarregado = null;
 		isCarregandoPai = false;
 		timer_PegarObjeto = 2f;
+		collObjects.Clear ();
+		collObjects.Capacity = 0;
 	}
 
 	void OnTriggerEnter (Collider col){

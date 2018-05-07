@@ -60,8 +60,8 @@ public class BirdStatureCtrl : MonoBehaviour {
 
 	public void UpdateHeight(float strength, Animator anim){
 		anim.SetFloat ("Stature", strength);
-		anim.SetLayerWeight (1, Mathf.Clamp(Mathf.Abs(strength), 0f, 0.8f));
-		anim.SetLayerWeight (2, Mathf.Clamp(Mathf.Abs(strength), 0f, 0.8f));
+		//anim.SetLayerWeight (1, Mathf.Clamp(Mathf.Abs(strength), 0f, 0.8f));
+		//anim.SetLayerWeight (2, Mathf.Clamp(Mathf.Abs(strength), 0f, 0.8f));
 
 		if(strength == 0f){
 			currentHeight = defaultHeight;

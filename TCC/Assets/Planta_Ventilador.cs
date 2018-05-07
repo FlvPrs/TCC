@@ -124,7 +124,7 @@ public class Planta_Ventilador : PlantaBehaviour {
 		currentState = Planta_CurrentState.Irritado;
 		//base.Irritar ();
 
-		vento.tag = "Wind2";
+		//vento.tag = "Wind2";
 
 		//DefaultState ();
 
@@ -150,7 +150,7 @@ public class Planta_Ventilador : PlantaBehaviour {
 	{
 		base.Acalmar ();
 
-		vento.tag = "Wind";
+		//vento.tag = "Wind";
 
 		//canStartVentiladorAutomatico = false; 
 

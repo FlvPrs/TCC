@@ -23,6 +23,13 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 
 	float askHealingCooldown = 0f;
 
+	public float delayFirstAskBy = 0f;
+	public bool canBeCarried = true;
+
+	void Awake (){
+		askHealingCooldown = delayFirstAskBy;
+	}
+
 	// Use this for initialization
 	void Start () {
 		fatherActions = GetComponent<FatherActions> ();
@@ -40,6 +47,9 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 		switch (currentDisposition) {
 		case FatherConditions.Disposto: //Andando normal
 			tag = "NPC_Pai";
+			if (carregadoPorKiwis) {
+				transform.GetComponentInParent<NPC_Kiwi> ().SoltarObjeto ();
+			}
 			break;
 		case FatherConditions.Debilitado: //Andando com dificuldade
 			tag = "PaiDebilitado";
@@ -70,7 +80,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 	}
 
 	public bool CanBeCarriedByKiwis (){
-		if (carregadoPorKiwis)
+		if (carregadoPorKiwis || !canBeCarried)
 			return false;
 		
 		numeroDeKiwis++;
@@ -100,12 +110,11 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 			//Se for MuitoMachucado, o balão nunca some.
 
 		CancelInvoke("ResetHealingCooldown");
-
 		if(askHealingCooldown > 0f){
 			askHealingCooldown -= Time.deltaTime;
 		} else {
 			fatherActions.animCtrl.SetTrigger ("askForHealing");
-			askHealingCooldown = (currentDisposition == FatherConditions.MuitoMachucado) ? 8f : (currentDisposition == FatherConditions.Machucado) ? 15f : 60f;
+			askHealingCooldown = (currentDisposition == FatherConditions.MuitoMachucado) ? 8f : (currentDisposition == FatherConditions.Machucado) ? 20f : 70f;
 		}
 
 		if(frutasComidas >= numberOfFruits){
@@ -116,7 +125,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 				currentDisposition = FatherConditions.Disposto;
 		}
 
-		Invoke ("ResetHealingCooldown", 0.1f);
+		Invoke ("ResetHealingCooldown", 0.5f);
 	}
 
 	void ResetHealingCooldown (){

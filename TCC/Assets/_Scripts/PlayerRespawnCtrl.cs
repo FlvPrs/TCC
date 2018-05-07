@@ -58,8 +58,8 @@ public class PlayerRespawnCtrl : MonoBehaviour {
 		} else {
 			Renderer rend = actualPai.GetChild(1).GetChild(0).GetComponent<Renderer>();
 			rend.material.SetColor ("_Color", new Color (0.392f, 0.862f, 0.862f));
-			actualPai.GetChild(1).Find("l_wing").gameObject.SetActive(false);
-			actualPai.GetChild(1).Find("r_wing").gameObject.SetActive(false);
+			actualPai.GetChild(1).Find("l_Asa").gameObject.SetActive(false);
+			actualPai.GetChild(1).Find("r_Asa").gameObject.SetActive(false);
 		}
 		isReturning = true;
 		flyingPai.SetActive (true);

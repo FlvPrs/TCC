@@ -170,14 +170,17 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 	}
 
 	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false){
-		timer = 0f;
-		currentSong = song;
-		playerIsMakingNoise = isSingingSomething;
-
-		if (!isFather)
-			currentInteractionAgent = player;
-		else if(currentInteractionAgent != player)
+		if (isFather && (currentInteractionAgent != player || (currentInteractionAgent == player && currentSong == PlayerSongs.Empty))) {
 			currentInteractionAgent = father;
+			timer = 0f;
+			currentSong = song;
+			playerIsMakingNoise = isSingingSomething;
+		} else if (!isFather && (currentInteractionAgent != father || (currentInteractionAgent == father && currentSong == PlayerSongs.Empty))) {
+			currentInteractionAgent = player;
+			timer = 0f;
+			currentSong = song;
+			playerIsMakingNoise = isSingingSomething;
+		}
 	}
 
 	//======================================================================================================================

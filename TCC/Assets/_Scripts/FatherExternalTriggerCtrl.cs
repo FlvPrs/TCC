@@ -11,7 +11,7 @@ public class FatherExternalTriggerCtrl : MonoBehaviour {
 
 
 	void OnTriggerEnter (Collider col){
-		if (!onlyPlayerCanTrigger && col.CompareTag("NPC_Pai")) {
+		if (!onlyPlayerCanTrigger && (col.CompareTag ("NPC_Pai") || col.CompareTag ("PaiDebilitado"))) {
 			if (anyState || col.GetComponent<FatherFSM> ().currentState == onlyChangeFromState) {
 				col.GetComponent<FatherFSM> ().externalTriggerActivated = true;
 				gameObject.SetActive (dontDisableAfterHit);
@@ -27,7 +27,7 @@ public class FatherExternalTriggerCtrl : MonoBehaviour {
 	}
 
 	void OnTriggerExit (Collider col){
-		if (!onlyPlayerCanTrigger && col.CompareTag("NPC_Pai")) {
+		if (!onlyPlayerCanTrigger && (col.CompareTag ("NPC_Pai") || col.CompareTag ("PaiDebilitado"))) {
 			if (anyState || col.GetComponent<FatherFSM> ().currentState == onlyChangeFromState) {
 				col.GetComponent<FatherFSM> ().externalTriggerActivated = true;
 				gameObject.SetActive (dontDisableAfterHit);

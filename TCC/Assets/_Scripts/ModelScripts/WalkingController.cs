@@ -301,13 +301,13 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			//////print (secondJumpStrengthMultiplier);
 
 			#region Pulo Duplo limiter
-			if (timeOnAir >= 0.15f) { //Só permite pulo duplo após 0.15s no ar
+			if (timeOnAir >= 0.1f) { //Só permite pulo duplo após 0.15s no ar
 				canFly = true;
 				asas.SetActive (true);
 				if (flyStamina > 0 || hasBonusJump) {
 					animCtrl.SetTrigger ("CanFly");
 				}
-				timeOnAir = 0.15f;
+				timeOnAir = 0.1f;
 			} else {
 				timeOnAir += Time.deltaTime;
 			}
@@ -441,6 +441,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		}
 
 		animCtrl.SetBool ("IsFlying", startedFly);
+		animCtrl.SetFloat ("flyStrength", secondJumpStrengthMultiplier);
 	}
 
 	public void OnJumpInputHold(){

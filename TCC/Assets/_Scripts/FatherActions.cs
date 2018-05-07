@@ -413,13 +413,17 @@ public class FatherActions : AgentFather {
 		ChangeHeight (HeightState.Default);
 	}
 
+	IEnumerator BroadcastSong (PlayerSongs song){
+		yield return new WaitForSeconds (3f);
+		currentSong = song;
+	}
+
 	public void TocarMusicaSimples (FatherSongSimple song) {
 		sing.Stop ();
 		singSustain.Stop ();
 
 		switch (song) {
 		case FatherSongSimple.Alegria: //DISTRAIR
-			currentSong = PlayerSongs.Alegria;
 			PartituraInfo[] alegria = new PartituraInfo[] {
 				new PartituraInfo (HeightState.Default),
 				new PartituraInfo (HeightState.Default),
@@ -427,14 +431,14 @@ public class FatherActions : AgentFather {
 				new PartituraInfo (HeightState.Default),
 			};
 			Sing_Partitura (alegria);
+			StartCoroutine ("BroadcastSong", PlayerSongs.Alegria);
 			break;
 		case FatherSongSimple.Estorvo: //IRRITAR
-			currentSong = PlayerSongs.Estorvo;
 			ChangeHeight (HeightState.High, singleNoteMinimumDuration * 6f);
 			Sing_SingleNoteRepeat (4);
+			StartCoroutine ("BroadcastSong", PlayerSongs.Estorvo);
 			break;
 		case FatherSongSimple.Serenidade: //ACALMAR
-			currentSong = PlayerSongs.Serenidade;
 			PartituraInfo[] serenidade = new PartituraInfo[] {
 				new PartituraInfo(HeightState.Low),
 				new PartituraInfo(HeightState.Default),
@@ -442,9 +446,9 @@ public class FatherActions : AgentFather {
 				new PartituraInfo(HeightState.Low),
 			};
 			Sing_Partitura (serenidade);
+			StartCoroutine ("BroadcastSong", PlayerSongs.Serenidade);
 			break;
 		case FatherSongSimple.Ninar: //DORMIR
-			currentSong = PlayerSongs.Ninar;
 			PartituraInfo[] ninar = new PartituraInfo[] {
 				new PartituraInfo(HeightState.Default),
 				new PartituraInfo(HeightState.Default),
@@ -452,6 +456,7 @@ public class FatherActions : AgentFather {
 				new PartituraInfo(HeightState.Low),
 			};
 			Sing_Partitura (ninar);
+			StartCoroutine ("BroadcastSong", PlayerSongs.Ninar);
 			break;
 		default:
 			Debug.LogWarning("BUG: O pai não conhece essa musica simples");
@@ -465,7 +470,6 @@ public class FatherActions : AgentFather {
 
 		switch (song) {
 		case FatherSongSustain.Amizade: //SEGUIR
-			currentSong = PlayerSongs.Amizade;
 //			ChangeHeight (HeightState.Default);
 //			Sing_SustainedNote (duration);
 			PartituraInfo[] amizade = new PartituraInfo[] {
@@ -475,9 +479,9 @@ public class FatherActions : AgentFather {
 				new PartituraInfo(HeightState.Default),
 			};
 			Sing_Partitura (amizade);
+			StartCoroutine ("BroadcastSong", PlayerSongs.Amizade);
 			break;
 		case FatherSongSustain.Crescimento: //CRESCER
-			currentSong = PlayerSongs.Crescimento;
 //			ChangeHeight (HeightState.High);
 //			Sing_SustainedNote (duration);
 			PartituraInfo[] crescimento = new PartituraInfo[] {
@@ -487,9 +491,9 @@ public class FatherActions : AgentFather {
 				new PartituraInfo(HeightState.High),
 			};
 			Sing_Partitura (crescimento);
+			StartCoroutine ("BroadcastSong", PlayerSongs.Crescimento);
 			break;
 		case FatherSongSustain.Encolhimento: //ENCOLHER
-			currentSong = PlayerSongs.Encolhimento;
 //			ChangeHeight (HeightState.Low);
 //			Sing_SustainedNote (duration);
 			PartituraInfo[] encolhimento = new PartituraInfo[] {
@@ -499,6 +503,7 @@ public class FatherActions : AgentFather {
 				new PartituraInfo(HeightState.Low),
 			};
 			Sing_Partitura (encolhimento);
+			StartCoroutine ("BroadcastSong", PlayerSongs.Encolhimento);
 			break;
 		default:
 			Debug.LogWarning("BUG: O pai não conhece essa musica com sustain");
