@@ -106,7 +106,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1984478224519584
 GameObject:
   m_ObjectHideFlags: 1
@@ -290,10 +290,15 @@ MonoBehaviour:
   timer: 0
   isMurcha: 0
   isBroto: 0
+  MDL_Aberta: {fileID: 1113776035819516}
+  MDL_Fechada: {fileID: 1953543908762934}
   vento: {fileID: 1357811504441980}
   ventiladorAutomatico: 1
   startAngry: 1
   auto_OnOffTimer: 2
+  auto_OnOffRatio: 1
+  delayAutoBy: 0
+  fechada: 1
   angularSpeed: 2
   layerMask:
     serializedVersion: 2

@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class Planta_Ventilador : PlantaBehaviour {
 
-	public GameObject vento;
+	public GameObject MDL_Aberta, MDL_Fechada, vento;
 	public bool ventiladorAutomatico = false;
 	public bool startAngry = false;
 	public float auto_OnOffTimer = 2f;
+	[Range(0.01f, 10f)]
+	public float auto_OnOffRatio = 1f; 	//É multiplicado por auto_onOffTimer. O resultado indica quanto tempo ficará ligada.
+										//1 significa o mesmo tempo ligado e desligado. 
+										//2 significa que ficará ligado 2 vezes mais do que desligado. 
+										//0.5 significa que ficará 2 vezes mais desligado do que ligado.
+	public float delayAutoBy = 0f;
+	float delayTimer;
 	bool canStartVentiladorAutomatico;
 	float ventiladorCooldown;
 
-	bool fechada = true;
+	public bool fechada = true;
 
 	Quaternion originalOrientation;
 
@@ -30,22 +37,34 @@ public class Planta_Ventilador : PlantaBehaviour {
 
 		if(startAngry){
 			vento.tag = "Wind2";
+		} else {
+			vento.tag = "Wind";
 		}
+
+		delayTimer = delayAutoBy;
+
+		if (ventiladorAutomatico && fechada)
+			ventiladorCooldown = auto_OnOffRatio * auto_OnOffTimer + Time.deltaTime;
 	}
 
 	protected override void Update ()
 	{
+		if (delayTimer > 0f)
+			delayTimer -= Time.deltaTime;
+		else
+			delayTimer = 0f;
+		
 		base.Update ();
 
-		if(fechada){
-			vento.SetActive (false);
-		} else {
-			vento.SetActive (true);
-		}
+		vento.SetActive (!fechada);
+		MDL_Aberta.SetActive (!fechada);
+		MDL_Fechada.SetActive (fechada);
 
 		if(timer >= 1f && currentState == Planta_CurrentState.Seguindo){
 			Invoke ("PararDeSeguir", 2f);
 		}
+
+		headJoint.localEulerAngles = new Vector3 (headJoint.localEulerAngles.x, headJoint.localEulerAngles.y, 0);
 	}
 
 	protected override void DefaultState ()
@@ -59,17 +78,19 @@ public class Planta_Ventilador : PlantaBehaviour {
 
 		//headJoint.rotation = Quaternion.Slerp(headJoint.rotation, originalOrientation, Time.deltaTime * angularSpeed);
 
-		if(ventiladorAutomatico && canStartVentiladorAutomatico){
-			ventiladorCooldown += Time.deltaTime;
-			if(ventiladorCooldown <= auto_OnOffTimer || auto_OnOffTimer == 0f){
-				fechada = false;
-			} else if (ventiladorCooldown <= auto_OnOffTimer * 2f) {
-				fechada = true;
+		if (delayTimer == 0f) {
+			if (ventiladorAutomatico && canStartVentiladorAutomatico) {
+				ventiladorCooldown += Time.deltaTime;
+				if (ventiladorCooldown <= auto_OnOffRatio * auto_OnOffTimer || auto_OnOffTimer == 0f) {
+					fechada = false;
+				} else if (ventiladorCooldown <= auto_OnOffTimer + (auto_OnOffRatio * auto_OnOffTimer)) {
+					fechada = true;
+				} else {
+					ventiladorCooldown = 0f;
+				}
 			} else {
 				ventiladorCooldown = 0f;
 			}
-		} else {
-			ventiladorCooldown = 0f;
 		}
 	}
 

@@ -180,12 +180,12 @@ public class Planta_Carnivora : PlantaBehaviour {
 		base.Acordar ();
 	}
 
-//	protected override void ChamarAtencao ()
-//	{
-//		base.ChamarAtencao ();
-//
-//		fechada = false;
-//	}
+	protected override void ChamarAtencao ()
+	{
+		base.ChamarAtencao ();
+
+		fechada = false;
+	}
 
 	protected override void Irritar ()
 	{
