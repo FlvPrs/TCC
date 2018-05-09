@@ -11,6 +11,7 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 	protected Transform npcTransform;
 	protected Transform player;
 	protected Transform father;
+	public Animator animCtrl;
 
 	[BitMaskAttribute(typeof(PlayerSongs))]
 	public PlayerSongs acceptedSongs; //Definir pelo inspector com quais melodias o NPC poderá interagir.

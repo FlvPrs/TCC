@@ -19,6 +19,8 @@ public class Npc_BeijaFlor : NPCBehaviour {
 		base.Awake ();
 		estado = EstadosBeijaFro.Idle;
 		dentroVeneno = false;
+
+		animCtrl.SetFloat ("idleStartAt", Random.Range (0f, 1f));
 	}
 
 	protected override void Update(){
@@ -121,11 +123,19 @@ public class Npc_BeijaFlor : NPCBehaviour {
 	protected override void Seguir(){
 		if (dentroVeneno == false) {
 			base.Seguir ();
+			animCtrl.SetBool ("isSeguindo", true);
 		}
 		if (dentroVeneno == true) {
 			PararDeSeguir ();
 			mudancaEstado (0);
 		}
+	}
+
+	protected override void PararDeSeguir ()
+	{
+		base.PararDeSeguir ();
+
+		animCtrl.SetBool ("isSeguindo", false);
 	}
 
 

@@ -213,7 +213,6 @@ public class Planta_Carnivora : PlantaBehaviour {
 		coll.radius = attackRange_default;
 
 		if(comendo){
-			print ("Comeu");
 			ReleaseFood ();
 		}
 	}
@@ -228,7 +227,7 @@ public class Planta_Carnivora : PlantaBehaviour {
 			return;
 		}
 
-		if (!fechada && (currentState == Planta_CurrentState.DefaultState || currentState == Planta_CurrentState.Irritado)) {
+		if (!fechada && !comendo && (currentState == Planta_CurrentState.DefaultState || currentState == Planta_CurrentState.Irritado)) {
 			if (col.GetComponent<ICarnivoraEdible> () != null) {
 				currentFood = col.GetComponent<ICarnivoraEdible> ();
 				currentFood.Carnivora_GetReadyToBeEaten ();

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPC_Kiwi : NPCBehaviour {
+public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 
 	Rigidbody rb;
 
@@ -36,10 +36,20 @@ public class NPC_Kiwi : NPCBehaviour {
 		initialOrientation = npcTransform.rotation;
 
 		defaultStopDist = nmAgent.stoppingDistance;
+
+		for (int i = 0; i < npcTransform.childCount; i++) {
+			if(npcTransform.GetChild(i).GetComponent<Animator>() != null)
+				npcTransform.GetChild(i).GetComponent<Animator>().SetFloat ("idleStartAt", Random.Range (0f, 1f));
+		}
 	}
 
 	protected override void Update ()
 	{
+		for (int i = 0; i < npcTransform.childCount; i++) {
+			if(npcTransform.GetChild(i).GetComponent<Animator>() != null)
+				npcTransform.GetChild(i).GetComponent<Animator>().SetBool ("isWalking", (nmAgent.velocity != Vector3.zero));
+		}
+
 		if (stopUpdate)
 			return;
 
@@ -355,6 +365,7 @@ public class NPC_Kiwi : NPCBehaviour {
 			stopUpdate = false;
 		}
 		else {
+			stopUpdate = false;
 			rb.velocity = Vector3.zero;
 			rb.isKinematic = true;
 			nmAgent.enabled = true;
@@ -368,4 +379,38 @@ public class NPC_Kiwi : NPCBehaviour {
 		//rb.isKinematic = enableNavMesh;
 		stopUpdate = !enableNavMesh;
 	}
+
+
+	#region Carnivora Interface
+	[HideInInspector]
+	public bool eatenByCarnivora = false;
+
+	public void Carnivora_GetReadyToBeEaten (){
+		//print ("EATEN");
+		stopUpdate = true;
+		ResetDefaultBehaviour ();
+		currentState = NPC_CurrentState.DefaultState;
+		if(objetoCarregado != null)
+			SoltarObjeto ();
+		nmAgent.enabled = false;
+		rb.isKinematic = true;
+		rb.velocity = Vector3.zero;
+	}
+	public void Carnivora_Release (){
+		//print ("released");
+		stopUpdate = false;
+		nmAgent.enabled = true;
+		//timer_StartPatrulha = 7f;
+		FleeFromPlayer ();
+		DefaultState ();
+	}
+
+	public void Carnivora_Shoot (Vector3 dir){
+		//print ("SHOOT!");
+		nmAgent.enabled = false;
+		rb.isKinematic = false;
+		rb.velocity = (dir * .5f);
+		StartCoroutine ("ResetNavMeshAfterWind", dir);
+	}
+	#endregion
 }
