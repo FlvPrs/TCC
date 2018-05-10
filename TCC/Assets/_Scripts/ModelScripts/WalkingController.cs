@@ -135,7 +135,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	bool holdVelocity;
 
 	bool isPressingDirInput;
-
+	float walkJoystickMagnitude;
 
 	void Awake(){
 		rb = GetComponent<Rigidbody> ();
@@ -390,6 +390,8 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		orientationRight = (orientationRight).normalized * input.x;
 
 		directionalInput = (orientationForward + orientationRight).normalized;
+
+		walkJoystickMagnitude = input.magnitude;
 	}
 
 	public void OnJumpInputDown(){
@@ -522,13 +524,14 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		if(isPressingDirInput){
 			walkStates.IS_WALKING = true;
 			//			if(isGrounded)
-			anim.ChangeForward(directionalInput.normalized);
+			if(!isFallingToDeath)
+				anim.ChangeForward(directionalInput.normalized);
 			//			else
 			//				anim.ChangeForward ((myT.forward + rb.velocity).normalized);
 
-			Vector3 clampedAnimSpeed = new Vector3 (directionalInput.x, 0, directionalInput.z);
-			clampedAnimSpeed = Vector3.ClampMagnitude (clampedAnimSpeed, animSpeed);
-			animCtrl.SetFloat ("WalkVelocity", clampedAnimSpeed.magnitude);
+			//Vector3 clampedAnimSpeed = new Vector3 (directionalInput.x, 0, directionalInput.z);
+			//clampedAnimSpeed = Vector3.ClampMagnitude (clampedAnimSpeed, animSpeed);
+			animCtrl.SetFloat ("WalkVelocity", Mathf.Clamp(walkJoystickMagnitude, 0f, animSpeed));
 		} else {
 			walkStates.IS_WALKING = false;
 		}

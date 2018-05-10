@@ -193,6 +193,7 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			if(canCenterWind)
 				transform.position = Vector3.MoveTowards (transform.position, centerOfWind, 0.1f);
 
+			playerCtrl.animCtrl.SetBool ("isOnWind", true);
 			playerCtrl.ContinuousExternalForce ((Vector3.ClampMagnitude(avrgCurrentMagnitude, 1f) * windcurrentForce) / currentCount, true, true);
 		}
 
@@ -227,6 +228,7 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			avrgCurrentMagnitude -= col.transform.forward;
 			if(currentCount < 1){
 				playerCtrl.AddExternalForce (currentMomentum, 0.5f);
+				playerCtrl.animCtrl.SetBool ("isOnWind", false);
 			}
 		}
 

@@ -15,10 +15,16 @@ public class Npc_BeijaFlor : NPCBehaviour {
 	List<Transform> collObjects = new List<Transform>();
 	Transform objetoCarregado;
 
+	public float maxBaseOffset = 8f;
+	float originalBaseOffset;
+	bool isCloseToCarnivora = false;
+
 	protected override void Awake(){
 		base.Awake ();
 		estado = EstadosBeijaFro.Idle;
 		dentroVeneno = false;
+
+		originalBaseOffset = nmAgent.baseOffset;
 
 		animCtrl.SetFloat ("idleStartAt", Random.Range (0f, 1f));
 	}
@@ -46,7 +52,17 @@ public class Npc_BeijaFlor : NPCBehaviour {
 			podePegarObj = true;
 		}
 
-		//////print (estado);
+		if(isCloseToCarnivora){
+			if (nmAgent.baseOffset < maxBaseOffset)
+				nmAgent.baseOffset += Time.deltaTime * 7f;
+			else
+				nmAgent.baseOffset = maxBaseOffset;
+		} else {
+			if (nmAgent.baseOffset > originalBaseOffset)
+				nmAgent.baseOffset -= Time.deltaTime * 5f;
+			else
+				nmAgent.baseOffset = originalBaseOffset;
+		}
 	}
 
 	public enum EstadosBeijaFro{
@@ -169,6 +185,10 @@ public class Npc_BeijaFlor : NPCBehaviour {
 				PararDeSeguir ();
 			}
 		}
+
+		if(colisor.CompareTag ("Carnivora")){
+			isCloseToCarnivora = true;
+		}
 	}
 
 	void OnTriggerEnter(Collider colisor){
@@ -213,6 +233,10 @@ public class Npc_BeijaFlor : NPCBehaviour {
 			playerPerto = false;
 			//seguindo = false;
 			//mudancaEstado (0);
+		}
+
+		if(colisor.CompareTag ("Carnivora")){
+			isCloseToCarnivora = false;
 		}
 	}
 }
