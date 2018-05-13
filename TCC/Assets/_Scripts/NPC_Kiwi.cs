@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 
 	Rigidbody rb;
@@ -22,11 +24,26 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 	Vector3 spawnPoint;
 	Quaternion initialOrientation;
 
+	private AudioSource simpleAudioSource;
+	private AudioSource sustainAudioSource;
+
+	public AudioClip[] carregando_Clips;
+	public AudioClip[] seguindo_Clips;
+	public AudioClip freeWalk_Clip;
+	public AudioClip[] ventoStates_Clip;
+	bool canStartVentoLoop = true;
+	int currClipIndex = 0;
+	bool canChangeSimpleClip = true;
+
 	protected override void Awake ()
 	{
 		base.Awake ();
 
 		rb = GetComponent<Rigidbody> ();
+		simpleAudioSource = GetComponent<AudioSource>();
+		simpleAudioSource.loop = false;
+		sustainAudioSource = transform.Find("AudioSourceLoop").GetComponent<AudioSource>();
+		sustainAudioSource.loop = true;
 
 		if (npcTransform.parent != null && npcTransform.parent.name == "NPC_SpawnPoint")
 			spawnPoint = npcTransform.parent.position;
@@ -55,6 +72,31 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 
 		if (isOnWind)
 			return;
+
+		if(nmAgent.velocity != Vector3.zero && canChangeSimpleClip){
+			if(currentState == NPC_CurrentState.DefaultState){
+				if (simpleAudioSource.clip != freeWalk_Clip) {
+					simpleAudioSource.clip = freeWalk_Clip;
+				}
+				simpleAudioSource.Play ();
+				StartCoroutine(WaitForSimpleClipToEnd (freeWalk_Clip.length - 0.03f));
+			} else if (currentState == NPC_CurrentState.Seguindo && !isCarregandoPai) {
+				simpleAudioSource.clip = seguindo_Clips [currClipIndex];
+				currClipIndex++;
+				if (currClipIndex >= seguindo_Clips.Length)
+					currClipIndex = 0;
+				simpleAudioSource.Play ();
+				StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length));
+			} else if (isCarregandoPai) {
+				simpleAudioSource.clip = carregando_Clips [currClipIndex];
+				currClipIndex++;
+				if (currClipIndex >= carregando_Clips.Length)
+					currClipIndex = 0;
+				simpleAudioSource.Play ();
+				StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length - 0.05f));
+			}
+		}
+			
 
 		distToPlayer = Vector3.Distance (player.position, npcTransform.position);
 
@@ -299,9 +341,18 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 			}
 		}
 
-		if(col.CompareTag("Wind") || col.CompareTag("Wind2")){
+		if ((col.CompareTag ("Wind") || col.CompareTag ("Wind2")) && canStartVentoLoop) {
 			if(objetoCarregado != null)
 				SoltarObjeto ();
+
+			canStartVentoLoop = false;
+
+			simpleAudioSource.clip = ventoStates_Clip [0];
+			sustainAudioSource.clip = ventoStates_Clip [1];
+			canStartVentoLoop = true;
+			simpleAudioSource.Play ();
+			StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length));
+
 		}
 	}
 	void OnTriggerStay (Collider col){
@@ -311,6 +362,14 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 			nmAgent.enabled = false;
 			rb.isKinematic = false;
 			rb.velocity = (col.transform.up * 25f) + (Vector3.down * 5f);
+
+//			if (canChangeSimpleClip && canStartVentoLoop)
+//			{
+//				simpleAudioSource.clip = ventoStates_Clip [2];
+//				canStartVentoLoop = false;
+//				//sustainAudioSource.Play();
+//			}
+
 			StartCoroutine ("ResetNavMeshAfterWind", col.transform.up);
 		} else if(col.CompareTag("Wind2")){
 			StopCoroutine ("ResetNavMeshAfterWind");
@@ -318,6 +377,14 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 			nmAgent.enabled = false;
 			rb.isKinematic = false;
 			rb.velocity = (col.transform.up * 50f) + (Vector3.down * 5f);
+
+//			if (canChangeSimpleClip && canStartVentoLoop)
+//			{
+//				simpleAudioSource.clip = ventoStates_Clip [2];
+//				canStartVentoLoop = false;
+//				//sustainAudioSource.Play();
+//			}
+
 			StartCoroutine ("ResetNavMeshAfterWind", col.transform.up);
 		}
 	}
@@ -339,8 +406,15 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 		}
 	}
 
+	IEnumerator WaitForSimpleClipToEnd (float duration){
+		canChangeSimpleClip = false;
+		yield return new WaitForSeconds (duration);
+		canChangeSimpleClip = true;
+	}
+
 	IEnumerator ResetNavMeshAfterWind (Vector3 windUp){
 		yield return new WaitForSeconds (2f);
+		simpleAudioSource.clip = ventoStates_Clip [2];
 		isOnWind = false;
 		rb.angularVelocity = Vector3.zero;
 		npcTransform.rotation = initialOrientation;
@@ -350,7 +424,26 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 			//enabled = false;
 			//Destroy (gameObject, 5f);
 			stopUpdate = true;
-			yield return new WaitForSeconds (6f);
+			int i = 0;
+			while (i < 12) {
+				yield return new WaitForSeconds (0.5f);
+				nmAgent.enabled = true;
+				if (!nmAgent.isOnNavMesh) {
+					nmAgent.enabled = false;
+				} else {
+					sustainAudioSource.Stop ();
+					simpleAudioSource.Play ();
+					StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length));
+
+					rb.velocity = Vector3.zero;
+					rb.angularVelocity = Vector3.zero;
+					rb.isKinematic = true;
+					npcTransform.rotation = initialOrientation;
+					stopUpdate = false;
+					yield break;
+				}
+				i++;
+			}
 			rb.velocity = Vector3.zero;
 			rb.angularVelocity = Vector3.zero;
 			rb.isKinematic = true;
@@ -365,12 +458,17 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 			stopUpdate = false;
 		}
 		else {
+			sustainAudioSource.Stop ();
+			simpleAudioSource.Play ();
+			StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length));
 			stopUpdate = false;
 			rb.velocity = Vector3.zero;
 			rb.isKinematic = true;
 			nmAgent.enabled = true;
 			nmAgent.SetDestination (npcTransform.position + (windUp * 5f));
 		}
+
+		canStartVentoLoop = true;
 	}
 
 	public void OnMovingPlat (bool enableNavMesh, Transform plat){
