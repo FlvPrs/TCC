@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.4964127, b: 0.57481724, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -725,6 +725,8 @@ MonoBehaviour:
   timer: 0
   isMurcha: 0
   isBroto: 1
+  murchando_Clip: {fileID: 0}
+  cresceBroto_Clip: {fileID: 0}
 --- !u!54 &215763932
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -888,6 +890,10 @@ Prefab:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 1085914527755644, guid: 3eb2e52f2e8d7f74aa46bdbc01177ce0, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3eb2e52f2e8d7f74aa46bdbc01177ce0, type: 2}
   m_IsPrefabParent: 0
@@ -938,6 +944,8 @@ MonoBehaviour:
   timer: 0
   isMurcha: 0
   isBroto: 0
+  murchando_Clip: {fileID: 0}
+  cresceBroto_Clip: {fileID: 0}
   facingRef: 0
   attackRange_default: 3
   fechada: 0
@@ -1045,7 +1053,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4954860743314744, guid: 3eb2e52f2e8d7f74aa46bdbc01177ce0, type: 2}
       propertyPath: m_LocalRotation.y
-      value: 0.7071068
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4954860743314744, guid: 3eb2e52f2e8d7f74aa46bdbc01177ce0, type: 2}
       propertyPath: m_LocalRotation.z
@@ -1058,10 +1066,6 @@ Prefab:
     - target: {fileID: 4954860743314744, guid: 3eb2e52f2e8d7f74aa46bdbc01177ce0, type: 2}
       propertyPath: m_RootOrder
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4954860743314744, guid: 3eb2e52f2e8d7f74aa46bdbc01177ce0, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 90
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3eb2e52f2e8d7f74aa46bdbc01177ce0, type: 2}
@@ -4354,6 +4358,8 @@ MonoBehaviour:
   timer: 0
   isMurcha: 1
   isBroto: 0
+  murchando_Clip: {fileID: 0}
+  cresceBroto_Clip: {fileID: 0}
 --- !u!54 &1767651460
 Rigidbody:
   m_ObjectHideFlags: 0

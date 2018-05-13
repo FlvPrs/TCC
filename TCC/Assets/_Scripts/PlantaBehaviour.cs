@@ -39,12 +39,17 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 	public bool isBroto;
 	protected GameObject MDL_Broto, MDL_Crescida, MDL_Murcha;
 
+	protected AudioSource simpleAudioSource;
+	protected bool canChangeSimpleClip = true;
+	public AudioClip murchando_Clip, cresceBroto_Clip;
 
 	protected virtual void Awake () {
 		selectedSongs = ReturnSelectedElements ();
 		plantaTransform = GetComponent<Transform> ();
 		player = GameObject.FindObjectOfType<WalkingController> ().transform;
 		father = GameObject.FindObjectOfType<FatherActions> ().transform;
+
+		simpleAudioSource = GetComponent<AudioSource> ();
 
 		MDL_Broto = plantaTransform.Find ("MDL_Broto").gameObject;
 		MDL_Crescida = plantaTransform.Find ("MDL_Crescida").gameObject;
@@ -188,6 +193,9 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 	//======================================================================================================================
 
 	protected virtual void CrescerBroto (){
+		simpleAudioSource.clip = cresceBroto_Clip;
+		simpleAudioSource.Play ();
+		StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length));
 		MDL_Broto.SetActive (false);
 		MDL_Crescida.SetActive (true);
 		MDL_Murcha.SetActive (false);
@@ -202,6 +210,10 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 		if(currentState != Planta_CurrentState.Murcho && !isBroto){
 			currentState = Planta_CurrentState.Murcho;
 			isMurcha = true;
+
+			simpleAudioSource.clip = murchando_Clip;
+			simpleAudioSource.Play ();
+			StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length));
 
 			MDL_Broto.SetActive (false);
 			MDL_Crescida.SetActive (false);
@@ -321,6 +333,13 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 
 	//======================================================================================================================
 	//======================================================================================================================
+
+	protected IEnumerator WaitForSimpleClipToEnd (float duration){
+		canChangeSimpleClip = false;
+		yield return new WaitForSeconds (duration);
+		canChangeSimpleClip = true;
+	}
+
 	//======================================================================================================================
 
 	//Esta função me retorna todos os indices selecionados do Enum acceptedSongs

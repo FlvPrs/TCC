@@ -28,6 +28,10 @@ public class Planta_Ventilador : PlantaBehaviour {
 
 	float allowStopMoving_Timer = 0f;
 
+	public AudioSource sustainAudioSource;
+	public AudioClip[] abrirFechar_Clips;
+	public AudioClip ventoNormal_Clip, irritar_Clip, ventoIrritado_Clip;
+
 	protected override void Awake ()
 	{
 		base.Awake ();
@@ -39,8 +43,12 @@ public class Planta_Ventilador : PlantaBehaviour {
 
 		if(startAngry){
 			vento.tag = "Wind2";
+			sustainAudioSource.clip = ventoIrritado_Clip;
+			sustainAudioSource.Play ();
 		} else {
 			vento.tag = "Wind";
+			sustainAudioSource.clip = ventoNormal_Clip;
+			sustainAudioSource.Play ();
 		}
 
 		delayTimer = delayAutoBy;
@@ -84,8 +92,18 @@ public class Planta_Ventilador : PlantaBehaviour {
 			if (ventiladorAutomatico && canStartVentiladorAutomatico) {
 				ventiladorCooldown += Time.deltaTime;
 				if (ventiladorCooldown <= auto_OnOffRatio * auto_OnOffTimer || auto_OnOffTimer == 0f) {
+					if(fechada){
+						simpleAudioSource.clip = abrirFechar_Clips[0];
+						simpleAudioSource.Play ();
+						StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length));
+					}
 					fechada = false;
 				} else if (ventiladorCooldown <= auto_OnOffTimer + (auto_OnOffRatio * auto_OnOffTimer)) {
+					if(!fechada){
+						simpleAudioSource.clip = abrirFechar_Clips[1];
+						simpleAudioSource.Play ();
+						StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length));
+					}
 					fechada = true;
 				} else {
 					ventiladorCooldown = 0f;
@@ -124,6 +142,9 @@ public class Planta_Ventilador : PlantaBehaviour {
 		CancelInvoke ("PararDeSeguir");
 		base.PararDeSeguir ();
 
+		sustainAudioSource.clip = ventoNormal_Clip;
+		sustainAudioSource.Play ();
+
 		StartCoroutine ("ReturnToOriginalOrientation");
 	}
 
@@ -138,11 +159,24 @@ public class Planta_Ventilador : PlantaBehaviour {
 
 	IEnumerator Close (){
 		yield return new WaitForSeconds (3f);
+		if(!fechada){
+			simpleAudioSource.clip = abrirFechar_Clips[1];
+			simpleAudioSource.Play ();
+			StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length));
+		}
 		fechada = true;
 	}
 
 	protected override void Irritar ()
 	{
+		if(currentState != Planta_CurrentState.Irritado){
+			sustainAudioSource.clip = ventoIrritado_Clip;
+			sustainAudioSource.Play ();
+			simpleAudioSource.clip = irritar_Clip;
+			simpleAudioSource.Play ();
+			StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length));
+		}
+
 		currentState = Planta_CurrentState.Irritado;
 		//base.Irritar ();
 
@@ -177,6 +211,9 @@ public class Planta_Ventilador : PlantaBehaviour {
 	{
 		base.Acalmar ();
 
+		sustainAudioSource.clip = ventoNormal_Clip;
+		sustainAudioSource.Play ();
+
 		//vento.tag = "Wind";
 
 		//canStartVentiladorAutomatico = false; 
@@ -188,6 +225,11 @@ public class Planta_Ventilador : PlantaBehaviour {
 	{
 		base.Dormir ();
 
+		if(!fechada){
+			simpleAudioSource.clip = abrirFechar_Clips[1];
+			simpleAudioSource.Play ();
+			StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length));
+		}
 		fechada = true;
 	}
 	protected override void Acordar ()
@@ -195,6 +237,14 @@ public class Planta_Ventilador : PlantaBehaviour {
 		base.Acordar ();
 
 		canStartVentiladorAutomatico = true;
+
+		if(fechada){
+			sustainAudioSource.clip = ventoNormal_Clip;
+			sustainAudioSource.Play ();
+			simpleAudioSource.clip = abrirFechar_Clips[0];
+			simpleAudioSource.Play ();
+			StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length));
+		}
 		fechada = false;
 		ventiladorCooldown = 0f;
 	}
@@ -223,6 +273,11 @@ public class Planta_Ventilador : PlantaBehaviour {
 
 		if (col.CompareTag ("Player") && (!ventiladorAutomatico || currentState == Planta_CurrentState.Seguindo || currentState == Planta_CurrentState.Irritado)) {
 			StopCoroutine ("Close");
+			if(fechada){
+				simpleAudioSource.clip = abrirFechar_Clips[0];
+				simpleAudioSource.Play ();
+				StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length));
+			}
 			fechada = false;
 		}
 	}
