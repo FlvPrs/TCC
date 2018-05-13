@@ -26,6 +26,8 @@ public class Planta_Ventilador : PlantaBehaviour {
 	public LayerMask layerMask;
 	public Transform headJoint;
 
+	float allowStopMoving_Timer = 0f;
+
 	protected override void Awake ()
 	{
 		base.Awake ();
@@ -60,7 +62,7 @@ public class Planta_Ventilador : PlantaBehaviour {
 		MDL_Aberta.SetActive (!fechada);
 		MDL_Fechada.SetActive (fechada);
 
-		if(timer >= 1f && currentState == Planta_CurrentState.Seguindo){
+		if (timer >= 1f && (currentState == Planta_CurrentState.Seguindo || currentState == Planta_CurrentState.Irritado)) {
 			Invoke ("PararDeSeguir", 2f);
 		}
 
@@ -120,7 +122,6 @@ public class Planta_Ventilador : PlantaBehaviour {
 	protected override void PararDeSeguir ()
 	{
 		CancelInvoke ("PararDeSeguir");
-
 		base.PararDeSeguir ();
 
 		StartCoroutine ("ReturnToOriginalOrientation");
@@ -153,9 +154,14 @@ public class Planta_Ventilador : PlantaBehaviour {
 
 		canStartVentiladorAutomatico = false;
 
-		if (playerIsMakingNoise) {
-			PararDeSeguir ();
-			return;
+		if (allowStopMoving_Timer < 1f) {
+			allowStopMoving_Timer += Time.deltaTime;
+		} else {
+			if (playerIsMakingNoise) {
+				allowStopMoving_Timer = 0f;
+				PararDeSeguir ();
+				return;
+			}
 		}
 
 		Vector3 dir = headJoint.position - currentInteractionAgent.position;

@@ -76,7 +76,7 @@ public class VenenoCtrl : MonoBehaviour {
 
 	public void ResetVeneno (){
 		rb.velocity = Vector3.zero;
-		//t.localPosition = Vector3.zero;
+		t.localPosition = Vector3.zero;
 		StartUpdate ();
 	}
 

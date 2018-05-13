@@ -26,8 +26,11 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 	public float delayFirstAskBy = 0f;
 	public bool canBeCarried = true;
 
+	private List<NPC_Kiwi> kiwis;
+
 	void Awake (){
 		askHealingCooldown = delayFirstAskBy;
+		kiwis = new List<NPC_Kiwi> (2);
 	}
 
 	// Use this for initialization
@@ -43,6 +46,8 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		fatherActions.currentDisposition = currentDisposition;
+
+		CanBeCarriedByKiwis ();
 
 		switch (currentDisposition) {
 		case FatherConditions.Disposto: //Andando normal
@@ -79,17 +84,18 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 		fatherActions.animCtrl.SetBool ("beingCarriedByKiwis", carregadoPorKiwis);
 	}
 
-	public bool CanBeCarriedByKiwis (){
+	public void CanBeCarriedByKiwis (){
 		if (carregadoPorKiwis || !canBeCarried)
-			return false;
+			return;
 		
-		numeroDeKiwis++;
-		if(numeroDeKiwis >= 2){
+		if(numeroDeKiwis > 1){
 			nmAgent.enabled = false;
-			return true;
-		}
+			carregadoPorKiwis = true;
 
-		return false;
+			for (int i = 0; i < kiwis.Count; i++) {
+				StartCoroutine (kiwis [i].PegarPai (transform));
+			}
+		}
 	}
 
 	public void ResetNumeroDeKiwis (){
@@ -98,6 +104,9 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 
 	public void StopCarriedByKiwis (){
 		carregadoPorKiwis = false;
+		for (int i = 0; i < kiwis.Count; i++) {
+			kiwis.RemoveAt(i);
+		}
 		numeroDeKiwis = 0;
 		transform.SetParent (null);
 		nmAgent.enabled = true;
@@ -150,12 +159,44 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 		dadColl.enabled = true;
 	}
 
+//	void OnTriggerEnter (Collider col){
+//		if(col.GetComponent<NPC_Kiwi>() != null){
+//			for (int i = 0; i < kiwis.Length; i++) {
+//				if (kiwis [i] == null) {
+//					if (col.GetComponent<NPC_Kiwi> ().CanCarryPai ()) {
+//						kiwis [i] = col.GetComponent<NPC_Kiwi> ();
+//						numeroDeKiwis++;
+//					}
+//				}
+//			}
+//		}
+//	}
+
 	void OnTriggerStay (Collider col){
+		if(col.GetComponent<NPC_Kiwi>() != null){
+			if (kiwis.Count < 2) {
+				if (!kiwis.Contains (col.GetComponent<NPC_Kiwi> ())) {
+					if (col.GetComponent<NPC_Kiwi> ().CanCarryPai ()) {
+						kiwis.Add (col.GetComponent<NPC_Kiwi> ());
+						numeroDeKiwis++;
+					}
+				}
+			}
+		}
+
 		if (!carregadoPorKiwis) {
 			if (col.CompareTag ("Wind")) {
 				nmAgent.Move (col.transform.up * 0.02f);
 			} else if (col.CompareTag ("Wind2")) {
 				nmAgent.Move (col.transform.up * 0.05f);
+			}
+		}
+	}
+
+	void OnTriggerExit (Collider col){
+		if(col.GetComponent<NPC_Kiwi>() != null){
+			if (kiwis.Contains (col.GetComponent<NPC_Kiwi> ())) {
+				kiwis.Remove (col.GetComponent<NPC_Kiwi> ());
 			}
 		}
 	}

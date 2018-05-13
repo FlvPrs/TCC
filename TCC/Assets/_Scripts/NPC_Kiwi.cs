@@ -35,6 +35,8 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 	int currClipIndex = 0;
 	bool canChangeSimpleClip = true;
 
+	bool movingToPai = false;
+
 	protected override void Awake ()
 	{
 		base.Awake ();
@@ -113,7 +115,7 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 			podePegarObj = true;
 		}
 
-		if(!isOnArbusto){
+		if(!isOnArbusto && !movingToPai){
 			nmAgent.stoppingDistance = defaultStopDist;
 		}
 
@@ -215,8 +217,11 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 
 	protected override void Seguir ()
 	{
-		if(!isCarregandoPai && currentState != NPC_CurrentState.Distraido && currentState != NPC_CurrentState.Seguindo){
+		if (!isCarregandoPai && currentState != NPC_CurrentState.Distraido && currentState != NPC_CurrentState.Seguindo) {
 			DefaultState ();
+			return;
+		} else if(movingToPai) {
+			Distrair ();
 			return;
 		}
 
@@ -286,12 +291,37 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 			CarregarObjeto (collObjects[index]);
 	}
 
+	public bool CanCarryPai (){
+		if (!isOnWind && podePegarObj && objetoCarregado == null && currentState == NPC_CurrentState.Seguindo) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public IEnumerator PegarPai (Transform pai){
+		movingToPai = true;
+		nmAgent.stoppingDistance = 1f;
+		nmAgent.SetDestination (pai.position);
+		yield return new WaitForSeconds (0.5f);
+		while (movingToPai) {
+			if (!nmAgent.pathPending && !nmAgent.isStopped) {
+				if (nmAgent.remainingDistance <= nmAgent.stoppingDistance) {
+					if (!nmAgent.hasPath || nmAgent.velocity.sqrMagnitude == 0f) {
+						movingToPai = false;
+						nmAgent.stoppingDistance = defaultStopDist;
+					}
+				}
+			}
+			yield return new WaitForSeconds (0.25f);
+		}
+		CarregarObjeto (pai);
+	}
+
 	void CarregarObjeto (Transform obj){
 		objetoCarregado = obj;
 
 		if(objetoCarregado.CompareTag("PaiDebilitado")){
 			isCarregandoPai = true;
-			objetoCarregado.GetComponent<Father_DebilitadoCtrl> ().carregadoPorKiwis = true;
 		}
 
 		objetoCarregado.SetParent (npcTransform);
@@ -324,15 +354,15 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 				}
 			}
 		}
-		if (col.CompareTag("PaiDebilitado")) {
-			if (objetoCarregado == null && podePegarObj && col.GetComponent<Father_DebilitadoCtrl> ().CanBeCarriedByKiwis ()) {
-				if(!collObjects.Contains(col.transform)){
-					collObjects.Add (col.transform);
-					StopCoroutine ("PegarObjeto");
-					StartCoroutine ("PegarObjeto");
-				}
-			}
-		}
+//		if (col.CompareTag("PaiDebilitado")) {
+//			if (objetoCarregado == null && podePegarObj && col.GetComponent<Father_DebilitadoCtrl> ().CanBeCarriedByKiwis (this)) {
+//				if(!collObjects.Contains(col.transform)){
+//					collObjects.Add (col.transform);
+//					StopCoroutine ("PegarObjeto");
+//					StartCoroutine ("PegarObjeto");
+//				}
+//			}
+//		}
 
 		if(col.CompareTag("Arbusto") && !isCarregandoPai){
 			if(currentState == NPC_CurrentState.DefaultState && !isOnArbusto){
@@ -394,12 +424,12 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 				collObjects.Remove (col.transform);
 			}
 		}
-		if(col.CompareTag("PaiDebilitado")){
-			col.GetComponent<Father_DebilitadoCtrl> ().ResetNumeroDeKiwis ();
-			if(collObjects.Contains(col.transform)){
-				collObjects.Remove (col.transform);
-			}
-		}
+//		if(col.CompareTag("PaiDebilitado")){
+//			col.GetComponent<Father_DebilitadoCtrl> ().ResetNumeroDeKiwis ();
+//			if(collObjects.Contains(col.transform)){
+//				collObjects.Remove (col.transform);
+//			}
+//		}
 
 		if(col.CompareTag("Arbusto")){
 			isOnArbusto = false;

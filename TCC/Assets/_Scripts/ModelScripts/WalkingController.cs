@@ -529,9 +529,13 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			//			else
 			//				anim.ChangeForward ((myT.forward + rb.velocity).normalized);
 
-			//Vector3 clampedAnimSpeed = new Vector3 (directionalInput.x, 0, directionalInput.z);
-			//clampedAnimSpeed = Vector3.ClampMagnitude (clampedAnimSpeed, animSpeed);
-			animCtrl.SetFloat ("WalkVelocity", Mathf.Clamp(walkJoystickMagnitude, 0f, animSpeed));
+			if (continuousExternalForceAdded) {
+				Vector3 clampedAnimSpeed = new Vector3 (directionalInput.x, 0, directionalInput.z);
+				clampedAnimSpeed = Vector3.ClampMagnitude (clampedAnimSpeed, animSpeed);
+				animCtrl.SetFloat ("WalkVelocity", clampedAnimSpeed.magnitude);
+			} else {
+				animCtrl.SetFloat ("WalkVelocity", Mathf.Clamp(walkJoystickMagnitude, 0f, animSpeed));
+			}
 		} else {
 			walkStates.IS_WALKING = false;
 		}
