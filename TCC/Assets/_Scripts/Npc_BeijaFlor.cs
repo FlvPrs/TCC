@@ -208,15 +208,15 @@ public class Npc_BeijaFlor : NPCBehaviour {
 			////print ("colidiu");
 			SoltarObjeto (colisor.transform);
 		}
-		if (colisor.name == "SementePlantaPlataforma") {
-			if (objetoCarregado == null && podePegarObj) {
-				if (!collObjects.Contains (colisor.transform)) {
-					collObjects.Add (colisor.transform);
-					StopCoroutine ("PegarObjeto");
-					StartCoroutine ("PegarObjeto");
-				}
-			}
-		}//TODO(Mudar o jeito de procurar pelo kiwi pelo codigo do fabio)
+//		if (colisor.name == "SementePlantaPlataforma") {
+//			if (objetoCarregado == null && podePegarObj) {
+//				if (!collObjects.Contains (colisor.transform)) {
+//					collObjects.Add (colisor.transform);
+//					StopCoroutine ("PegarObjeto");
+//					StartCoroutine ("PegarObjeto");
+//				}
+//			}
+//		}//TODO(Mudar o jeito de procurar pelo kiwi pelo codigo do fabio)
 	}
 	void OnTriggerExit (Collider colisor)
 	{

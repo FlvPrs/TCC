@@ -159,24 +159,32 @@ public class MenuControllerInGame : MonoBehaviour {
 				if (onMenu1) {
 					if (opcaoMenu1 > 1) {
 						opcaoMenu1--;
+					} else if (opcaoMenu1 == 1) {
+						opcaoMenu1 = 4;
 					}
 				} else if (onMenu3) {
 					if (!controlandoVolume) {
 						if (opcaoMenu3 > 1) {
 							opcaoMenu3--;
-						} 
+						} else if (opcaoMenu3 == 1) {
+							opcaoMenu3 = 2;
+						}
 					} else if (controlandoVolume) {
 						musicaEfeito = !musicaEfeito;
 					}
 				} else if (onPause) {
 					if (opcaoMenuPause > 1) {
 						opcaoMenuPause--;
+					} else if (opcaoMenuPause == 1) {
+						opcaoMenuPause = 6;
 					}
 				} else if (onMenu2) {
 					deleteSave = !deleteSave;
 				} else if (onMenuDeath) {
 					if (opcaoMenuMorte > 1) {
 						opcaoMenuMorte--;
+					} else if (opcaoMenuMorte == 1) {
+						opcaoMenuMorte = 3;
 					}
 				}
 			}
@@ -187,11 +195,15 @@ public class MenuControllerInGame : MonoBehaviour {
 				if (onMenu1) {
 					if (opcaoMenu1 < 4) {
 						opcaoMenu1++;
+					} else if (opcaoMenu1 == 4) {
+						opcaoMenu1 = 1;
 					}
 				} else if (onMenu3) {
 					if (!controlandoVolume) {
 						if (opcaoMenu3 < 2) {
 							opcaoMenu3++;
+						}else if (opcaoMenu3 == 2) {
+							opcaoMenu3 = 1;
 						}
 					} else if (controlandoVolume) {
 						musicaEfeito = !musicaEfeito;
@@ -199,12 +211,16 @@ public class MenuControllerInGame : MonoBehaviour {
 				} else if (onPause) {
 					if (opcaoMenuPause < 6) {
 						opcaoMenuPause++;
+					}else if (opcaoMenuPause == 6) {
+						opcaoMenuPause = 1;
 					}
 				}else if (onMenu2) {
 					deleteSave = !deleteSave;
 				}else if (onMenuDeath) {
-					if (opcaoMenuMorte < 2) {
+					if (opcaoMenuMorte < 3) {
 						opcaoMenuMorte++;
+					}else if (opcaoMenuMorte == 3) {
+						opcaoMenuMorte = 1;
 					}
 				}
 			}
