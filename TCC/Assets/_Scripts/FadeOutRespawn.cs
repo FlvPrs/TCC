@@ -100,7 +100,7 @@ public class FadeOutRespawn : MonoBehaviour {
 
 		if (fatherRetunsPlayer) {
 			yield return new WaitForSeconds (3f);
-			camCtrl.ChangeCameraTo (spawnCamIndex [spawnIndex]);
 		}
+		camCtrl.ChangeCameraTo (spawnCamIndex [spawnIndex]);
 	}
 }

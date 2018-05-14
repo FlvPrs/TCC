@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Name: Camera Blends
   m_EditorClassIdentifier: 
   m_CustomBlends:
-  - m_From: (none)
-    m_To: (none)
+  - m_From: '**ANY CAMERA**'
+    m_To: camera3
     m_Blend:
       m_Style: 2
-      m_Time: 2
+      m_Time: 1
+  - m_From: camera8
+    m_To: camera1
+    m_Blend:
+      m_Style: 2
+      m_Time: 1

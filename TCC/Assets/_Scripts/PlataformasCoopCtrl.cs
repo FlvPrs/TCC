@@ -43,26 +43,26 @@ public class PlataformasCoopCtrl : MonoBehaviour, ISongListener, IFatherSustainI
 		//fatherExternalTrigger.SetActive (false);
 	}
 
-	void Update(){
-		if (playerSing && dadSing)
-			return;
-		else {
-			if (!playerSing) {
-				for (int i = 0; i < plataformas.Length; i++) {
-					Vector3 oldPos = plataformas [i].platform.localPosition;
-					plataformas [i].platform.localPosition = Vector3.MoveTowards (plataformas [i].platform.localPosition, originalPos [i] + dad_deltaY [i], 0.02f);
-					son_deltaY [i] += plataformas [i].platform.localPosition - oldPos;
-				}
-			}
-			if (!dadSing) {
-				for (int i = 0; i < plataformas.Length; i++) {
-					Vector3 oldPos = plataformas [i].platform.localPosition;
-					plataformas [i].platform.localPosition = Vector3.MoveTowards (plataformas [i].platform.localPosition, originalPos [i] + son_deltaY [i], 0.02f);
-					dad_deltaY [i] += plataformas [i].platform.localPosition - oldPos;
-				}
-			}
-		}
-	}
+//	void Update(){
+//		if (playerSing && dadSing)
+//			return;
+//		else {
+//			if (!playerSing) {
+//				for (int i = 0; i < plataformas.Length; i++) {
+//					Vector3 oldPos = plataformas [i].platform.localPosition;
+//					plataformas [i].platform.localPosition = Vector3.MoveTowards (plataformas [i].platform.localPosition, originalPos [i] + dad_deltaY [i], 0.02f);
+//					son_deltaY [i] += plataformas [i].platform.localPosition - oldPos;
+//				}
+//			}
+//			if (!dadSing) {
+//				for (int i = 0; i < plataformas.Length; i++) {
+//					Vector3 oldPos = plataformas [i].platform.localPosition;
+//					plataformas [i].platform.localPosition = Vector3.MoveTowards (plataformas [i].platform.localPosition, originalPos [i] + son_deltaY [i], 0.02f);
+//					dad_deltaY [i] += plataformas [i].platform.localPosition - oldPos;
+//				}
+//			}
+//		}
+//	}
 
 	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false){
 		if(song == PlayerSongs.Crescimento){
