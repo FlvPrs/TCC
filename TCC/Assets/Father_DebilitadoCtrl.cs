@@ -53,7 +53,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 		case FatherConditions.Disposto: //Andando normal
 			tag = "NPC_Pai";
 			if (carregadoPorKiwis) {
-				transform.GetComponentInParent<NPC_Kiwi> ().SoltarObjeto ();
+				//transform.GetComponentInParent<NPC_Kiwi> ().SoltarObjeto ();
 			}
 			break;
 		case FatherConditions.Debilitado: //Andando com dificuldade
@@ -67,7 +67,10 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 			if (carregadoPorKiwis) {
 				askHealingCooldown = 0f;
 				tag = "NPC_Pai";
-				transform.GetComponentInParent<NPC_Kiwi> ().SoltarObjeto ();
+				for (int i = 0; i < kiwis.Count; i++) {
+					kiwis [i].SoltarObjeto ();
+				}
+				//transform.GetComponentInParent<NPC_Kiwi> ().SoltarObjeto ();
 			}
 			if(isInverno)
 				AskForFruit (3);

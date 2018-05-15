@@ -40,9 +40,15 @@ public class PoisonMushroom_Ctrl : MonoBehaviour {
 
 	bool canUpdate = true;
 
+	public AudioClip[] boing_Clips;
+
+	AudioSource simpleAudioSource;
+	int clipIndex = 0;
+
 	void Awake(){
 		mushAnimCtrl = GetComponentInParent<Animator> ();
 		player = FindObjectOfType<WalkingController> ();
+		simpleAudioSource = GetComponent<AudioSource> ();
 
 		Transform venenosGroup = transform.Find ("Venenos");
 		venenos = new GameObject[venenosGroup.childCount];
@@ -130,6 +136,11 @@ public class PoisonMushroom_Ctrl : MonoBehaviour {
 
 	void OnTriggerEnter(Collider col){
 		if(col.CompareTag("Player")){
+			simpleAudioSource.clip = boing_Clips [clipIndex];
+			simpleAudioSource.Play ();
+			clipIndex++;
+			if (clipIndex >= boing_Clips.Length)
+				clipIndex = 0;
 			mushAnimCtrl.SetTrigger ("boing");
 			Vector3 dir = col.transform.up * jumpForce;
 			player.AddExternalForce (dir, 0.01f);

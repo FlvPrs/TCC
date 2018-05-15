@@ -571,7 +571,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		Vector3 normalDir = Vector3.zero;
 
 		float directionY = Mathf.Sign (velocity.y);
-		float rayLength = 1f + skinWidth + Mathf.Clamp(Mathf.Abs (velocity.y * 0.1f), 0f, 4f);
+		float rayLength = 1f + skinWidth/* + Mathf.Clamp(Mathf.Abs (velocity.y * 0.1f), 0f, 4f)*/;
 
 		for (int i = 0; i < verticalRayCount; i++) {
 			for (int j = 0; j < verticalRayCount; j++) {
@@ -742,6 +742,8 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 
 		if (!waitTillGroundedOrJump)
 			Invoke ("ResetExternalForce", duration);
+//		else
+//			animCtrl.SetTrigger ("CanJump");
 	}
 	void ResetExternalForce (){
 		externalForceAdded = false;
