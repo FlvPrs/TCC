@@ -186,6 +186,9 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 			currentSong = song;
 			playerIsMakingNoise = isSingingSomething;
 		}
+
+		if (song != PlayerSongs.Empty)
+			playerIsMakingNoise = false;
 	}
 
 	//======================================================================================================================

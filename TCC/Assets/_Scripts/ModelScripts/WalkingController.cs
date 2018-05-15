@@ -189,10 +189,13 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 
 		if (isGrounded) {
 			startCDBonusJump = false;
-			//////print ("estou no chao");
+			if(wasReleasedByCarnivora){
+				birdSingCtrl.TriggerSFX_Carnivora (3);
+				wasReleasedByCarnivora = false;
+			}
 		}
 
-		//////print (startCDBonusJump);
+		//print (startCDBonusJump);
 		#region power up fruit limitado
 		if(hasBonusJump_2){
 			if (startCDBonusJump) {
@@ -555,7 +558,6 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		return isFallingHard;
 	}
 
-
 	bool Grounded(out bool collAbove){
 		if(eatenByCarnivora) {
 			collAbove = false;
@@ -776,26 +778,36 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	#region Carnivora Interface
 	[HideInInspector]
 	public bool eatenByCarnivora = false;
+	bool wasReleasedByCarnivora;
 
 	public void Carnivora_GetReadyToBeEaten (){
-		////print ("EATEN");
+		//print ("EATEN");
 		eatenByCarnivora = true;
+		wasReleasedByCarnivora = false;
 		SetVelocityTo (Vector3.zero, true);
 		//BypassGravity (true);
 		walkStates.IS_WALKING = false;
+		birdSingCtrl.TriggerSFX_Carnivora (0);
+		animCtrl.SetTrigger ("startSingFX");
 	}
 	public void Carnivora_Release (){
-		////print ("released");
+		//print ("released");
 		eatenByCarnivora = false;
+		//wasReleasedByCarnivora = true;
 		SetVelocityTo (Vector3.zero, false);
 		//BypassGravity (false);
+		birdSingCtrl.TriggerSFX_Carnivora (1);
+		animCtrl.SetTrigger ("startSingFX");
 	}
 
 	public void Carnivora_Shoot (Vector3 dir){
-		////print ("SHOOT!");
+		//print ("SHOOT!");
 		eatenByCarnivora = false;
+		//wasReleasedByCarnivora = true;
 		SetVelocityTo (Vector3.zero, true);
 		AddExternalForce (dir, 1f, true, true);
+		birdSingCtrl.TriggerSFX_Carnivora (2);
+		animCtrl.SetTrigger ("startSingFX");
 	}
 	#endregion
 

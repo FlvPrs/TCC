@@ -38,8 +38,10 @@ public class BirdSingCtrl : MonoBehaviour {
 	private float singleNoteMinimumDuration = 0.3f;
 
 	private AudioSource audioSourceAttack;
-	private AudioSource audioSourceSustain;
-	private AudioSource audioSourceRelease;
+
+	public AudioSource fx_AudioSource;
+	public AudioClip[] carnivoraFX_Clips;
+
 	public Material playerMat;
 	private float currentAir = 5f;
 	private float maxAir = 10f;
@@ -136,6 +138,11 @@ public class BirdSingCtrl : MonoBehaviour {
 			Debug_TocaPartitura(0);
 		}
 		#endregion
+	}
+
+	public void TriggerSFX_Carnivora (int index){
+		fx_AudioSource.clip = carnivoraFX_Clips [index];
+		fx_AudioSource.Play ();
 	}
 
 	public void SingNote(bool specificIndex = false, int index = 0){

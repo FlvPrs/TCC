@@ -671,7 +671,7 @@ GameObject:
   - component: {fileID: 4050295007216612}
   - component: {fileID: 82236669298101808}
   m_Layer: 12
-  m_Name: AudioSourceRelease
+  m_Name: FX_AudioSource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2606,6 +2606,12 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 6a50bc0d5d117eb4486bed652bd4e7db, type: 3}
     - {fileID: 8300000, guid: 7d058c50aef481f43a5554c1c2dda8df, type: 3}
   noteIndexes: 
+  fx_AudioSource: {fileID: 82236669298101808}
+  carnivoraFX_Clips:
+  - {fileID: 8300000, guid: f80a36e39e4664d44bbd239f0d3eda38, type: 3}
+  - {fileID: 8300000, guid: 7e5dadb516e67a7469d8332264a08fb6, type: 3}
+  - {fileID: 8300000, guid: 65372e72511f0a641955af53c64c676a, type: 3}
+  - {fileID: 8300000, guid: 55ec6b92b4d5ee24388b34f043912507, type: 3}
   playerMat: {fileID: 2100000, guid: 144b7d076d3c5c648b0e72605d3f1b9d, type: 2}
 --- !u!114 &114424595165685340
 MonoBehaviour:

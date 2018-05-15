@@ -271,7 +271,7 @@ public class Planta_Ventilador : PlantaBehaviour {
 			return;
 		}
 
-		if (col.CompareTag ("Player") && (!ventiladorAutomatico || currentState == Planta_CurrentState.Seguindo || currentState == Planta_CurrentState.Irritado)) {
+		if (col.CompareTag ("Player") && currentState != Planta_CurrentState.Dormindo && (!ventiladorAutomatico || currentState == Planta_CurrentState.Seguindo || currentState == Planta_CurrentState.Irritado)) {
 			StopCoroutine ("Close");
 			if(fechada){
 				simpleAudioSource.clip = abrirFechar_Clips[0];

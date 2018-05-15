@@ -28,11 +28,15 @@ public class Planta_Carnivora : PlantaBehaviour {
 	GameObject indicadorDeSono;
 	#endregion
 
+	public AudioSource sustainAudioSource;
+	public AudioClip abrindo_Clip, temaAberta_Clip, temaIrritada_Clip, bote_Clip, temaComendo_Clip, fxComendo_Clip, cuspe_Clip, cuspeForte_Clip;
+
 	protected override void Awake ()
 	{
 		base.Awake ();
 
 		foodContainer = plantaTransform.Find ("FoodContainer");
+		foodContainer.gameObject.SetActive (false);
 	}
 
 	void Start (){
@@ -63,9 +67,33 @@ public class Planta_Carnivora : PlantaBehaviour {
 	{
 		base.Update ();
 
-		if(fechada){
-			
+		if (isBroto || isMurcha) {
+			sustainAudioSource.Stop ();
+			return;
 		}
+
+		if(!fechada && canChangeSimpleClip){
+			if (currentState != Planta_CurrentState.Irritado) {
+				if (sustainAudioSource.clip != temaAberta_Clip || (!sustainAudioSource.isPlaying)) {
+					sustainAudioSource.clip = temaAberta_Clip;
+					sustainAudioSource.Play ();
+				}
+			} else {
+				if (sustainAudioSource.clip != temaIrritada_Clip || !sustainAudioSource.isPlaying) {
+					sustainAudioSource.clip = temaIrritada_Clip;
+					sustainAudioSource.Play ();
+				}
+			}
+		} else if (comendo && canChangeSimpleClip) {
+			if (sustainAudioSource.clip != temaComendo_Clip || !sustainAudioSource.isPlaying) {
+				sustainAudioSource.clip = temaComendo_Clip;
+				sustainAudioSource.Play ();
+			}
+		} else {
+			sustainAudioSource.Stop ();
+		}
+
+		foodContainer.gameObject.SetActive (comendo);
 
 		//Debug.DrawRay (transform.position, plantaTransform.up * 10f);
 
@@ -86,7 +114,24 @@ public class Planta_Carnivora : PlantaBehaviour {
 		#endregion
 	}
 
+	protected override void CrescerBroto ()
+	{
+		//base.CrescerBroto ();
+		simpleAudioSource.clip = cresceBroto_Clip;
+		simpleAudioSource.Play ();
+		StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length - 0.4f));
+		MDL_Broto.SetActive (false);
+		MDL_Crescida.SetActive (true);
+		MDL_Murcha.SetActive (false);
+		isBroto = false;
+		isMurcha = false;
+	}
+
 	void Attack (Transform food){
+		simpleAudioSource.clip = bote_Clip;
+		simpleAudioSource.Play ();
+		StartCoroutine(WaitForSimpleClipToEnd (bote_Clip.length - 0.8f));
+
 		fechada = comendo = true;
 
 		coll.radius = attackRange_default;
@@ -111,16 +156,22 @@ public class Planta_Carnivora : PlantaBehaviour {
 	}
 
 	void ReleaseFood (){
-		fechada = true;
+		fechada = false;
 		comendo = false;
 		currentFood.Carnivora_Release ();
 		currentFood = null;
+
+		simpleAudioSource.clip = cuspe_Clip;
+		simpleAudioSource.Play ();
 	}
 
 	void ShootFood (){
 		fechada = comendo = false;
 		currentFood.Carnivora_Shoot (foodDir * facingDirection * shootingStrength);
 		currentFood = null;
+
+		simpleAudioSource.clip = cuspeForte_Clip;
+		simpleAudioSource.Play ();
 	}
 
 
@@ -167,6 +218,9 @@ public class Planta_Carnivora : PlantaBehaviour {
 			return;
 		}
 
+		simpleAudioSource.clip = bote_Clip;
+		simpleAudioSource.Play ();
+
 		fechada = true;
 
 		base.Dormir ();
@@ -183,6 +237,11 @@ public class Planta_Carnivora : PlantaBehaviour {
 	protected override void ChamarAtencao ()
 	{
 		base.ChamarAtencao ();
+
+		if(fechada){
+			simpleAudioSource.clip = abrindo_Clip;
+			simpleAudioSource.Play ();
+		}
 
 		fechada = false;
 	}
@@ -220,6 +279,10 @@ public class Planta_Carnivora : PlantaBehaviour {
 
 	protected override void OnTriggerEnter (Collider col)
 	{
+		if (isBroto || isMurcha) {
+			return;
+		}
+
 		base.OnTriggerEnter (col);
 
 		//Este IF checa se a layer de 'col' é uma das layer contidas na layer mask fornecida e, se não for, return.
@@ -242,6 +305,10 @@ public class Planta_Carnivora : PlantaBehaviour {
 
 	protected override void OnTriggerStay (Collider col)
 	{
+		if (isBroto || isMurcha) {
+			return;
+		}
+
 		base.OnTriggerStay (col);
 
 		//Este IF checa se a layer de 'col' é uma das layer contidas na layer mask fornecida e, se não for, return.
