@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 135939856572634510}
   - component: {fileID: 54618627221577636}
   - component: {fileID: 114936810918874992}
+  - component: {fileID: 82630835318191630}
   m_Layer: 20
   m_Name: FrutaDeCura
   m_TagString: Fruta
@@ -159,6 +160,86 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!82 &82630835318191630
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1638619598340002}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 5
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!95 &95873801548815310
 Animator:
   serializedVersion: 3
@@ -187,7 +268,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f25baddf2dd09aa42903dbfac51b9ab4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  raycastMask:
+    serializedVersion: 2
+    m_Bits: 1
   forceDir: {x: 1, y: 0, z: 1}
+  frutas_Clips:
+  - frutaFX_Clip: {fileID: 8300000, guid: 29aab3665011829429d71e5da6775a8b, type: 3}
+    frutaGrounded_Clip: {fileID: 8300000, guid: 3bc43ad499aa8954e9d47bdf45858825,
+      type: 3}
+  - frutaFX_Clip: {fileID: 8300000, guid: cfac8e19ac820454fbbb87dc4ab13032, type: 3}
+    frutaGrounded_Clip: {fileID: 8300000, guid: 5fd562b3bbb27824ea0f8162bb65e182,
+      type: 3}
+  - frutaFX_Clip: {fileID: 8300000, guid: 2c715553f023ae840b27308d25e33812, type: 3}
+    frutaGrounded_Clip: {fileID: 8300000, guid: 6a853f0796dba7941a2f6e79d8364fd4,
+      type: 3}
 --- !u!119 &119631149486508772
 Projector:
   m_ObjectHideFlags: 1

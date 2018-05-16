@@ -119,7 +119,7 @@ public class Planta_Carnivora : PlantaBehaviour {
 		//base.CrescerBroto ();
 		simpleAudioSource.clip = cresceBroto_Clip;
 		simpleAudioSource.Play ();
-		StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length - 0.4f));
+		StartCoroutine(WaitForSimpleClipToEnd (cresceBroto_Clip.length));
 		MDL_Broto.SetActive (false);
 		MDL_Crescida.SetActive (true);
 		MDL_Murcha.SetActive (false);
@@ -130,7 +130,7 @@ public class Planta_Carnivora : PlantaBehaviour {
 	void Attack (Transform food){
 		simpleAudioSource.clip = bote_Clip;
 		simpleAudioSource.Play ();
-		StartCoroutine(WaitForSimpleClipToEnd (bote_Clip.length - 0.8f));
+		StartCoroutine(WaitForSimpleClipToEnd (bote_Clip.length));
 
 		fechada = comendo = true;
 
@@ -163,6 +163,7 @@ public class Planta_Carnivora : PlantaBehaviour {
 
 		simpleAudioSource.clip = cuspe_Clip;
 		simpleAudioSource.Play ();
+		//StartCoroutine(WaitForSimpleClipToEnd (cuspe_Clip.length));
 	}
 
 	void ShootFood (){
@@ -172,6 +173,7 @@ public class Planta_Carnivora : PlantaBehaviour {
 
 		simpleAudioSource.clip = cuspeForte_Clip;
 		simpleAudioSource.Play ();
+		StartCoroutine(WaitForSimpleClipToEnd (cuspeForte_Clip.length + 0.1f));
 	}
 
 

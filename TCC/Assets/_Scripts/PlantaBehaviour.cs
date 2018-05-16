@@ -338,6 +338,7 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 	//======================================================================================================================
 
 	protected IEnumerator WaitForSimpleClipToEnd (float duration){
+		StopCoroutine ("WaitForSimpleClipToEnd");
 		canChangeSimpleClip = false;
 		yield return new WaitForSeconds (duration);
 		canChangeSimpleClip = true;

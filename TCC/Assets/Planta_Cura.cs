@@ -10,6 +10,10 @@ public class Planta_Cura : PlantaBehaviour {
 	public Transform frutaContainer;
 	public GameObject frutaPrefab, plantaFechada, plantaAberta;
 
+	public AudioClip abrindo_Clip, fechando_Clip;
+
+	float aberta_Timer = 0f;
+
 	void Start (){
 		frutaInitPos = frutaContainer.position;
 
@@ -23,19 +27,30 @@ public class Planta_Cura : PlantaBehaviour {
 
 		plantaFechada.SetActive (fechada);
 		plantaAberta.SetActive (!fechada);
+
+		if (!fechada) {
+			if (aberta_Timer > 10f)
+				Encolher ();
+			else
+				aberta_Timer += Time.deltaTime;
+		}
 	}
 
 	protected override void Crescer ()
 	{
-		print ("Cresça!");
+		//print ("Cresça!");
 		if (currentState == Planta_CurrentState.Crescendo)
 			return;
 		
 		base.Crescer ();
 
+		aberta_Timer = 0f;
 
 		//TODO: Fazer abrir por animação
 		if(fechada){
+			simpleAudioSource.clip = abrindo_Clip;
+			simpleAudioSource.Play ();
+
 			fechada = false;
 			if (numeroDeFrutas > 0) {
 				numeroDeFrutas--;
@@ -48,7 +63,12 @@ public class Planta_Cura : PlantaBehaviour {
 	{
 		base.Encolher ();
 
+		aberta_Timer = 0f;
+
 		if(!fechada){
+			simpleAudioSource.clip = fechando_Clip;
+			simpleAudioSource.Play ();
+
 			fechada = true;
 			//TODO: Fazer fechar por animação
 		}
@@ -58,6 +78,6 @@ public class Planta_Cura : PlantaBehaviour {
 		GameObject fruta = Instantiate (frutaPrefab);
 		fruta.transform.position = frutaInitPos;
 		yield return new WaitForSeconds (1f);
-		fruta.GetComponent<FrutaDeCura_Controller> ().CairDaPlanta ();
+		fruta.GetComponent<FrutaDeCura_Controller> ().CairDaPlanta (numeroDeFrutas);
 	}
 }

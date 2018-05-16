@@ -792,11 +792,17 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	}
 	public void Carnivora_Release (){
 		//print ("released");
+		birdSingCtrl.TriggerSFX_Carnivora (1);
+		animCtrl.SetTrigger ("startSingFX");
+
+		Invoke ("Carnivora_Desatordoar", 1f);
+	}
+	void Carnivora_Desatordoar (){
 		eatenByCarnivora = false;
 		//wasReleasedByCarnivora = true;
 		SetVelocityTo (Vector3.zero, false);
 		//BypassGravity (false);
-		birdSingCtrl.TriggerSFX_Carnivora (1);
+		birdSingCtrl.TriggerSFX_Carnivora (3);
 		animCtrl.SetTrigger ("startSingFX");
 	}
 

@@ -322,6 +322,8 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 
 		if(objetoCarregado.CompareTag("PaiDebilitado")){
 			isCarregandoPai = true;
+		} else if (objetoCarregado.CompareTag("Fruta")) {
+			objetoCarregado.GetComponent<FrutaDeCura_Controller> ().Freeze ();
 		}
 
 		objetoCarregado.SetParent (npcTransform);
@@ -332,6 +334,9 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 		if(isCarregandoPai){
 			objetoCarregado.GetComponent<Father_DebilitadoCtrl> ().StopCarriedByKiwis ();
 		} else if (objetoCarregado != null) {
+			if (objetoCarregado.CompareTag("Fruta")) {
+				objetoCarregado.GetComponent<FrutaDeCura_Controller> ().UnFreeze ();
+			}
 			objetoCarregado.SetParent (null);
 		}
 		objetoCarregado = null;
