@@ -19,6 +19,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	private bool fakeDeathMenu;
 	public int faseAtualSave;
 	int entersToSavePlayer = 0;
+	public GameObject SetaIndicativa;
 
 	private FatherSacrifice_Ctrl fatherSacrificeCtrl;
 
@@ -152,10 +153,12 @@ public class MenuControllerInGame : MonoBehaviour {
 					}
 				}
 			}
+			AlteraIndicadorSelecao ();
 			StartCoroutine ("EnterAvailable");
 		}
 		if (Input.GetKeyDown (KeyCode.UpArrow) || Input.GetAxisRaw ("L_Joystick_Y") > 0.2f) {
 			if (controleOpcaoEixo) {
+				
 				if (onMenu1) {
 					if (opcaoMenu1 > 1) {
 						opcaoMenu1--;
@@ -187,11 +190,13 @@ public class MenuControllerInGame : MonoBehaviour {
 						opcaoMenuMorte = 3;
 					}
 				}
+				AlteraIndicadorSelecao ();
 			}
 			StartCoroutine ("TrocaOpcaoEixo");
 		}
 		if (Input.GetKeyDown (KeyCode.DownArrow) || Input.GetAxisRaw ("L_Joystick_Y") < -0.2f) {
 			if (controleOpcaoEixo) {
+				
 				if (onMenu1) {
 					if (opcaoMenu1 < 4) {
 						opcaoMenu1++;
@@ -223,11 +228,13 @@ public class MenuControllerInGame : MonoBehaviour {
 						opcaoMenuMorte = 1;
 					}
 				}
+				AlteraIndicadorSelecao ();
 			}
 			StartCoroutine ("TrocaOpcaoEixo");
 		}
 		if (Input.GetKeyDown (KeyCode.LeftArrow) || Input.GetAxisRaw ("L_Joystick_X") < -0.2f) {
 			if (controleOpcaoEixo) {
+				
 				if (onMenu2) {
 					if (opcaoMenu2 > 1) {
 						opcaoMenu2--;
@@ -245,11 +252,13 @@ public class MenuControllerInGame : MonoBehaviour {
 						}
 					}
 				}
+				AlteraIndicadorSelecao ();
 			}
 			StartCoroutine ("TrocaOpcaoEixo");
 		}
 		if (Input.GetKeyDown (KeyCode.RightArrow) || Input.GetAxisRaw ("L_Joystick_X") > 0.2f) {
 			if (controleOpcaoEixo) {
+				
 				if (onMenu2) {
 					if (opcaoMenu2 < 3) {
 						opcaoMenu2++;
@@ -267,6 +276,7 @@ public class MenuControllerInGame : MonoBehaviour {
 						}
 					}
 				}
+				AlteraIndicadorSelecao ();
 			}
 			StartCoroutine ("TrocaOpcaoEixo");
 		}
@@ -304,6 +314,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			} else if (onMenuDeath) {
 				TrocaMenus (6);
 			}
+			AlteraIndicadorSelecao ();
 		}
 		if (Input.GetKeyDown (KeyCode.JoystickButton7)) {
 			if (inGame) {
@@ -341,7 +352,17 @@ public class MenuControllerInGame : MonoBehaviour {
 		controleOpcaoEixo = true;
 	}
 
-
+	void AlteraIndicadorSelecao(){
+		if (opcaoMenu1 == 1) {
+			SetaIndicativa.transform.localPosition = new Vector3 (-130.0f, 45.0f, 0);
+		} else if (opcaoMenu1 == 2) {
+			SetaIndicativa.transform.localPosition = new Vector3 (-130.0f, -45.0f, 0);
+		}else if (opcaoMenu1 == 3) {
+			SetaIndicativa.transform.localPosition = new Vector3 (-130.0f, -145.0f, 0);
+		}else if (opcaoMenu1 == 4) {
+			SetaIndicativa.transform.localPosition = new Vector3 (-130.0f, -245.0f, 0);
+		}
+	}
 	void PaiCaminhandoParaMorte (){
 		print ("Morreu");
 		if(entersToSavePlayer == 0){
