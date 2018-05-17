@@ -16,7 +16,7 @@ public class ArvoreFrutaScript : MonoBehaviour, ISongListener {
 		frutaInitPos = fruta.transform.position;
 	}
 
-	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false){
+	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false, HeightState height = HeightState.Default){
 		if (song == PlayerSongs.Crescimento) {
 			if (!fruta.activeSelf) {
 				fruta.transform.position = frutaInitPos;

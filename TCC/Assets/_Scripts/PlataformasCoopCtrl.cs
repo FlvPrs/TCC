@@ -64,7 +64,7 @@ public class PlataformasCoopCtrl : MonoBehaviour, ISongListener, IFatherSustainI
 //		}
 //	}
 
-	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false){
+	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false, HeightState height = HeightState.Default){
 		if(song == PlayerSongs.Crescimento){
 			if (!isFather) { //SE FOR O FILHO ---------------------------------------------
 				for (int i = 0; i < plataformas.Length; i++) {

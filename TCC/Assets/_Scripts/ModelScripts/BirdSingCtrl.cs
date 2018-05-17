@@ -151,7 +151,7 @@ public class BirdSingCtrl : MonoBehaviour {
 		oldState = playerCtrl.walkStates.CURR_HEIGHT_STATE;
 
 		partituraCollider.isSingingSomething = true;
-
+		partituraCollider.currentHeight = oldState;
 		singleNoteCollider.currentHeight = oldState;
 
 		//Quando o jogador tocar varias notas rapidamente, a seguinte linha deixa um
@@ -181,12 +181,14 @@ public class BirdSingCtrl : MonoBehaviour {
 	IEnumerator StopSingleNote(){
 		yield return new WaitForSeconds (0.05f);
 		singleNoteCollider.gameObject.SetActive (true);
+		partituraCollider.isSingingSomething = false;
 
 		yield return new WaitForSeconds (singleNoteMinimumDuration-0.05f);
 		singleNoteCollider.gameObject.SetActive (false);
 //		playerCtrl.walkStates.TOCANDO_NOTAS = false;
 //		playerCtrl.canStartSing = true;
-		partituraCollider.isSingingSomething = false;
+
+		//partituraCollider.isSingingSomething = false;
 	}
 
 	public void RepeatNote (bool nextNote = false, HeightState currHeight = HeightState.Default){

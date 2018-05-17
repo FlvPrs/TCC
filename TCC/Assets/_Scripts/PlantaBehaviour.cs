@@ -174,7 +174,7 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 		}
 	}
 
-	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false){
+	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false, HeightState height = HeightState.Default){
 		if (isFather && (currentInteractionAgent != player || (currentInteractionAgent == player && currentSong == PlayerSongs.Empty))) {
 			currentInteractionAgent = father;
 			timer = 0f;

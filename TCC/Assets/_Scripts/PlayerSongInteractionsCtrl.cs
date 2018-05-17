@@ -13,6 +13,7 @@ public class PlayerSongInteractionsCtrl : MonoBehaviour {
 
 	public bool isSingingSomething;
 	public PlayerSongs currentSong;
+	public HeightState currentHeight;
 
 	void Start (){
 		currentSong = PlayerSongs.Empty;
@@ -20,8 +21,8 @@ public class PlayerSongInteractionsCtrl : MonoBehaviour {
 
 	void OnTriggerStay (Collider col){
 		if(col.GetComponent<ISongListener> () != null)
-			col.GetComponent<ISongListener> ().DetectSong(currentSong, isSingingSomething);
+			col.GetComponent<ISongListener> ().DetectSong(currentSong, isSingingSomething, false, currentHeight);
 		else if (col.GetComponentInParent<ISongListener> () != null)
-			col.GetComponentInParent<ISongListener> ().DetectSong(currentSong, isSingingSomething);
+			col.GetComponentInParent<ISongListener> ().DetectSong(currentSong, isSingingSomething, false, currentHeight);
 	}
 }

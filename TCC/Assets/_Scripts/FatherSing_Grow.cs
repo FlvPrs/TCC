@@ -30,7 +30,7 @@ public class FatherSing_Grow : MonoBehaviour, ISongListener {
 		}
 	}
 
-	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false){
+	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false, HeightState height = HeightState.Default){
 		if(isFather && song == PlayerSongs.Crescimento){
 			startGrow = true;
 		}
