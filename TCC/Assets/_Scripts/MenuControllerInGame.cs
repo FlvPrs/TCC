@@ -19,7 +19,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	private bool fakeDeathMenu;
 	public int faseAtualSave;
 	int entersToSavePlayer = 0;
-	public GameObject SetaIndicativa;
+	public GameObject SetaIndicativa1, SetaIndicativa2, SetaIndicativa3, SetaIndicativa4, SetaIndicativa5;
 
 	private FatherSacrifice_Ctrl fatherSacrificeCtrl;
 
@@ -103,6 +103,8 @@ public class MenuControllerInGame : MonoBehaviour {
 							} else if (saveSlot3 == 4) {
 								SceneManager.LoadScene (3);
 							}
+						} else if (opcaoMenu2 == 4) {
+							TrocaMenus (1);
 						}
 					} else if (deleteSave) {
 						if (opcaoMenu2 == 1) {
@@ -134,9 +136,10 @@ public class MenuControllerInGame : MonoBehaviour {
 						TrocaMenus (4);
 					} else if (opcaoMenuPause == 5) {
 						SceneManager.LoadScene (1);
-					} else if (opcaoMenuPause == 6) {
-						Application.Quit ();
 					}
+//					else if (opcaoMenuPause == 6) {
+//						Application.Quit ();
+//					}
 				} 
 				else if (onMenuDeath) {
 					if (opcaoMenuMorte == 1) {
@@ -179,7 +182,7 @@ public class MenuControllerInGame : MonoBehaviour {
 					if (opcaoMenuPause > 1) {
 						opcaoMenuPause--;
 					} else if (opcaoMenuPause == 1) {
-						opcaoMenuPause = 6;
+						opcaoMenuPause = 5;
 					}
 				} else if (onMenu2) {
 					deleteSave = !deleteSave;
@@ -214,9 +217,9 @@ public class MenuControllerInGame : MonoBehaviour {
 						musicaEfeito = !musicaEfeito;
 					}
 				} else if (onPause) {
-					if (opcaoMenuPause < 6) {
+					if (opcaoMenuPause < 5) {
 						opcaoMenuPause++;
-					}else if (opcaoMenuPause == 6) {
+					}else if (opcaoMenuPause == 5) {
 						opcaoMenuPause = 1;
 					}
 				}else if (onMenu2) {
@@ -260,7 +263,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			if (controleOpcaoEixo) {
 				
 				if (onMenu2) {
-					if (opcaoMenu2 < 3) {
+					if (opcaoMenu2 < 4) {
 						opcaoMenu2++;
 					}
 				} else if (onMenu3) {
@@ -353,14 +356,53 @@ public class MenuControllerInGame : MonoBehaviour {
 	}
 
 	void AlteraIndicadorSelecao(){
-		if (opcaoMenu1 == 1) {
-			SetaIndicativa.transform.localPosition = new Vector3 (-130.0f, 45.0f, 0);
-		} else if (opcaoMenu1 == 2) {
-			SetaIndicativa.transform.localPosition = new Vector3 (-130.0f, -45.0f, 0);
-		}else if (opcaoMenu1 == 3) {
-			SetaIndicativa.transform.localPosition = new Vector3 (-130.0f, -145.0f, 0);
-		}else if (opcaoMenu1 == 4) {
-			SetaIndicativa.transform.localPosition = new Vector3 (-130.0f, -245.0f, 0);
+		if (onMenu1) {
+			if (opcaoMenu1 == 1) {
+				SetaIndicativa1.transform.localPosition = new Vector3 (-17.6f, 45.0f, 0);
+			} else if (opcaoMenu1 == 2) {
+				SetaIndicativa1.transform.localPosition = new Vector3 (-17.6f, -45.0f, 0);
+			} else if (opcaoMenu1 == 3) {
+				SetaIndicativa1.transform.localPosition = new Vector3 (-17.6f, -145.0f, 0);
+			} else if (opcaoMenu1 == 4) {
+				SetaIndicativa1.transform.localPosition = new Vector3 (-17.6f, -245.0f, 0);
+			}
+		} else if (onMenu2) {
+			if (opcaoMenu2 == 1) {
+				SetaIndicativa2.SetActive (true);
+				SetaIndicativa3.SetActive (false);
+				SetaIndicativa2.transform.localPosition = new Vector3 (-280.0f, -223.0f, 0f);
+			} else if (opcaoMenu2 == 2) {
+				SetaIndicativa2.SetActive (true);
+				SetaIndicativa3.SetActive (false);
+				SetaIndicativa2.transform.localPosition = new Vector3 (0.0f, -223.0f, 0f);
+			} else if (opcaoMenu2 == 3) {
+				SetaIndicativa2.SetActive (true);
+				SetaIndicativa3.SetActive (false);
+				SetaIndicativa2.transform.localPosition = new Vector3 (280.0f, -223.0f, 0f);
+			} else if (opcaoMenu2 == 4) {
+				SetaIndicativa2.SetActive (false);
+				SetaIndicativa3.SetActive (true);
+			}
+		} else if (onPause) {
+			if (opcaoMenuPause == 1) {
+				SetaIndicativa4.transform.localPosition = new Vector3 (13.0f, 120.0f, 0f);
+			} else if (opcaoMenuPause == 2) {
+				SetaIndicativa4.transform.localPosition = new Vector3 (13.0f, 30.0f, 0f);
+			} else if (opcaoMenuPause == 3) {
+				SetaIndicativa4.transform.localPosition = new Vector3 (13.0f, -60.0f, 0f);
+			} else if (opcaoMenuPause == 4) {
+				SetaIndicativa4.transform.localPosition = new Vector3 (13.0f, -150.0f, 0f);
+			} else if (opcaoMenuPause == 5) {
+				SetaIndicativa4.transform.localPosition = new Vector3 (13.0f, -240.0f, 0f);
+			}
+		} else if (onMenuDeath) {
+			if (opcaoMenuMorte == 1) {
+				SetaIndicativa5.transform.localPosition = new Vector3 (-3.0f, -12.0f, 0f);
+			} else if (opcaoMenuMorte == 2) {
+				SetaIndicativa5.transform.localPosition = new Vector3 (13.0f, -124.0f, 0f);
+			} else if (opcaoMenuMorte == 3) {
+				SetaIndicativa5.transform.localPosition = new Vector3 (13.0f, -236.0f, 0f);
+			}
 		}
 	}
 	void PaiCaminhandoParaMorte (){
