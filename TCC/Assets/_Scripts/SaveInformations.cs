@@ -29,13 +29,16 @@ public class SaveInformations : MonoBehaviour {
 	void Update(){
 		print (SlotAtual);
 		if (Input.GetKeyDown (KeyCode.J)) {
-			SceneManager.LoadScene (1);
-		}
-		if (Input.GetKeyDown (KeyCode.K)) {
 			SceneManager.LoadScene (2);
 		}
-		if (Input.GetKeyDown (KeyCode.L)) {
+		if (Input.GetKeyDown (KeyCode.K)) {
 			SceneManager.LoadScene (3);
+		}
+		if (Input.GetKeyDown (KeyCode.L)) {
+			SceneManager.LoadScene (4);
+		}
+		if (Input.GetKeyDown (KeyCode.H)) {
+			SceneManager.LoadScene (1);
 		}
 
 	}
