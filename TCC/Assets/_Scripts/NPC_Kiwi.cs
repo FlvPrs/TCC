@@ -145,7 +145,7 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 
 		if (!isOnArbusto) {
 			//Normalmente, Foge do player quando este se aproxima.
-			if (distToPlayer < 20f && !isCarregandoPai) {
+			if (distToPlayer < 7f && !isCarregandoPai) {
 				patrulhando = false;
 				timer_StartPatrulha = 0;
 				currentSong = PlayerSongs.Empty;

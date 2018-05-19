@@ -79,8 +79,8 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 		GetComponent<Rigidbody> ().isKinematic = true;
 		GetComponent<Rigidbody> ().useGravity = false;
 
-		balaoFeedback = Instantiate (balaoFeedbackPrefab, plantaTransform).GetComponent<BalaoFeedback_Ctrl> ();
-		balaoFeedback.transform.localPosition = Vector3.up * balao_Height;
+		//balaoFeedback = Instantiate (balaoFeedbackPrefab, plantaTransform).GetComponent<BalaoFeedback_Ctrl> ();
+		//balaoFeedback.transform.localPosition = Vector3.up * balao_Height;
 	}
 
 
@@ -197,9 +197,9 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 		if (song != PlayerSongs.Empty)
 			playerIsMakingNoise = false;
 
-		if(playerIsMakingNoise){
-			balaoFeedback.ShowBalao (balaoTypes.ouvindo);
-		}
+//		if(playerIsMakingNoise){
+//			balaoFeedback.ShowBalao (balaoTypes.ouvindo);
+//		}
 	}
 
 	//======================================================================================================================
