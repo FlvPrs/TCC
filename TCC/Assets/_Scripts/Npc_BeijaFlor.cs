@@ -52,7 +52,7 @@ public class Npc_BeijaFlor : NPCBehaviour {
 			podePegarObj = true;
 		}
 
-		if(isCloseToCarnivora){
+		if(isCloseToCarnivora || dentroVeneno){
 			if (nmAgent.baseOffset < maxBaseOffset)
 				nmAgent.baseOffset += Time.deltaTime * 7f;
 			else
@@ -137,14 +137,14 @@ public class Npc_BeijaFlor : NPCBehaviour {
 	}
 
 	protected override void Seguir(){
-		if (dentroVeneno == false) {
+		//if (dentroVeneno == false) {
 			base.Seguir ();
 			animCtrl.SetBool ("isSeguindo", true);
-		}
-		if (dentroVeneno == true) {
-			PararDeSeguir ();
-			mudancaEstado (0);
-		}
+		//}
+//		if (dentroVeneno == true) {
+//			PararDeSeguir ();
+//			mudancaEstado (0);
+//		}
 	}
 
 	protected override void PararDeSeguir ()

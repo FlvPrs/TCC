@@ -103,11 +103,17 @@ public class AgentFather : MonoBehaviour {
 //		default:
 //			break;
 //		}
-		if (currentDisposition != FatherConditions.Disposto) {
+		if (currentDisposition == FatherConditions.Debilitado) {
 			animCtrl.SetBool ("isDebilitado", true);
+			animCtrl.SetBool ("isVeryDebilitado", false);
 			nmAgent.speed = 6;
+		} else if (currentDisposition == FatherConditions.Machucado) {
+			animCtrl.SetBool ("isDebilitado", false);
+			animCtrl.SetBool ("isVeryDebilitado", true);
+			nmAgent.speed = 4;
 		} else {
 			animCtrl.SetBool ("isDebilitado", false);
+			animCtrl.SetBool ("isVeryDebilitado", false);
 			nmAgent.speed = navMeshSpeed;
 		}
 
@@ -163,7 +169,7 @@ public class AgentFather : MonoBehaviour {
 	protected float oldPosY;
 
 	protected void MoveAgentWithRB (Vector3 target){
-		if (currentDisposition == FatherConditions.Machucado || currentDisposition == FatherConditions.MuitoMachucado)
+		if (/*currentDisposition == FatherConditions.Machucado || */currentDisposition == FatherConditions.MuitoMachucado)
 			return;
 
 		if (!nmAgent.isStopped) {
@@ -188,7 +194,7 @@ public class AgentFather : MonoBehaviour {
 	}
 
 	protected void MoveAgentOnNavMesh (Vector3 target){
-		if (currentDisposition == FatherConditions.Machucado || currentDisposition == FatherConditions.MuitoMachucado) {
+		if (/*currentDisposition == FatherConditions.Machucado || */currentDisposition == FatherConditions.MuitoMachucado) {
 			//nmAgent.isStopped = true;
 			return;
 		}

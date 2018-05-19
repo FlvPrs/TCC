@@ -108,7 +108,7 @@ public class FatherActions : AgentFather {
 	//--- Esta função deve rodar todo frame ---
 	//SE <player> estiver DENTRO do raio <startDistance>, COMECE a Andar até <pos>
 	//SE <player> estiver FORA do raio <stopDistance>, PARE de andar
-	public void GuidePlayerTo (Vector3 pos, float startDistance = 6f, float stopDistance = 15f){
+	public void GuidePlayerTo (Vector3 pos, float startDistance = 16f, float stopDistance = 22f){
 		currentTargetPos = pos;
 		if (distToPlayer <= startDistance){
 			//Guide

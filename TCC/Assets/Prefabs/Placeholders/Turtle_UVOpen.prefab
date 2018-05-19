@@ -3234,10 +3234,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d367f4220c566642919d04e5e1ce228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animCtrl: {fileID: 0}
   acceptedSongs: 1
   currentSong: 0
   currentState: 0
   timer: 0
+  balaoFeedbackPrefab: {fileID: 1509926593202526, guid: a804f084326552f41ad76f7d3a4f36b0,
+    type: 2}
 --- !u!114 &114463537269892520
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3255,6 +3258,10 @@ MonoBehaviour:
   timer: 0
   isMurcha: 0
   isBroto: 0
+  murchando_Clip: {fileID: 0}
+  cresceBroto_Clip: {fileID: 0}
+  balaoFeedbackPrefab: {fileID: 0}
+  balao_Height: 5
   alturaFlor: 0
   alturaInicial: 1
   acaoTerminada: 0

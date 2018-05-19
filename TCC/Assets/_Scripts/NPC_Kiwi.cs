@@ -41,6 +41,8 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 	{
 		base.Awake ();
 
+		balaoFeedback.transform.localPosition = Vector3.up * nmAgent.height * 2f;
+
 		rb = GetComponent<Rigidbody> ();
 		simpleAudioSource = GetComponent<AudioSource>();
 		simpleAudioSource.loop = false;
@@ -91,11 +93,11 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 				StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length));
 			} else if (isCarregandoPai) {
 				simpleAudioSource.clip = carregando_Clips [currClipIndex];
+				simpleAudioSource.Play ();
+				StartCoroutine(WaitForSimpleClipToEnd (carregando_Clips [currClipIndex].length + 0.05f));
 				currClipIndex++;
 				if (currClipIndex >= carregando_Clips.Length)
 					currClipIndex = 0;
-				simpleAudioSource.Play ();
-				StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length - 0.05f));
 			}
 		}
 			
@@ -117,6 +119,9 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 
 		if(!isOnArbusto && !movingToPai){
 			nmAgent.stoppingDistance = defaultStopDist;
+			balaoFeedback.transform.localPosition = Vector3.up * nmAgent.height * 2f;
+		} else {
+			balaoFeedback.transform.localPosition = Vector3.up * nmAgent.height * 5f;
 		}
 
 		if (!podePegarObj && objetoCarregado == null){
@@ -140,7 +145,7 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 
 		if (!isOnArbusto) {
 			//Normalmente, Foge do player quando este se aproxima.
-			if (distToPlayer < 7f && !isCarregandoPai) {
+			if (distToPlayer < 20f && !isCarregandoPai) {
 				patrulhando = false;
 				timer_StartPatrulha = 0;
 				currentSong = PlayerSongs.Empty;
@@ -217,10 +222,11 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 
 	protected override void Seguir ()
 	{
-		if (!isCarregandoPai && currentState != NPC_CurrentState.Distraido && currentState != NPC_CurrentState.Seguindo) {
-			DefaultState ();
-			return;
-		} else if(movingToPai) {
+//		if (!isCarregandoPai && currentState != NPC_CurrentState.Distraido && currentState != NPC_CurrentState.Seguindo) {
+//			DefaultState ();
+//			return;
+//		} else 
+			if(movingToPai) {
 			Distrair ();
 			return;
 		}
@@ -235,7 +241,7 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 
 		if (currentState != NPC_CurrentState.Distraido){
 			currentState = NPC_CurrentState.Distraido;
-			timer_Distraido = 15f;
+			timer_Distraido = 20f;
 		}
 
 		if(timer_Distraido > 0f){
@@ -350,7 +356,7 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 		if (stopUpdate)
 			return;
 
-		if(col.CompareTag("Fruta") || col.CompareTag("Semente")){
+		if(col.CompareTag("Fruta")){
 			if (objetoCarregado == null && podePegarObj) {
 				if(!collObjects.Contains(col.transform)){
 					collObjects.Add (col.transform);

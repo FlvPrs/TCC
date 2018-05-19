@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum PartituraState { Empty, High, Medium, Low }
+public enum PartituraState { n, High, Medium, Low }
 
 /// <summary>
 /// A função deste script é popular o instrumento com as notas definidas no Inspector.

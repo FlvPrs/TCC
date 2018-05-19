@@ -43,6 +43,10 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 	protected bool canChangeSimpleClip = true;
 	public AudioClip murchando_Clip, cresceBroto_Clip;
 
+	public GameObject balaoFeedbackPrefab;
+	protected BalaoFeedback_Ctrl balaoFeedback;
+	public float balao_Height = 5f;
+
 	protected virtual void Awake () {
 		selectedSongs = ReturnSelectedElements ();
 		plantaTransform = GetComponent<Transform> ();
@@ -74,6 +78,9 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 
 		GetComponent<Rigidbody> ().isKinematic = true;
 		GetComponent<Rigidbody> ().useGravity = false;
+
+		balaoFeedback = Instantiate (balaoFeedbackPrefab, plantaTransform).GetComponent<BalaoFeedback_Ctrl> ();
+		balaoFeedback.transform.localPosition = Vector3.up * balao_Height;
 	}
 
 
@@ -189,6 +196,10 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 
 		if (song != PlayerSongs.Empty)
 			playerIsMakingNoise = false;
+
+		if(playerIsMakingNoise){
+			balaoFeedback.ShowBalao (balaoTypes.ouvindo);
+		}
 	}
 
 	//======================================================================================================================

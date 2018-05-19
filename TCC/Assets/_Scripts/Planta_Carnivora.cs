@@ -24,9 +24,7 @@ public class Planta_Carnivora : PlantaBehaviour {
 	public LayerMask foodMask;
 	public float shootingStrength = 30f;
 
-	#region DELETAR
-	GameObject indicadorDeSono;
-	#endregion
+	public Animator animCtrl;
 
 	public AudioSource sustainAudioSource;
 	public AudioClip abrindo_Clip, temaAberta_Clip, temaIrritada_Clip, bote_Clip, temaComendo_Clip, fxComendo_Clip, cuspe_Clip, cuspeForte_Clip;
@@ -40,9 +38,6 @@ public class Planta_Carnivora : PlantaBehaviour {
 	}
 
 	void Start (){
-		indicadorDeSono = GameObject.CreatePrimitive (PrimitiveType.Cylinder);
-		indicadorDeSono.transform.position = plantaTransform.position + (Vector3.up * 5);
-
 		coll = GetComponent<SphereCollider> ();
 		attackRange_irritado = attackRange_default * 2f;
 
@@ -93,17 +88,12 @@ public class Planta_Carnivora : PlantaBehaviour {
 			sustainAudioSource.Stop ();
 		}
 
+		animCtrl.SetBool ("fechada", fechada);
 		foodContainer.gameObject.SetActive (comendo);
 
 		//Debug.DrawRay (transform.position, plantaTransform.up * 10f);
 
 		#region DELETAR
-		if(currentState != Planta_CurrentState.Dormindo && !fechada){
-			indicadorDeSono.SetActive (false);
-		} else {
-			indicadorDeSono.SetActive (true);
-		}
-
 		if (comendo) {
 			if(Input.GetKeyDown(KeyCode.Keypad0)){
 				ReleaseFood ();

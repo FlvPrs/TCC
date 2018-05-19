@@ -28,9 +28,13 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 
 	private List<NPC_Kiwi> kiwis;
 
+	private BalaoFeedback_Ctrl balaoFeedback;
+
 	void Awake (){
 		askHealingCooldown = delayFirstAskBy;
 		kiwis = new List<NPC_Kiwi> (2);
+
+		balaoFeedback = transform.Find ("BalaoFeedback").GetComponent<BalaoFeedback_Ctrl> ();
 	}
 
 	// Use this for initialization
@@ -81,8 +85,8 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 			break;
 		}
 
-		if (carregadoPorKiwis)
-			fatherActions.LookAtPlayer ();
+//		if (carregadoPorKiwis)
+//			fatherActions.LookAtPlayer ();
 
 		fatherActions.animCtrl.SetBool ("beingCarriedByKiwis", carregadoPorKiwis);
 	}
@@ -126,6 +130,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 			askHealingCooldown -= Time.deltaTime;
 		} else {
 			fatherActions.animCtrl.SetTrigger ("askForHealing");
+			balaoFeedback.ShowBalaoCura (numberOfFruits, frutasComidas);
 			askHealingCooldown = (currentDisposition == FatherConditions.MuitoMachucado) ? 8f : (currentDisposition == FatherConditions.Machucado) ? 20f : 70f;
 		}
 

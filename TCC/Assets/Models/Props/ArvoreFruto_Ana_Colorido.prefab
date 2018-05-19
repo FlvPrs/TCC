@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 33028960042858460}
   - component: {fileID: 23783982165678112}
   - component: {fileID: 64008999652390374}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: pSphere4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,7 +75,7 @@ GameObject:
   - component: {fileID: 33817936822473196}
   - component: {fileID: 23806141351391168}
   - component: {fileID: 64575453154153386}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: pSphere5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 33454968563322596}
   - component: {fileID: 23546788980657962}
   - component: {fileID: 64053002686654466}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: pSphere6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,7 +111,7 @@ GameObject:
   - component: {fileID: 33850412485966282}
   - component: {fileID: 23180113614402082}
   - component: {fileID: 64918774494291524}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: pSphere3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 33561534486159078}
   - component: {fileID: 23930738088550738}
   - component: {fileID: 64226222327976180}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: pSphere8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -180,7 +180,7 @@ GameObject:
   - component: {fileID: 33507370119432710}
   - component: {fileID: 23109102716688330}
   - component: {fileID: 64078617347763490}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: pSphere10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -215,7 +215,7 @@ GameObject:
   - component: {fileID: 33015514998444640}
   - component: {fileID: 23582492137360322}
   - component: {fileID: 64627532494527152}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: pSphere12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -265,7 +265,7 @@ GameObject:
   - component: {fileID: 33430148127051114}
   - component: {fileID: 23410809693329270}
   - component: {fileID: 64969581756179484}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: pSphere7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -318,7 +318,7 @@ GameObject:
   - component: {fileID: 33581448622272366}
   - component: {fileID: 23849309848832006}
   - component: {fileID: 64827531433857382}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: pSphere9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -351,7 +351,7 @@ GameObject:
   - component: {fileID: 33065130115215776}
   - component: {fileID: 23741865031467118}
   - component: {fileID: 64290006204055668}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: pSphere11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -369,7 +369,7 @@ GameObject:
   - component: {fileID: 33415802968780424}
   - component: {fileID: 23818738503321946}
   - component: {fileID: 64643511152511556}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: pCylinder11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -403,7 +403,7 @@ GameObject:
   - component: {fileID: 33720469775548864}
   - component: {fileID: 23265470561636066}
   - component: {fileID: 64440872534153130}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: pSphere13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1714,7 +1714,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5f11c41369f40f4ebd5c92b6c31f398, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactableState: 1
   fruta: {fileID: 1981434709967342}
 --- !u!119 &119516545039286402
 Projector:
@@ -1744,7 +1743,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 17.6
+  m_Radius: 25
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!135 &135477614805779970
 SphereCollider:

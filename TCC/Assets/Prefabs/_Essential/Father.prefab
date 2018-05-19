@@ -2399,6 +2399,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentDisposition: 0
   carregadoPorKiwis: 0
+  delayFirstAskBy: 0
+  canBeCarried: 1
 --- !u!114 &114760307647813902
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2871,7 +2873,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 1.3
-  m_Speed: 8
+  m_Speed: 10
   m_Acceleration: 40
   avoidancePriority: 50
   m_AngularSpeed: 300

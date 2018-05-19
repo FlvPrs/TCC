@@ -39,6 +39,7 @@ GameObject:
   - component: {fileID: 65692174365919292}
   - component: {fileID: 114959712536519708}
   - component: {fileID: 114009722163400434}
+  - component: {fileID: 114288809358496002}
   m_Layer: 13
   m_Name: WindPoint
   m_TagString: WindCurrent
@@ -96,6 +97,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0fe5f9d2d2f3cd4295da9d8743479c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114288809358496002
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1894142154088444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fca0e05e7a49f2041af503f7a3fbee8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camCtrl: {fileID: 0}
+  newCamIndex: 0
+  exitAsDifferentCam: 0
+  exitCamIndex: 0
+  change_LookAt: 0
+  newLookAt: {fileID: 0}
 --- !u!114 &114959712536519708
 MonoBehaviour:
   m_ObjectHideFlags: 1

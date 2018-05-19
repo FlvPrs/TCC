@@ -8,11 +8,15 @@ using UnityEngine;
 public class InstrumentoTrigger_Ctrl : MonoBehaviour, ISongListener {
 
 	public PartituraState noteType;
+	public bool fatherCanInteract;
 
 	public bool interactedWith = false;
 	public bool interagiuCorretamente = false;
 
 	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false, HeightState height = HeightState.Default){
+		if (isFather && !fatherCanInteract)
+			return;
+		
 		if(isSingingSomething && !interactedWith){
 			interactedWith = true;
 			switch (noteType) {

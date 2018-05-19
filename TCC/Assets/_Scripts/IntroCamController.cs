@@ -127,7 +127,7 @@ public class IntroCamController : MonoBehaviour {
 				GetComponent<CinemachineVirtualCamera> ().m_Priority = 0;
 				playerRegainedCtrl = true;
 				playerCtrl.playerCanMove = true;
-				enabled = false;
+				//enabled = false;
 			}
 			else
 				camTrack.m_PathPosition = Mathf.SmoothStep (camTrack.m_PathPosition, 0f, t);

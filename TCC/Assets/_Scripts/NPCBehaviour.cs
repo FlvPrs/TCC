@@ -39,6 +39,9 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 
 	public float timer = 0f;
 
+	public GameObject balaoFeedbackPrefab;
+	protected BalaoFeedback_Ctrl balaoFeedback;
+
 	protected virtual void Awake () {
 		selectedSongs = ReturnSelectedElements ();
 		nmAgent = GetComponent<NavMeshAgent> ();
@@ -52,6 +55,8 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 
 		GetComponent<Rigidbody> ().isKinematic = true;
 
+		balaoFeedback = Instantiate (balaoFeedbackPrefab, npcTransform).GetComponent<BalaoFeedback_Ctrl> ();
+		balaoFeedback.transform.localPosition = Vector3.up * nmAgent.height;
 	}
 	
 	// Update is called once per frame
@@ -60,8 +65,8 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 			timer = 1f;
 			currentInteractionAgent = null;
 			currentSong = PlayerSongs.Empty;
-			if (currentState == NPC_CurrentState.Seguindo)
-				currentState = NPC_CurrentState.DefaultState;
+//			if (currentState == NPC_CurrentState.Seguindo)
+//				currentState = NPC_CurrentState.DefaultState;
 		} else {
 			timer += Time.deltaTime;
 		}
@@ -138,6 +143,10 @@ public class NPCBehaviour : MonoBehaviour, ISongListener {
 
 		if (song == PlayerSongs.Amizade)
 			oldInteractionAgent = currentInteractionAgent;
+
+		if(playerIsMakingNoise){
+			balaoFeedback.ShowBalao (balaoTypes.ouvindo);
+		}
 	}
 
 	//======================================================================================================================
