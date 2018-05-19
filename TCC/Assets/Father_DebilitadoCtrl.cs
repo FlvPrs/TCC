@@ -111,9 +111,9 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 
 	public void StopCarriedByKiwis (){
 		carregadoPorKiwis = false;
-		for (int i = 0; i < kiwis.Count; i++) {
-			kiwis.RemoveAt(i);
-		}
+//		for (int i = 0; i < kiwis.Count; i++) {
+//			kiwis.RemoveAt(i);
+//		}
 		numeroDeKiwis = 0;
 		transform.SetParent (null);
 		nmAgent.enabled = true;
@@ -128,6 +128,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 		CancelInvoke("ResetHealingCooldown");
 		if(askHealingCooldown > 0f){
 			askHealingCooldown -= Time.deltaTime;
+
 		} else {
 			fatherActions.animCtrl.SetTrigger ("askForHealing");
 			balaoFeedback.ShowBalaoCura (numberOfFruits, frutasComidas);

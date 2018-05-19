@@ -621,7 +621,7 @@ GameObject:
   - component: {fileID: 4020579276636144}
   - component: {fileID: 33911878325805204}
   - component: {fileID: 23487279327646294}
-  - component: {fileID: 64599393446569070}
+  - component: {fileID: 135658310981361612}
   m_Layer: 20
   m_Name: SementePlantaPlataforma
   m_TagString: Semente
@@ -1044,8 +1044,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1731358827496604}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 45.9, y: 0.62, z: -31.309998}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.18, y: 15.97, z: 5.95}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4020579276636144}
@@ -2777,20 +2777,6 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: 8d187847f8728424eb4ff76ceffb3b86, type: 3}
---- !u!64 &64599393446569070
-MeshCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1775329057442530}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Convex: 1
-  m_InflateMesh: 0
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300000, guid: 9e47f4efddcb6da4db75458844de8c0f, type: 3}
 --- !u!65 &65195192411859534
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -2923,7 +2909,7 @@ MonoBehaviour:
     type: 2}
   balao_Height: 5
   alturaFlor: 0
-  alturaInicial: 0
+  alturaInicial: 1
   acaoTerminada: 0
   isClosed: 0
 --- !u!114 &114846195621121710
@@ -2937,6 +2923,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64a1f4898ddcc1449962e2b685d018fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!135 &135658310981361612
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1775329057442530}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.94956815
+  m_Center: {x: 0, y: 0.94956756, z: -0.04628845}
 --- !u!136 &136305914785372406
 CapsuleCollider:
   m_ObjectHideFlags: 1

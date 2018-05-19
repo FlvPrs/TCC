@@ -15,7 +15,7 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 	public int alturaInicial;
 	public bool acaoTerminada, isClosed;
 	private Rigidbody r;
-	private Vector3 upPlataform, originalPosition, finalDestination, currentDestination;
+	private Vector3 upPlataform, originalPosition, finalDestination, currentDestination, newPosition;
 	protected GameObject MDL_Fechada;
 	// Use this for initialization
 	protected override void Awake(){
@@ -23,6 +23,7 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 		MDL_Fechada = plantaTransform.Find ("MDL_Fechada").gameObject;
 
 		nmSurface = FindObjectOfType<NavMeshSurface> ();
+
 
 		if (isClosed) {
 			currentState = Planta_CurrentState.Dormindo;
@@ -134,8 +135,19 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 
 	protected override void Crescer(){
 		if (alturaFlor <= 4) {
+			//originalPosition = t.position;
 			////print ("crescendo111");
 			if (acaoTerminada) {
+				//originalPosition = t.position;
+				if (alturaFlor == 1) {
+					newPosition = t.position;
+				}else if (alturaFlor == 2) {
+					newPosition = t.position-(Vector3.up*4.0f);
+				}else if (alturaFlor == 3) {
+					newPosition = t.position-(Vector3.up*8.0f);
+				}else if (alturaFlor == 4) {
+					newPosition = t.position-(Vector3.up*12.0f);
+				}
 				if (currentState == Planta_CurrentState.Crescendo) {
 					return;
 				}
@@ -158,8 +170,19 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 
 	protected override void Encolher(){
 		if (alturaFlor >= 1) {
+			//originalPosition = t.position;
 			////print ("crescendo222");
 			if (acaoTerminada) {
+				//originalPosition = t.position;
+				if (alturaFlor == 1) {
+					newPosition = t.position;
+				}else if (alturaFlor == 2) {
+					newPosition = t.position-(Vector3.up*4.0f);
+				}else if (alturaFlor == 3) {
+					newPosition = t.position-(Vector3.up*8.0f);
+				}else if (alturaFlor == 4) {
+					newPosition = t.position-(Vector3.up*12.0f);
+				}
 				if (currentState == Planta_CurrentState.Encolhendo) {
 					return;
 				}
@@ -182,7 +205,7 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 		currentState = Planta_CurrentState.DefaultState;
 	}
 	void TrocaAlturaInicial(int levelInicial){
-		
+		newPosition = originalPosition;
 		TrocaAltura (levelInicial);
 
 	}
@@ -193,18 +216,21 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 		case 1:
 			////print ("rolando1");
 			Vector3 dir1 = Vector3.zero;
-			upPlataform = originalPosition;
+			//originalPosition = t.position;
+			upPlataform = newPosition;
 			if (!primeiraTroca) { 
 				isClosed = false;
-				if (Vector3.Distance (t.position, upPlataform) <= 0.1f) {
+				//if (Vector3.Distance (t.position.y, upPlataform.y) <= 0.1f) {
+				if(Mathf.Abs((t.position-upPlataform).y )< 0.1f){
 					acaoTerminada = true;
 					currentState = Planta_CurrentState.DefaultState;
-					t.position = upPlataform;
+					t.position = new Vector3 (t.position.x,upPlataform.y,t.position.z);
 					return;
 				} else {
-					dir1 = Vector3.Lerp (t.position, upPlataform, velocidade * Time.deltaTime);
+					t.position = new Vector3 (t.position.x, Mathf.Lerp (t.position.y, upPlataform.y, velocidade * Time.deltaTime),t.position.z);
+//					dir1 = Vector3.Lerp (t.position, upPlataform, velocidade * Time.deltaTime);
 					acaoTerminada = false;
-					t.position = dir1;
+//					t.position = dir1;
 				}
 			} else if (primeiraTroca) {
 				////print ("inicio1");
@@ -215,20 +241,23 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 		case 2:
 			////print ("rolando2");
 			Vector3 dir2 = Vector3.zero;
-			upPlataform = originalPosition;
+			//originalPosition = t.position;
+			upPlataform = newPosition;
 			upPlataform.y += 4.0f;
 			if (!primeiraTroca) {
 				isClosed = false;
-				if (Vector3.Distance (t.position, upPlataform) <= 0.1f) {
+				//if (Vector3.Distance (t.position, upPlataform) <= 0.1f) {
+					if(Mathf.Abs((t.position-upPlataform).y )< 0.1f){
 					acaoTerminada = true;
 					currentState = Planta_CurrentState.DefaultState;
 					//primeiraTroca = false;
-					t.position = upPlataform;
+					t.position = new Vector3 (t.position.x,upPlataform.y,t.position.z);
 					return;
 				} else {
-					dir2 = Vector3.Lerp (t.position, upPlataform, velocidade * Time.deltaTime);
-					//acaoTerminada = false;
-					t.position = dir2;
+					t.position = new Vector3 (t.position.x, Mathf.Lerp (t.position.y, upPlataform.y, velocidade * Time.deltaTime),t.position.z);
+//					dir2 = Vector3.Lerp (t.position, upPlataform, velocidade * Time.deltaTime);
+					acaoTerminada = false;
+//					t.position = dir2;
 				}
 			} else if (primeiraTroca) {
 				////print ("inicio2");
@@ -239,19 +268,23 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 		case 3:
 			////print ("rolando3");
 			Vector3 dir3 = Vector3.zero;
-			upPlataform = originalPosition;
+			//originalPosition = t.position;
+			upPlataform = newPosition;
 			upPlataform.y += 8.0f;
 			if (!primeiraTroca) {
 				isClosed = false;
-				if (Vector3.Distance (t.position, upPlataform) <= 0.1f) {
+				//if (Vector3.Distance (t.position, upPlataform) <= 0.1f) {
+					if(Mathf.Abs((t.position-upPlataform).y )< 0.1f){
 					acaoTerminada = true;
 					currentState = Planta_CurrentState.DefaultState;
 					//primeiraTroca = false;
-					t.position = upPlataform;
+					t.position = new Vector3 (t.position.x,upPlataform.y,t.position.z);
 					return;
 				} else {
-					dir3 = Vector3.Lerp (t.position, upPlataform, velocidade * Time.deltaTime);
-					t.position = dir3;
+					t.position = new Vector3 (t.position.x, Mathf.Lerp (t.position.y, upPlataform.y, velocidade * Time.deltaTime),t.position.z);
+					acaoTerminada = false;
+//					dir3 = Vector3.Lerp (t.position, upPlataform, velocidade * Time.deltaTime);
+//					t.position = dir3;
 				}
 			} else if (primeiraTroca) {
 				////print ("inicio3");
@@ -264,19 +297,23 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 		case 4:
 			////print ("rolando4");
 			Vector3 dir4 = Vector3.zero;
-			upPlataform = originalPosition;
+			//originalPosition = t.position;
+			upPlataform = newPosition;
 			upPlataform.y += 12.0f;
 			if (!primeiraTroca) {
 				isClosed = false;
-				if (Vector3.Distance (t.position, upPlataform) <= 0.1f) {
+				//if (Vector3.Distance (t.position, upPlataform) <= 0.1f) {
+					if(Mathf.Abs((t.position-upPlataform).y )< 0.1f){
 					acaoTerminada = true;
 					currentState = Planta_CurrentState.DefaultState;
 					//primeiraTroca = false;
-					t.position = upPlataform;
+					t.position = new Vector3 (t.position.x,upPlataform.y,t.position.z);
 					return;
 				} else {
-					dir4 = Vector3.Lerp (t.position, upPlataform, velocidade * Time.deltaTime);
-					t.position = dir4;
+					t.position = new Vector3 (t.position.x, Mathf.Lerp (t.position.y, upPlataform.y, velocidade * Time.deltaTime),t.position.z);
+					acaoTerminada = false;
+//					dir4 = Vector3.Lerp (t.position, upPlataform, velocidade * Time.deltaTime);
+//					t.position = dir4;
 				}
 			} else if (primeiraTroca) {
 				t.position = upPlataform;
