@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class TranslateObject : MonoBehaviour {
 
+	public bool startAtCurrentPos;
 	public Vector3 originalPos;
 	public Vector3 destination;
+	public Transform destinationTransform; //Opcional.
 	public float seconds; //O nome é tempo, mas na verdade esta var armazenará a velocidade.
 	public bool translateLocal;
 	public bool easeOut;
@@ -18,6 +20,12 @@ public class TranslateObject : MonoBehaviour {
 
 	void Start () {
 		myT = GetComponent<Transform> ();
+
+		if (startAtCurrentPos)
+			originalPos = myT.position;
+
+		if (destinationTransform != null)
+			destination = destinationTransform.position;
 	}
 
 	void Update () {
@@ -41,5 +49,10 @@ public class TranslateObject : MonoBehaviour {
 
 		if (perc == 1f)
 			enabled = false;
+	}
+	public void StartMove(){
+		startMove = true;
+		if (destinationTransform != null)
+			destination = destinationTransform.position;
 	}
 }

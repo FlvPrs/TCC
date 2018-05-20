@@ -173,6 +173,7 @@ public class Npc_BeijaFlor : NPCBehaviour {
 				//Seguir ();
 			} else if(currentSong != PlayerSongs.Empty && currentSong != PlayerSongs.Amizade) {
 				seguindo = false;
+				print("pareiSeguir");
 				//playerPerto = false;
 				//PararDeSeguir ();
 				if (timerToPatrulha <= 10) {
@@ -181,8 +182,8 @@ public class Npc_BeijaFlor : NPCBehaviour {
 			}
 			if (seguindo) {
 				Seguir ();
-			} else {
-				PararDeSeguir ();
+			}else if(!seguindo) {
+				//PararDeSeguir ();
 			}
 		}
 

@@ -11,7 +11,7 @@ public class TerraFertilScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (gameObject.transform.childCount > 2) {
+		if (gameObject.transform.childCount == 3) {
 			if (podeReceberSemente == true) {
 				TesteAtivaPlanta ();
 			}

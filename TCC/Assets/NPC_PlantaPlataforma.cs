@@ -327,41 +327,41 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 		}
 	}
 
-	protected override void OnTriggerEnter(Collider colisor){
-		base.OnTriggerEnter (colisor);
-
-		if(colisor.CompareTag("Player")){
-			colisor.transform.parent.parent = t;
-		}
-	}
-
-	protected override void OnTriggerExit(Collider colisor){
-		base.OnTriggerExit (colisor);
-
-		if (colisor.CompareTag ("Player")) {
-			colisor.transform.parent.parent = null;
-		}
-
-		if(colisor.GetComponent<NPC_Kiwi>() != null){
-			colisor.GetComponent<NPC_Kiwi> ().OnMovingPlat (true, null);
-		}
-
-		if(colisor.GetComponent<Npc_BeijaFlor>() != null){
-			colisor.GetComponent<Npc_BeijaFlor> ().OnMovingPlat (true, null);
-		}
-	}
-
-	protected override void OnTriggerStay (Collider col)
-	{
-		base.OnTriggerStay (col);
-
-		if(col.GetComponent<NPC_Kiwi>() != null){
-			col.GetComponent<NPC_Kiwi> ().OnMovingPlat (acaoTerminada, t);
-		}
-
-		if(col.GetComponent<Npc_BeijaFlor>() != null){
-			col.GetComponent<Npc_BeijaFlor> ().OnMovingPlat (acaoTerminada, t);
-		}
-	}
+//	protected override void OnTriggerEnter(Collider colisor){
+//		base.OnTriggerEnter (colisor);
+//
+//		if(colisor.CompareTag("Player")){
+//			colisor.transform.parent.parent = t;
+//		}
+//	}
+//
+//	protected override void OnTriggerExit(Collider colisor){
+//		base.OnTriggerExit (colisor);
+//
+//		if (colisor.CompareTag ("Player")) {
+//			colisor.transform.parent.parent = null;
+//		}
+//
+//		if(colisor.GetComponent<NPC_Kiwi>() != null){
+//			colisor.GetComponent<NPC_Kiwi> ().OnMovingPlat (true, null);
+//		}
+//
+//		if(colisor.GetComponent<Npc_BeijaFlor>() != null){
+//			colisor.GetComponent<Npc_BeijaFlor> ().OnMovingPlat (true, null);
+//		}
+//	}
+//
+//	protected override void OnTriggerStay (Collider col)
+//	{
+//		base.OnTriggerStay (col);
+//
+//		if(col.GetComponent<NPC_Kiwi>() != null){
+//			col.GetComponent<NPC_Kiwi> ().OnMovingPlat (acaoTerminada, t);
+//		}
+//
+//		if(col.GetComponent<Npc_BeijaFlor>() != null){
+//			col.GetComponent<Npc_BeijaFlor> ().OnMovingPlat (acaoTerminada, t);
+//		}
+//	}
 
 }
