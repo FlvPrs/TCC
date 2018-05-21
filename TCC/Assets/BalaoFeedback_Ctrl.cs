@@ -4,12 +4,12 @@ using UnityEngine;
 
 public enum balaoTypes
 {
-	cansado, errou, ouvindo
+	cansado, errou, ouvindo, kiwi
 }
 
 public class BalaoFeedback_Ctrl : MonoBehaviour {
 
-	public Sprite cansado, errou, ouvindo;
+	public Sprite cansado, errou, ouvindo, kiwi;
 	public Sprite[] cura1, cura2, cura3;
 
 	private SpriteRenderer spritePosition;
@@ -32,6 +32,9 @@ public class BalaoFeedback_Ctrl : MonoBehaviour {
 		case balaoTypes.ouvindo:
 			spritePosition.sprite = ouvindo;
 			break;
+//		case balaoTypes.kiwi:
+//			spritePosition.sprite = kiwi;
+//			break;
 
 		default:
 			break;

@@ -128,6 +128,7 @@ public class Planta_Ventilador : PlantaBehaviour {
 		}
 
 		Vector3 dir = currentInteractionAgent.position - headJoint.position;
+		dir = new Vector3 (dir.x, 0, dir.z);
 
 		if (Vector3.Dot (-Vector3.up, dir.normalized) < 0f) {
 			headJoint.rotation = Quaternion.Slerp (headJoint.rotation, Quaternion.LookRotation (dir), Time.deltaTime * angularSpeed);
@@ -199,6 +200,7 @@ public class Planta_Ventilador : PlantaBehaviour {
 		}
 
 		Vector3 dir = headJoint.position - currentInteractionAgent.position;
+		dir = new Vector3 (dir.x, 0, dir.z);
 
 		if (Vector3.Dot (-Vector3.up, dir.normalized) < 0f) {
 			headJoint.rotation = Quaternion.Slerp (headJoint.rotation, Quaternion.LookRotation (dir), Time.deltaTime * angularSpeed);

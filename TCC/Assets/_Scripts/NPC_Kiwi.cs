@@ -258,8 +258,8 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 		//TODO: O que ficar "Agitado" significa?
 		//Agitado -> 10s -> Normal
 
-		if (objetoCarregado != null)
-			SoltarObjeto ();
+//		if (objetoCarregado != null)
+//			SoltarObjeto ();
 
 		base.Irritar ();
 	}
@@ -336,10 +336,10 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 		objetoCarregado.localPosition = new Vector3 (0, 0.3f, 0);
 	}
 
-	public void SoltarObjeto (){
-		if(isCarregandoPai){
+	public void SoltarObjeto (bool calledByFather = false){
+		if(isCarregandoPai && !calledByFather){
 			objetoCarregado.GetComponent<Father_DebilitadoCtrl> ().StopCarriedByKiwis ();
-		} else if (objetoCarregado != null) {
+		} else if (!isCarregandoPai && objetoCarregado != null) {
 			if (objetoCarregado.CompareTag("Fruta")) {
 				objetoCarregado.GetComponent<FrutaDeCura_Controller> ().UnFreeze ();
 			}

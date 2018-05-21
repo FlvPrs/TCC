@@ -15,16 +15,18 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 
 	public FatherConditions currentDisposition;
 
-	[HideInInspector]
 	public bool carregadoPorKiwis;
 	int numeroDeKiwis = 0;
 
 	int frutasComidas = 0;
 
 	float askHealingCooldown = 0f;
+	float askKiwiCooldown = 0f;
 
 	public float delayFirstAskBy = 0f;
-	public bool canBeCarried = true;
+	public bool canBeCarriedByDefault = true;
+
+	bool canBeCarried = true;
 
 	private List<NPC_Kiwi> kiwis;
 
@@ -32,6 +34,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 
 	void Awake (){
 		askHealingCooldown = delayFirstAskBy;
+		askKiwiCooldown = delayFirstAskBy;
 		kiwis = new List<NPC_Kiwi> (2);
 
 		balaoFeedback = transform.Find ("BalaoFeedback").GetComponent<BalaoFeedback_Ctrl> ();
@@ -55,26 +58,24 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 
 		switch (currentDisposition) {
 		case FatherConditions.Disposto: //Andando normal
-			tag = "NPC_Pai";
-			if (carregadoPorKiwis) {
-				//transform.GetComponentInParent<NPC_Kiwi> ().SoltarObjeto ();
-			}
+			canBeCarried = false;
 			break;
 		case FatherConditions.Debilitado: //Andando com dificuldade
-			tag = "PaiDebilitado";
+			canBeCarried = false;
 			break;
 		case FatherConditions.Machucado: //Parado
-			tag = "PaiDebilitado";
-			AskForFruit ();
+			canBeCarried = true;
+			if(!carregadoPorKiwis)
+				AskForKiwi ();
 			break;
 		case FatherConditions.MuitoMachucado: //Parado quase morto
+			canBeCarried = false;
 			if (carregadoPorKiwis) {
 				askHealingCooldown = 0f;
-				tag = "NPC_Pai";
 				for (int i = 0; i < kiwis.Count; i++) {
-					kiwis [i].SoltarObjeto ();
+					kiwis [i].SoltarObjeto (true);
 				}
-				//transform.GetComponentInParent<NPC_Kiwi> ().SoltarObjeto ();
+				StopCarriedByKiwis ();
 			}
 			if(isInverno)
 				AskForFruit (3);
@@ -92,9 +93,12 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 	}
 
 	public void CanBeCarriedByKiwis (){
-		if (carregadoPorKiwis || !canBeCarried)
+		if (carregadoPorKiwis || !canBeCarriedByDefault || !canBeCarried)
 			return;
-		
+
+		if (numeroDeKiwis < 0)
+			numeroDeKiwis = 0;
+
 		if(numeroDeKiwis > 1){
 			nmAgent.enabled = false;
 			carregadoPorKiwis = true;
@@ -105,26 +109,35 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 		}
 	}
 
-	public void ResetNumeroDeKiwis (){
-		numeroDeKiwis = 0;
-	}
-
 	public void StopCarriedByKiwis (){
 		carregadoPorKiwis = false;
-//		for (int i = 0; i < kiwis.Count; i++) {
-//			kiwis.RemoveAt(i);
-//		}
+		for (int i = 0; i < kiwis.Count; i++) {
+			kiwis.RemoveAt(i);
+		}
 		numeroDeKiwis = 0;
 		transform.SetParent (null);
 		nmAgent.enabled = true;
 	}
 
-	void AskForFruit (int numberOfFruits = 1){
-		//TODO colocar balão no HUD. 
-			//Se for Debilitado, o balão some depois de um tempo.
-			//Se for Machucado, o balão some depois de um tempo, depois aparece de novo,...
-			//Se for MuitoMachucado, o balão nunca some.
+	void AskForKiwi (){
+		CancelInvoke("ResetKiwiBalaoCooldown");
+		if(askKiwiCooldown > 0f){
+			askKiwiCooldown -= Time.deltaTime;
 
+		} else {
+			fatherActions.animCtrl.SetTrigger ("askForHealing");
+			balaoFeedback.ShowBalao(balaoTypes.kiwi);
+			//askHealingCooldown = (currentDisposition == FatherConditions.MuitoMachucado) ? 8f : (currentDisposition == FatherConditions.Machucado) ? 20f : 70f;
+			askKiwiCooldown = 8f;
+		}
+
+		Invoke ("ResetKiwiBalaoCooldown", 0.5f);
+	}
+	void ResetKiwiBalaoCooldown (){
+		askKiwiCooldown = 0f;
+	}
+
+	void AskForFruit (int numberOfFruits = 1){
 		CancelInvoke("ResetHealingCooldown");
 		if(askHealingCooldown > 0f){
 			askHealingCooldown -= Time.deltaTime;
@@ -132,7 +145,8 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 		} else {
 			fatherActions.animCtrl.SetTrigger ("askForHealing");
 			balaoFeedback.ShowBalaoCura (numberOfFruits, frutasComidas);
-			askHealingCooldown = (currentDisposition == FatherConditions.MuitoMachucado) ? 8f : (currentDisposition == FatherConditions.Machucado) ? 20f : 70f;
+			//askHealingCooldown = (currentDisposition == FatherConditions.MuitoMachucado) ? 8f : (currentDisposition == FatherConditions.Machucado) ? 20f : 70f;
+			askHealingCooldown = 8f;
 		}
 
 		if(frutasComidas >= numberOfFruits){
@@ -158,6 +172,8 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 			currentDisposition = FatherConditions.Disposto;
 			Destroy (fruta);
 		}
+
+		StopCarriedByKiwis ();
 
 		StartCoroutine ("BlinkCollider");
 	}
@@ -189,7 +205,11 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 						kiwis.Add (col.GetComponent<NPC_Kiwi> ());
 						numeroDeKiwis++;
 					}
-				}
+				} 
+//				else if (!col.GetComponent<NPC_Kiwi> ().CanCarryPai ()) {
+//					kiwis.Remove (col.GetComponent<NPC_Kiwi> ());
+//					numeroDeKiwis--;
+//				}
 			}
 		}
 
@@ -206,6 +226,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 		if(col.GetComponent<NPC_Kiwi>() != null){
 			if (kiwis.Contains (col.GetComponent<NPC_Kiwi> ())) {
 				kiwis.Remove (col.GetComponent<NPC_Kiwi> ());
+				numeroDeKiwis--;
 			}
 		}
 	}
