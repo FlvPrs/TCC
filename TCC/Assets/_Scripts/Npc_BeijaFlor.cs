@@ -181,8 +181,8 @@ public class Npc_BeijaFlor : NPCBehaviour {
 			}
 			if (seguindo) {
 				Seguir ();
-			} else {
-				PararDeSeguir ();
+			}else if(!seguindo) {
+				//PararDeSeguir ();
 			}
 		}
 

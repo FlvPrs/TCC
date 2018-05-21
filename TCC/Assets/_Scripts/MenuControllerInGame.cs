@@ -11,7 +11,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	public int saveSlot1, saveSlot2, saveSlot3, volumeAlterado;
 	private bool onMenu1, onMenu2, onMenu3, onMenu4, onMenu5, onMenuDeath,onPause, controlandoVolume, musicaEfeito, inGame;
 	private bool podeEnter, jogando, controleOpcaoEixo, deleteSave;
-	public GameObject menu1, menu2, menu3, menu4, menu5, menuPause, menuMorte, telaFundo, seta;
+	public GameObject menu1, menu2, menu3, menu4, menu5, menuPause, menuMorte, menuFakeDeath, telaFundo, seta;
 	public GameObject VM1, VM2, VM3, VM4, VM5, VM6, VM7, VM8;
 	public GameObject VE1, VE2, VE3, VE4, VE5, VE6, VE7, VE8;
 	public static SaveInformations save;
@@ -143,12 +143,13 @@ public class MenuControllerInGame : MonoBehaviour {
 				} 
 				else if (onMenuDeath) {
 					if (opcaoMenuMorte == 1) {
-						if(!fakeDeathMenu) {
+						//if(!fakeDeathMenu) {
 						Time.timeScale = 1f;
 						TrocaMenus (6);
-						}else if(fakeDeathMenu){
-							PaiCaminhandoParaMorte ();
-						}
+						//}
+//						else if(fakeDeathMenu){
+//							PaiCaminhandoParaMorte ();
+//						}
 					} else if (opcaoMenuMorte == 2) {
 						SceneManager.LoadScene (1);
 					} else if (opcaoMenuMorte == 3) {
@@ -405,23 +406,23 @@ public class MenuControllerInGame : MonoBehaviour {
 			}
 		}
 	}
-	void PaiCaminhandoParaMorte (){
-		print ("Morreu");
-		if(entersToSavePlayer == 0){
-			fatherSacrificeCtrl.StartSacrifice ();
-			entersToSavePlayer++;
-			return;
-		}
-		//entersToSavePlayer++;
-		fatherSacrificeCtrl.ContinueAVoar ();
-//		if(entersToSavePlayer <= 0){
-//			MortePai ();
+//	void PaiCaminhandoParaMorte (){
+//		print ("Morreu");
+//		if(entersToSavePlayer == 0){
+//			fatherSacrificeCtrl.StartSacrifice ();
+//			entersToSavePlayer++;
+//			return;
 //		}
-	}
-
-	void MortePai(){
-		//TODO
-	}
+//		//entersToSavePlayer++;
+//		fatherSacrificeCtrl.ContinueAVoar ();
+////		if(entersToSavePlayer <= 0){
+////			MortePai ();
+////		}
+//	}
+//
+//	void MortePai(){
+//		//TODO
+//	}
 
 
 	void GetSaveVariables(){
@@ -499,6 +500,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			menu4.SetActive (false);
 			menu5.SetActive (false);
 			menuMorte.SetActive (false);
+			menuFakeDeath.SetActive (false);
 			menuPause.SetActive (true);
 			telaFundo.SetActive (true);
 
@@ -527,6 +529,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			menu4.SetActive (false);
 			menu5.SetActive (false);
 			menuMorte.SetActive (false);
+			menuFakeDeath.SetActive (false);
 			menuPause.SetActive (false);
 			telaFundo.SetActive (true);
 
@@ -553,6 +556,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			menu4.SetActive (false);
 			menu5.SetActive (false);
 			menuMorte.SetActive (false);
+			menuFakeDeath.SetActive (false);
 			menuPause.SetActive (false);
 			telaFundo.SetActive (true);
 
@@ -581,6 +585,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			menu4.SetActive (false);
 			menu5.SetActive (false);
 			menuMorte.SetActive (false);
+			menuFakeDeath.SetActive (false);
 			menuPause.SetActive (false);
 			telaFundo.SetActive (true);
 
@@ -609,6 +614,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			menu4.SetActive (true);
 			menu5.SetActive (false);
 			menuMorte.SetActive (false);
+			menuFakeDeath.SetActive (false);
 			menuPause.SetActive (false);
 			telaFundo.SetActive (true);
 
@@ -634,6 +640,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			menu4.SetActive (false);
 			menu5.SetActive (false);
 			menuMorte.SetActive (true);
+			menuFakeDeath.SetActive (false);
 			menuPause.SetActive (false);
 			telaFundo.SetActive (true);
 
@@ -661,6 +668,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			menu4.SetActive (false);
 			menu5.SetActive (false);
 			menuMorte.SetActive (false);
+			menuFakeDeath.SetActive (false);
 			menuPause.SetActive (false);
 			telaFundo.SetActive (false);
 
@@ -688,6 +696,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			menu4.SetActive (false);
 			menu5.SetActive (true);
 			menuMorte.SetActive (false);
+			menuFakeDeath.SetActive (false);
 			menuPause.SetActive (false);
 			telaFundo.SetActive (true);
 
@@ -714,7 +723,8 @@ public class MenuControllerInGame : MonoBehaviour {
 			menu3.SetActive (false);
 			menu4.SetActive (false);
 			menu5.SetActive (false);
-			menuMorte.SetActive (true);
+			menuMorte.SetActive (false);
+			menuFakeDeath.SetActive (true);
 			menuPause.SetActive (false);
 			telaFundo.SetActive (false);
 
