@@ -147,9 +147,9 @@ public class MenuControllerInGame : MonoBehaviour {
 						Time.timeScale = 1f;
 						TrocaMenus (6);
 						//}
-//						else if(fakeDeathMenu){
-//							PaiCaminhandoParaMorte ();
-//						}
+						//else if(fakeDeathMenu){
+						//	PaiCaminhandoParaMorte ();
+						//}
 					} else if (opcaoMenuMorte == 2) {
 						SceneManager.LoadScene (1);
 					} else if (opcaoMenuMorte == 3) {
@@ -406,20 +406,22 @@ public class MenuControllerInGame : MonoBehaviour {
 			}
 		}
 	}
-//	void PaiCaminhandoParaMorte (){
-//		print ("Morreu");
+	void PaiCaminhandoParaMorte (){
+		print ("Morreu");
 //		if(entersToSavePlayer == 0){
 //			fatherSacrificeCtrl.StartSacrifice ();
 //			entersToSavePlayer++;
 //			return;
 //		}
-//		//entersToSavePlayer++;
-//		fatherSacrificeCtrl.ContinueAVoar ();
-////		if(entersToSavePlayer <= 0){
-////			MortePai ();
-////		}
-//	}
-//
+		//entersToSavePlayer++;
+		player.playerCanCanOnlySing = true;
+		fatherSacrificeCtrl.CheckSingToStartSacrifice ();
+		//fatherSacrificeCtrl.ContinueAVoar ();
+//		if(entersToSavePlayer <= 0){
+//			MortePai ();
+//		}
+	}
+
 //	void MortePai(){
 //		//TODO
 //	}
@@ -741,6 +743,7 @@ public class MenuControllerInGame : MonoBehaviour {
 
 			opcaoMenuMorte = 1;
 			player.playerCanMove = false;
+			PaiCaminhandoParaMorte ();
 			break;
 
 		}

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Npc_BeijaFlor : NPCBehaviour {
+public class Npc_BeijaFlor : NPCBehaviour, IPlatformMovable {
 
 	private float distToPlayer;
 	private float timerToPatrulha;

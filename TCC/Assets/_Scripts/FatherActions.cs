@@ -6,7 +6,7 @@ public enum FSM_WalkStates { SimpleWalk, FollowingPlayer, GuidingPlayer, Flying 
 public enum FSM_IdleStates { Inactive, LookingAtPlayer, RandomWalk, Gliding, Jumping }
 
 
-public class FatherActions : AgentFather {
+public class FatherActions : AgentFather, IPlatformMovable {
 
 	public FatherSongInteractionsCtrl songInteractionCollider;
 	protected HeightState currentState;
@@ -130,7 +130,7 @@ public class FatherActions : AgentFather {
 	//--- Esta função deve rodar todo frame ---
 	//SE <player> estiver FORA do raio <startDistance>, ANDE até o <player>
 	//SE <player> estiver DENTRO do raio <stopDistance>, PARE de andar
-	public void FollowPlayer (float startDistance = 12f, float stopDistance = 6f){
+	public void FollowPlayer (float startDistance = 8f, float stopDistance = 4f){
 		if (distToPlayer >= startDistance){
 			//Follow
 			isFollowingPlayer = true;
@@ -512,6 +512,13 @@ public class FatherActions : AgentFather {
 	}
 
 	#endregion
+
+	public void OnMovingPlat (bool enableNavMesh, Transform plat){
+		nmAgent.enabled = enableNavMesh;
+		agentTransform.parent = plat;
+		//rb.isKinematic = enableNavMesh;
+		stopUpdate = !enableNavMesh;
+	}
 }
 
 

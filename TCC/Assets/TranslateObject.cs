@@ -55,4 +55,16 @@ public class TranslateObject : MonoBehaviour {
 		if (destinationTransform != null)
 			destination = destinationTransform.position;
 	}
+
+	public void UpdateDestination (Vector3 dest, bool ignoreX = false, bool ignoreY = false, bool ignoreZ = false){
+		if(ignoreX){
+			destination = new Vector3(destination.x, dest.y, dest.z);
+		} else if (ignoreY) {
+			destination = new Vector3(dest.x, destination.y, dest.z);
+		} else if (ignoreZ) {
+			destination = new Vector3(dest.x, dest.y, destination.z);
+		} else {
+			destination = dest;
+		}
+	}
 }

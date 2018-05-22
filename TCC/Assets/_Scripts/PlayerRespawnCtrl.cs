@@ -60,6 +60,10 @@ public class PlayerRespawnCtrl : MonoBehaviour {
 			rend.material.SetColor ("_Color", new Color (0.392f, 0.862f, 0.862f));
 			actualPai.GetChild(1).Find("l_Asa").gameObject.SetActive(false);
 			actualPai.GetChild(1).Find("r_Asa").gameObject.SetActive(false);
+			actualPai.GetChild (1).GetComponent<Animator> ().SetBool ("isDying", true);
+			Quaternion deadRotation = actualPai.rotation;
+			deadRotation.eulerAngles = new Vector3 (-21.463f, 5.437f, -49.114f);
+			actualPai.rotation = deadRotation;
 		}
 		isReturning = true;
 		flyingPai.SetActive (true);

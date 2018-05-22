@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 
-public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
+public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible, IPlatformMovable {
 
 	Rigidbody rb;
 
@@ -145,13 +145,13 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible {
 
 		if (!isOnArbusto) {
 			//Normalmente, Foge do player quando este se aproxima.
-			if (distToPlayer < 7f && !isCarregandoPai) {
+			if (distToPlayer < 6f && !isCarregandoPai) {
 				patrulhando = false;
 				timer_StartPatrulha = 0;
 				currentSong = PlayerSongs.Empty;
 
-				if (objetoCarregado != null)
-					SoltarObjeto ();
+//				if (objetoCarregado != null)
+//					SoltarObjeto ();
 
 				if (!fugindo) {
 					fugindo = true;

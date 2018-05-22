@@ -13,6 +13,7 @@ public class FadeOutRespawn : MonoBehaviour {
 	[Range(0f, 5f)]
 	public float fadeFromBlack_Duration = 0.5f;
 
+	public float waitTillChangeLvl = 3f;
 	//private float duration = 0f;
 
 	public Image blackScrn;
@@ -70,7 +71,7 @@ public class FadeOutRespawn : MonoBehaviour {
 		fadeOut_ToBlack = false;
 
 		if (fadeToEndLevel) {
-			yield return new WaitForSeconds (3f);
+			yield return new WaitForSeconds (waitTillChangeLvl);
 			//EndGame.Restart ();
 			EndGame.ChangeLevel ();
 			yield return null;

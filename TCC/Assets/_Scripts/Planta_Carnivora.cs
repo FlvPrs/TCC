@@ -147,7 +147,7 @@ public class Planta_Carnivora : PlantaBehaviour {
 
 	void ReleaseFood (){
 		fechada = false;
-		comendo = true; //TODO: DEIXAR FALSE
+		comendo = false; //TODO: DEIXAR FALSE
 		currentFood.Carnivora_Release ();
 		currentFood = null;
 

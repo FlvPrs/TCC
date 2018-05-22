@@ -31,6 +31,8 @@ public class FatherFSM : MonoBehaviour {
 	public bool externalTriggerActivated;
 	float checkDistance, checkTimer;
 
+	public bool followClose;
+
 	void Start () {
 		fatherActions = GetComponent<FatherActions> ();
 	}
@@ -112,7 +114,10 @@ public class FatherFSM : MonoBehaviour {
 			fatherActions.MoveHere (currentStateInfo.destination.position);
 			break;
 		case FatherStates.FollowingPlayer:
-			fatherActions.FollowPlayer ();
+			if(followClose)
+				fatherActions.FollowPlayer (4f, 3.8f);
+			else
+				fatherActions.FollowPlayer ();
 			break;
 		case FatherStates.GuidingPlayer:
 			fatherActions.GuidePlayerTo (currentStateInfo.destination.position);

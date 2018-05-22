@@ -108,6 +108,8 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	public bool playerInputStartGame;
 	[HideInInspector]
 	public bool playerCanMove;
+	[HideInInspector]
+	public bool playerCanCanOnlySing;
 
 	[HideInInspector]
 	public bool holdHeight = false;

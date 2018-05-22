@@ -28,12 +28,16 @@ public class UpPlatPlatform : MonoBehaviour {
 			colisor.transform.parent.parent = null;
 		}
 
-		if(colisor.GetComponent<NPC_Kiwi>() != null){
-			colisor.GetComponent<NPC_Kiwi> ().OnMovingPlat (true, null);
-		}
+//		if(colisor.GetComponent<NPC_Kiwi>() != null){
+//			colisor.GetComponent<NPC_Kiwi> ().OnMovingPlat (true, null);
+//		}
+//
+//		if(colisor.GetComponent<Npc_BeijaFlor>() != null){
+//			colisor.GetComponent<Npc_BeijaFlor> ().OnMovingPlat (true, null);
+//		}
 
-		if(colisor.GetComponent<Npc_BeijaFlor>() != null){
-			colisor.GetComponent<Npc_BeijaFlor> ().OnMovingPlat (true, null);
+		if(colisor.GetComponent<IPlatformMovable>() != null){
+			colisor.GetComponent<IPlatformMovable> ().OnMovingPlat (true, null);
 		}
 	}
 
@@ -41,13 +45,17 @@ public class UpPlatPlatform : MonoBehaviour {
 	{
 		//base.OnTriggerStay (col);
 
-		if(col.GetComponent<NPC_Kiwi>() != null){
-			col.GetComponent<NPC_Kiwi> ().OnMovingPlat (plantaPlataforma.acaoTerminada, plantaPlataforma.transform);
-		}
+//		if(col.GetComponent<NPC_Kiwi>() != null){
+//			col.GetComponent<NPC_Kiwi> ().OnMovingPlat (plantaPlataforma.acaoTerminada, plantaPlataforma.transform);
+//		}
+//
+//		if(col.GetComponent<Npc_BeijaFlor>() != null){
+//			//print ("deuok");
+//			col.GetComponent<Npc_BeijaFlor> ().OnMovingPlat (plantaPlataforma.acaoTerminada, plantaPlataforma.transform);
+//		}
 
-		if(col.GetComponent<Npc_BeijaFlor>() != null){
-			print ("deuok");
-			col.GetComponent<Npc_BeijaFlor> ().OnMovingPlat (plantaPlataforma.acaoTerminada, plantaPlataforma.transform);
+		if(col.GetComponent<IPlatformMovable>() != null){
+			col.GetComponent<IPlatformMovable> ().OnMovingPlat (plantaPlataforma.acaoTerminada, plantaPlataforma.transform);
 		}
 	}
 }

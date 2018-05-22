@@ -8,6 +8,8 @@ public class quedaCollider : MonoBehaviour {
 	public GameObject player;
 	public WayPointQueda wayPoint;
 	public TranslateObject movePai;
+
+	bool startMove;
 	// Use this for initialization
 	void Start () {
 		posicaoInicial = player.transform.position;
@@ -19,6 +21,10 @@ public class quedaCollider : MonoBehaviour {
 			player.transform.position = posicaoInicial;
 			movePai.startMove = false;
 		}
+
+		if (startMove) {
+			movePai.UpdateDestination (player.transform.position, false, true, false);
+		}
 	}
 
 	void OnTriggerEnter(Collider colisor){
@@ -26,7 +32,7 @@ public class quedaCollider : MonoBehaviour {
 			posicaoQueda = colisor.transform.position;
 			wayPoint.GetPlayerPosition (posicaoQueda);
 			movePai.StartMove();
-			print ("colisaoPlayer");
+			startMove = true;
 
 		}
 	}

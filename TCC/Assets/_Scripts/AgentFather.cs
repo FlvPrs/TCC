@@ -30,6 +30,9 @@ public class AgentFather : MonoBehaviour {
 	public NoteParts[] staccatoSounds; //0 Default, 1 High, 2 Low
 	protected int[] noteIndexes;
 
+	public bool canWalkWhile_Machucado = true;
+	bool canWalk;
+
 	#region ========== Debug Variables ==========
 	public Transform targetReference;
 	protected AudioSource sing;
@@ -71,20 +74,20 @@ public class AgentFather : MonoBehaviour {
 		if(!nmAgent.isActiveAndEnabled){
 			bool isOnAir = (isJumping || isFlying);
 			animCtrl.SetBool ("IsOnOffMeshLink", isOnAir);
-			if(isOnAir){
-				if (!IsInvoking ())
-					Invoke ("openWings", 0.02f);
-			}
+//			if(isOnAir){
+//				if (!IsInvoking ())
+//					Invoke ("openWings", 0.02f);
+//			}
 		} else {
 			if (nmAgent.isOnOffMeshLink) {
 				animCtrl.SetBool ("IsOnOffMeshLink", true);
 				animCtrl.SetBool ("isGrounded", false);
-				openWings ();
+				//openWings ();
 			} else {
 				animCtrl.SetTrigger ("EnteredOffMeshLink");
 				animCtrl.SetBool ("IsOnOffMeshLink", false);
 				animCtrl.SetBool ("isGrounded", true);
-				openWings (false);
+				//openWings (false);
 			}
 		}
 
@@ -121,6 +124,15 @@ public class AgentFather : MonoBehaviour {
 			animCtrl.SetBool ("isWalking", (nmAgent.enabled && !nmAgent.isStopped) ? isWalking : false);
 		} else {
 			animCtrl.SetBool ("isWalking", isWalking);
+		}
+
+		openWings (!isWalking || isFlying || isJumping || nmAgent.isOnOffMeshLink);
+
+		if (currentDisposition == FatherConditions.MuitoMachucado || (currentDisposition == FatherConditions.Machucado && !canWalkWhile_Machucado)) {
+			canWalk = false;
+			isWalking = false;
+		} else {
+			canWalk = true;
 		}
 	}
 
@@ -169,7 +181,7 @@ public class AgentFather : MonoBehaviour {
 	protected float oldPosY;
 
 	protected void MoveAgentWithRB (Vector3 target){
-		if (currentDisposition == FatherConditions.Machucado || currentDisposition == FatherConditions.MuitoMachucado) {
+		if (!canWalk) {
 			isWalking = false;
 			return;
 		}
@@ -196,7 +208,7 @@ public class AgentFather : MonoBehaviour {
 	}
 
 	protected void MoveAgentOnNavMesh (Vector3 target){
-		if (currentDisposition == FatherConditions.Machucado || currentDisposition == FatherConditions.MuitoMachucado) {
+		if (!canWalk) {
 			isWalking = false;
 			return;
 		}
@@ -229,7 +241,7 @@ public class AgentFather : MonoBehaviour {
 					}
 				}
 			}
-			isWalking = true;
+			//isWalking = true;
 			return false;
 		}
 		//Se estiver andando com Rigidbody ------------------------------
@@ -243,7 +255,7 @@ public class AgentFather : MonoBehaviour {
 				isWalking = false;
 				return true;
 			} else {
-				isWalking = true;
+				//isWalking = true;
 				return false;
 			}
 		}

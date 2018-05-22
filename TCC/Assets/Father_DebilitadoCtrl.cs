@@ -24,7 +24,10 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 	float askKiwiCooldown = 0f;
 
 	public float delayFirstAskBy = 0f;
+	public float delayAllAsksBy = 0f;
 	public bool canBeCarriedByDefault = true;
+
+
 
 	bool canBeCarried = true;
 
@@ -63,7 +66,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 		case FatherConditions.Debilitado: //Andando com dificuldade
 			canBeCarried = false;
 			break;
-		case FatherConditions.Machucado: //Parado
+		case FatherConditions.Machucado: //Parado, dependendo do caso
 			canBeCarried = true;
 			if(!carregadoPorKiwis)
 				AskForKiwi ();
@@ -86,8 +89,8 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 			break;
 		}
 
-//		if (carregadoPorKiwis)
-//			fatherActions.LookAtPlayer ();
+		if (carregadoPorKiwis)
+			fatherActions.LookAtPlayer ();
 
 		fatherActions.animCtrl.SetBool ("beingCarriedByKiwis", carregadoPorKiwis);
 	}
@@ -128,7 +131,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 			fatherActions.animCtrl.SetTrigger ("askForHealing");
 			balaoFeedback.ShowBalao(balaoTypes.kiwi);
 			//askHealingCooldown = (currentDisposition == FatherConditions.MuitoMachucado) ? 8f : (currentDisposition == FatherConditions.Machucado) ? 20f : 70f;
-			askKiwiCooldown = 8f;
+			askKiwiCooldown = 8f + delayAllAsksBy;
 		}
 
 		Invoke ("ResetKiwiBalaoCooldown", 0.5f);
@@ -146,7 +149,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 			fatherActions.animCtrl.SetTrigger ("askForHealing");
 			balaoFeedback.ShowBalaoCura (numberOfFruits, frutasComidas);
 			//askHealingCooldown = (currentDisposition == FatherConditions.MuitoMachucado) ? 8f : (currentDisposition == FatherConditions.Machucado) ? 20f : 70f;
-			askHealingCooldown = 8f;
+			askHealingCooldown = 8f + delayAllAsksBy;
 		}
 
 		if(frutasComidas >= numberOfFruits){
