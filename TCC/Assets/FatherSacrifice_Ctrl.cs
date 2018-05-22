@@ -56,12 +56,12 @@ public class FatherSacrifice_Ctrl : MonoBehaviour {
 				//Time.timeScale = 0.8f + timeAcceleration;
 				//vooCooldown -= Time.deltaTime;
 				//sacrifice_Pai.Translate (dir.normalized * (0.1f + timeAcceleration));
-			sacrifice_Pai.Translate (dir.normalized);
+			sacrifice_Pai.Translate (dir.normalized * 0.6f);
 			//} else if (canSlowTime) {
 				//Time.timeScale = 0.1f;
 			//}
 
-			if (Vector3.Distance (wpInformation [currentWayPoint].next.position, sacrifice_Pai.position) < 1f)
+			if (Vector3.Distance (wpInformation [currentWayPoint].next.position, sacrifice_Pai.position) < 1.1f)
 				currentWayPoint++;
 		} else {
 			//TODO Fim

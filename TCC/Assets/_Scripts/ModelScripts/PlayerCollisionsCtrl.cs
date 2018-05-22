@@ -35,6 +35,9 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 	private bool venenoDecay, venenoIncrease;
 	private bool iminentFakeDeath = false;
 	private bool diedByVeneno = false;
+	bool onFakeDeathSang = false;
+
+	VignettePulse venenoFX;
 
 	void Awake(){
 		playerCtrl = GetComponent<WalkingController> ();
@@ -42,6 +45,8 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 		camPOI = GetComponentInChildren<CameraFollowPOI> ();
 
 		originalGlideStrength = playerCtrl.glideStrength;
+
+		venenoFX = FindObjectOfType<VignettePulse> ();
 	}
 
 //	void Update(){
@@ -64,13 +69,23 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 
 	void Update (){
 		if(poisoningTimer >= 0f && !diedByVeneno){
-			if(venenoDecay)
+			if (venenoDecay) {
 				poisoningTimer -= Time.deltaTime;
-			else if (venenoIncrease)
+				if (poisoningTimer <= 0f) {
+					RestartVenenoTimer ();
+				}
+			} else if (venenoIncrease) {
 				poisoningTimer += Time.deltaTime;
+			}
+
+			if (venenoFX != null) {
+//				venenoFX.maxIntensity = 0.5f + (poisoningTimer * 0.1f);
+//				venenoFX.speedModifier = 1f + (poisoningTimer);
+				venenoFX.maxIntensity = poisoningTimer * 0.5f;
+				venenoFX.start = (poisoningTimer != 0);
+			}
 
 			if(poisoningTimer > timeToDieByVeneno){
-				//TODO Die Birdo Die
 				diedByVeneno = true;
 				if(iminentFakeDeath){
 					FindObjectOfType<MenuControllerInGame> ().TrocaMenus (8);
@@ -86,6 +101,21 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			}
 		} else {
 			poisoningTimer = 0f;
+			if (!diedByVeneno)
+				venenoFX.start = false;
+			else if (iminentFakeDeath && playerCtrl.walkStates.TOCANDO_NOTAS) {
+					onFakeDeathSang = true;
+			}
+
+			if(onFakeDeathSang){
+				if (venenoFX.maxIntensity > 0.4f)
+					venenoFX.maxIntensity -= 1 * Time.deltaTime;
+				else
+					onFakeDeathSang = false;
+			} else {
+				if (venenoFX.maxIntensity < 0.9f)
+					venenoFX.maxIntensity += 0.2f * Time.deltaTime;
+			}
 		}
 	}
 
@@ -245,7 +275,7 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 	IEnumerator ClearPoison (){
 		venenoDecay = false;
 		venenoIncrease = false;
-		yield return new WaitForSeconds (3f);
+		yield return new WaitForSeconds (1f);
 		venenoDecay = true;
 	}
 }
