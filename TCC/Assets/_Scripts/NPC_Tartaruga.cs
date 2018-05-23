@@ -31,6 +31,6 @@ public class NPC_Tartaruga : NPCBehaviour {
 			sustainAudioSource.Stop ();
 		}
 
-		print (isPlaying);
+		//print (isPlaying);
 	}
 }

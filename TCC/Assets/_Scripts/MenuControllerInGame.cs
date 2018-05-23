@@ -45,6 +45,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		print (inGame);
 		
 		if (Input.GetKeyDown (KeyCode.Return)||Input.GetKeyDown(KeyCode.JoystickButton0)) {
 			if (podeEnter) {
@@ -52,7 +53,7 @@ public class MenuControllerInGame : MonoBehaviour {
 					if (opcaoMenu1 == 1) {
 						TrocaMenus (2);
 					} else if (opcaoMenu1 == 2) {
-						TrocaMenus (3);
+						//TrocaMenus (3);
 					} else if (opcaoMenu1 == 3) {
 						TrocaMenus (4);
 					} else if (opcaoMenu1 == 4) {
@@ -129,7 +130,7 @@ public class MenuControllerInGame : MonoBehaviour {
 					if (opcaoMenuPause == 1) {
 						TrocaMenus (6);
 					} else if (opcaoMenuPause == 2) {
-						TrocaMenus (3);
+						//TrocaMenus (3);
 					} else if (opcaoMenuPause == 3) {
 						TrocaMenus (7);
 					} else if (opcaoMenuPause == 4) {
@@ -493,6 +494,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	}
 
 	public void TrocaMenus(int numeroMenu){
+		print (numeroMenu);
 		switch (numeroMenu) {
 		case 0:// menuPausa
 			
@@ -600,7 +602,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenuDeath = false;
 			jogando = false;
 			fakeDeathMenu = false;
-			inGame = false;
+			//inGame = false;
 
 			opcaoMenu3 = 1;
 			player.playerCanMove = false;
@@ -629,7 +631,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			onMenuDeath = false;
 			jogando = false;
 			fakeDeathMenu = false;
-			inGame = false;
+			//inGame = false;
 
 			player.playerCanMove = false;
 			break;
