@@ -364,7 +364,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			animCtrl.SetBool ("IsSinging", false);
 
 
-		if(hasBonusJump){
+		if(hasBonusJump_2){
 			bonusJumpParticle.SetActive (true);
 		} else{
 			bonusJumpParticle.SetActive (false);

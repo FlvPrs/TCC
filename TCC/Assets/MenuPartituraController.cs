@@ -10,6 +10,8 @@ public class MenuPartituraController : MonoBehaviour {
 	bool apertouDirecional = false;
 	int currIndex = 0;
 
+	bool canPressLTrigger = true;
+
 	// Use this for initialization
 	void Start () {
 		partiturasGroup = transform.GetChild (0);
@@ -19,51 +21,56 @@ public class MenuPartituraController : MonoBehaviour {
 			partituras [i] = partiturasGroup.GetChild (i).gameObject;
 			partituras [i].SetActive (false);
 		}
+
+		partiturasGroup.gameObject.SetActive (menuAberto);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetAxis("L_Trigger") != 0 || Input.GetKey(KeyCode.Tab)){
+		bool oldState = menuAberto;
+
+		if ((Input.GetAxis ("L_Trigger") != 0 && canPressLTrigger) || Input.GetKeyDown (KeyCode.Tab)) {
+			menuAberto = !menuAberto;
+			partiturasGroup.gameObject.SetActive (menuAberto);
+			canPressLTrigger = false;
+		} else if (Input.GetAxis ("L_Trigger") == 0) {
+			canPressLTrigger = true;
+		}
+
+//		if(!menuAberto){
+//			currIndex = 0;
+//		} 
+		if (menuAberto) {
 			int oldIndex = currIndex;
 
-			if(!menuAberto){
-				currIndex = 0;
-			} else {
-				#region DirectionInput
-				if(Input.GetAxis("DPad_X") <= -0.1f || Input.GetKeyDown(KeyCode.E)){
-					if (!apertouDirecional) {
-						apertouDirecional = true;
-						currIndex++;
-					}
-				} else if (Input.GetAxis("DPad_X") >= 0.1f || Input.GetKeyDown(KeyCode.Q)) {
-					if (!apertouDirecional) {
-						apertouDirecional = true;
-						currIndex--;
-					}
-				} else {
-					apertouDirecional = false;
+			#region DirectionInput
+			if(Input.GetAxis("DPad_X") <= -0.1f || Input.GetKeyDown(KeyCode.E)){
+				if (!apertouDirecional) {
+					apertouDirecional = true;
+					currIndex++;
 				}
-				#endregion
-
-				if (currIndex >= partituras.Length)
-					currIndex = 0;
-				else if (currIndex < 0)
-					currIndex = partituras.Length - 1;
+			} else if (Input.GetAxis("DPad_X") >= 0.1f || Input.GetKeyDown(KeyCode.Q)) {
+				if (!apertouDirecional) {
+					apertouDirecional = true;
+					currIndex--;
+				}
+			} else {
+				apertouDirecional = false;
 			}
+			#endregion
 
-			if(oldIndex != currIndex){
+			if (currIndex >= partituras.Length)
+				currIndex = 0;
+			else if (currIndex < 0)
+				currIndex = partituras.Length - 1;
+
+			if(oldIndex != currIndex || oldState == false){
 				for (int i = 0; i < partituras.Length; i++) {
 					partituras [i].SetActive (false);
 				}
 			}
 
 			partituras [currIndex].SetActive (true);
-
-			menuAberto = true;
-		} else {
-			menuAberto = false;
 		}
-
-		partiturasGroup.gameObject.SetActive (menuAberto);
 	}
 }
