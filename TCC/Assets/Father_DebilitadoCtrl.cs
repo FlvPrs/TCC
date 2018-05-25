@@ -56,6 +56,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		fatherActions.currentDisposition = currentDisposition;
+		fatherActions.isCarregadoPorKiwis = carregadoPorKiwis;
 
 		CanBeCarriedByKiwis ();
 

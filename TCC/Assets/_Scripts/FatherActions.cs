@@ -51,7 +51,7 @@ public class FatherActions : AgentFather, IPlatformMovable {
 
 		UpdateHeightCollider (currentState);
 
-		if(!isCarregadoPorKiwis)
+		//if(!isCarregadoPorKiwis)
 			songInteractionCollider.currentSong = currentSong;
 //		else
 //			songInteractionCollider.currentSong = PlayerSongs.Alegria;
@@ -278,10 +278,10 @@ public class FatherActions : AgentFather, IPlatformMovable {
 	}
 
 	IEnumerator ResetSingingSomething (){
-		if(!isCarregadoPorKiwis)
+		//if(!isCarregadoPorKiwis)
 			songInteractionCollider.isSingingSomething = true;
 		yield return new WaitForSeconds (0.2f);
-		if(!isCarregadoPorKiwis)
+		//if(!isCarregadoPorKiwis)
 			songInteractionCollider.isSingingSomething = false;
 	}
 		
@@ -298,7 +298,7 @@ public class FatherActions : AgentFather, IPlatformMovable {
 		sing.Play ();
 		balaoNotasCtrl.Show_BalaoNotas (currentState);
 		//staccatoColl.SetActive (true);
-		if(!isCarregadoPorKiwis)
+		//if(!isCarregadoPorKiwis)
 			songInteractionCollider.isSingingSomething = true;
 
 		CancelInvoke("ResetNoteIndex");
@@ -313,7 +313,7 @@ public class FatherActions : AgentFather, IPlatformMovable {
 	void HideStaccatoColl (){
 		//staccatoColl.SetActive (false);
 		currentSong = PlayerSongs.Empty;
-		if(!isCarregadoPorKiwis)
+		//if(!isCarregadoPorKiwis)
 			songInteractionCollider.isSingingSomething = false;
 	}
 
@@ -361,7 +361,7 @@ public class FatherActions : AgentFather, IPlatformMovable {
 			counter_SingSustain = 0f; //Inicia o counter.
 			sustainDuration = duration;
 			//sustainColl.SetActive (true);
-			if(!isCarregadoPorKiwis)
+			//if(!isCarregadoPorKiwis)
 				songInteractionCollider.isSingingSomething = true;
 		}
 
@@ -373,7 +373,7 @@ public class FatherActions : AgentFather, IPlatformMovable {
 				singSustain.Stop ();
 				//sustainColl.SetActive (false);
 				currentSong = PlayerSongs.Empty;
-				if(!isCarregadoPorKiwis)
+				//if(!isCarregadoPorKiwis)
 					songInteractionCollider.isSingingSomething = false;
 			}
 			else { //Se ainda não alcançou <duration>s, aumente o counter.
@@ -389,7 +389,7 @@ public class FatherActions : AgentFather, IPlatformMovable {
 				singSustain.Stop ();
 				//sustainColl.SetActive (false);
 				currentSong = PlayerSongs.Empty;
-				if(!isCarregadoPorKiwis)
+				//if(!isCarregadoPorKiwis)
 					songInteractionCollider.isSingingSomething = false;
 			}
 		}
@@ -513,7 +513,28 @@ public class FatherActions : AgentFather, IPlatformMovable {
 
 	#endregion
 
+//	bool currentNavMeshState;
+//	bool nmWasActive;
+
 	public void OnMovingPlat (bool enableNavMesh, Transform plat){
+		if (isCarregadoPorKiwis) {
+			return;
+		}
+
+//		if(nmAgent.isActiveAndEnabled){
+//			nmWasActive = true;
+//			currentNavMeshState = true;
+//		} else {
+//			currentNavMeshState = false;
+//		}
+//
+//		if(enableNavMesh){
+//			if (nmWasActive && !currentNavMeshState)
+//				nmAgent.enabled = true;
+//		} else {
+//			nmAgent.enabled = false;
+//		}
+
 		nmAgent.enabled = enableNavMesh;
 		agentTransform.parent = plat;
 		//rb.isKinematic = enableNavMesh;
