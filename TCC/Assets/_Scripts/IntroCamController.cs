@@ -6,7 +6,7 @@ using Cinemachine;
 
 public class IntroCamController : MonoBehaviour {
 
-	public FallingFatherScript fallctrl;
+	public quedaCollider fallctrl;
 
 	[FMODUnity.EventRef]
 	public string audioIntro, audioTrilha;
