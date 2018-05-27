@@ -27,7 +27,7 @@ public class SaveInformations : MonoBehaviour {
 	}
 
 	void Update(){
-		print (SlotAtual);
+		//print (SlotAtual);
 		if (Input.GetKeyDown (KeyCode.J)) {
 			SceneManager.LoadScene (2);
 		}
@@ -40,7 +40,7 @@ public class SaveInformations : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.H)) {
 			SceneManager.LoadScene (1);
 		}
-		print ("leluia");
+		//print ("leluia");
 
 	}
 
@@ -71,7 +71,7 @@ public class SaveInformations : MonoBehaviour {
 	}
 
 	public static void SalvaCena(int faseAtual){
-		if (faseAtual != 1) {
+		if (faseAtual != 0) {
 			SaveSlot (SlotAtual, faseAtual);
 		}
 	}
