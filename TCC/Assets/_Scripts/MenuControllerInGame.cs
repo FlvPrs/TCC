@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuControllerInGame : MonoBehaviour {
 
@@ -20,6 +21,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	public int faseAtualSave;
 	int entersToSavePlayer = 0;
 	public GameObject SetaIndicativa1, SetaIndicativa2, SetaIndicativa3, SetaIndicativa4, SetaIndicativa5;
+	private Text textoSave1, textoSave2, textoSave3;
 
 	private FatherSacrifice_Ctrl fatherSacrificeCtrl;
 
@@ -70,11 +72,13 @@ public class MenuControllerInGame : MonoBehaviour {
 								player.playerInputStartGame = true;
 
 								print ("acionei");
-							} else if (saveSlot1 == 3) {
+							} else if (saveSlot1 == 2) {
 								SceneManager.LoadScene (2);
+							}else if (saveSlot1 == 3) {
+								SceneManager.LoadScene (3);
 								////print ("ja tem save");
 							} else if (saveSlot1 == 4) {
-								SceneManager.LoadScene (3);
+								SceneManager.LoadScene (4);
 							}
 						} else if (opcaoMenu2 == 2) {
 							SaveInformations.EscolhendoSlot (2);
@@ -84,11 +88,14 @@ public class MenuControllerInGame : MonoBehaviour {
 								inGame = true;
 								player.playerInputStartGame = true;
 								////print ("acionei");
-							} else if (saveSlot2 == 3) {
+							}else if (saveSlot2 == 2) {
 								SceneManager.LoadScene (2);
 								////print ("ja tem save");
-							} else if (saveSlot2 == 4) {
+							} else if (saveSlot2 == 3) {
 								SceneManager.LoadScene (3);
+								////print ("ja tem save");
+							} else if (saveSlot2 == 4) {
+								SceneManager.LoadScene (4);
 							}
 						} else if (opcaoMenu2 == 3) {
 							SaveInformations.EscolhendoSlot (3);
@@ -99,10 +106,13 @@ public class MenuControllerInGame : MonoBehaviour {
 								player.playerInputStartGame = true;
 								////print ("acionei");
 							} else if (saveSlot3 == 3) {
+								SceneManager.LoadScene (3);
+								////print ("ja tem save");
+							}else if (saveSlot3 == 2) {
 								SceneManager.LoadScene (2);
 								////print ("ja tem save");
 							} else if (saveSlot3 == 4) {
-								SceneManager.LoadScene (3);
+								SceneManager.LoadScene (4);
 							}
 						} else if (opcaoMenu2 == 4) {
 							TrocaMenus (1);
@@ -432,6 +442,36 @@ public class MenuControllerInGame : MonoBehaviour {
 		saveSlot1 = PlayerPrefs.GetInt ("saveSlot1");
 		saveSlot2 = PlayerPrefs.GetInt ("saveSlot2");
 		saveSlot3 = PlayerPrefs.GetInt ("saveSlot3");
+
+		if (saveSlot1 == 1) {
+			textoSave1.text = "0%";
+		}else if (saveSlot1 == 2) {
+			textoSave1.text = "25%";
+		}else if (saveSlot1 == 3) {
+			textoSave1.text = "50%";
+		}else if (saveSlot1 == 4) {
+			textoSave1.text = "75%";
+		}
+
+		if (saveSlot2 == 1) {
+			textoSave2.text = "0%";
+		}else if (saveSlot2 == 2) {
+			textoSave2.text = "25%";
+		}else if (saveSlot2 == 3) {
+			textoSave2.text = "50%";
+		}else if (saveSlot2 == 4) {
+			textoSave2.text = "75%";
+		}
+
+		if (saveSlot3 == 1) {
+			textoSave2.text = "0%";
+		}else if (saveSlot3 == 2) {
+			textoSave2.text = "25%";
+		}else if (saveSlot3 == 3) {
+			textoSave2.text = "50%";
+		}else if (saveSlot3 == 4) {
+			textoSave2.text = "75%";
+		}
 
 		volumeMusica = PlayerPrefs.GetInt ("volumeMusicaS");
 		volumeEfeitos = PlayerPrefs.GetInt ("volumeEfeitoS");
