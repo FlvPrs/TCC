@@ -32,6 +32,8 @@ public class Planta_Ventilador : PlantaBehaviour {
 	public AudioClip[] abrirFechar_Clips;
 	public AudioClip ventoNormal_Clip, irritar_Clip, ventoIrritado_Clip;
 
+	public bool invernoBehaviour;
+
 	protected override void Awake ()
 	{
 		base.Awake ();
@@ -71,7 +73,8 @@ public class Planta_Ventilador : PlantaBehaviour {
 		MDL_Fechada.SetActive (fechada);
 
 		if (timer >= 1f && (currentState == Planta_CurrentState.Seguindo || currentState == Planta_CurrentState.Irritado)) {
-			Invoke ("PararDeSeguir", 2f);
+			float stopFollowTimer = (!invernoBehaviour) ? 2f : 0.1f;
+			Invoke ("PararDeSeguir", stopFollowTimer);
 		}
 
 		headJoint.localEulerAngles = new Vector3 (headJoint.localEulerAngles.x, headJoint.localEulerAngles.y, 0);
@@ -150,7 +153,18 @@ public class Planta_Ventilador : PlantaBehaviour {
 	}
 
 	IEnumerator ReturnToOriginalOrientation (){
-		yield return new WaitForSeconds (10f);
+		float returnOri = (!invernoBehaviour) ? 10f : 0.25f;
+		yield return new WaitForSeconds (returnOri);
+
+		if(invernoBehaviour){
+			if(!fechada){
+				simpleAudioSource.clip = abrirFechar_Clips[1];
+				simpleAudioSource.Play ();
+				StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length));
+			}
+			fechada = true;
+		}
+
 		while (Quaternion.Dot(headJoint.rotation, originalOrientation) < 0.9999f) {
 			headJoint.rotation = Quaternion.Slerp(headJoint.rotation, originalOrientation, Time.deltaTime * angularSpeed);
 			yield return new WaitForSeconds(Time.deltaTime);
@@ -251,6 +265,20 @@ public class Planta_Ventilador : PlantaBehaviour {
 		ventiladorCooldown = 0f;
 	}
 
+	protected override void ChamarAtencao ()
+	{
+		base.ChamarAtencao ();
+
+		if(invernoBehaviour){
+			if(fechada){
+				simpleAudioSource.clip = abrirFechar_Clips[0];
+				simpleAudioSource.Play ();
+				StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length));
+			}
+			fechada = false;
+		}
+	}
+
 //	protected override void OnTriggerEnter (Collider col)
 //	{
 //		base.OnTriggerEnter (col);
@@ -269,7 +297,7 @@ public class Planta_Ventilador : PlantaBehaviour {
 	{
 		base.OnTriggerStay (col);
 
-		if((layerMask.value & 1<<col.gameObject.layer) == 0){
+		if((layerMask.value & 1<<col.gameObject.layer) == 0 || invernoBehaviour){
 			return;
 		}
 

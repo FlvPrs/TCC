@@ -27,7 +27,7 @@ public class MenuControllerInGame : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		GetSaveVariables ();
+		//GetSaveVariables (); //TODO Ask Erick
 		SaveInformations.SalvaCena (faseAtualSave);
 		if (volumeAlterado != 2) {
 			volumeMusica = 8;
@@ -47,7 +47,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		print (inGame);
+		//print (inGame);
 		
 		if (Input.GetKeyDown (KeyCode.Return)||Input.GetKeyDown(KeyCode.JoystickButton0)) {
 			if (podeEnter) {
@@ -534,7 +534,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	}
 
 	public void TrocaMenus(int numeroMenu){
-		print (numeroMenu);
+		//print (numeroMenu);
 		switch (numeroMenu) {
 		case 0:// menuPausa
 			

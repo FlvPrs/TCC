@@ -37,6 +37,8 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible, IPlatformMovable {
 
 	bool movingToPai = false;
 
+	public bool invernoBehaviour;
+
 	protected override void Awake ()
 	{
 		base.Awake ();
@@ -83,14 +85,16 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible, IPlatformMovable {
 					simpleAudioSource.clip = freeWalk_Clip;
 				}
 				simpleAudioSource.Play ();
-				StartCoroutine(WaitForSimpleClipToEnd (freeWalk_Clip.length - 0.03f));
+				float freeWalkRepeatTime = (!invernoBehaviour) ? freeWalk_Clip.length - 0.03f : (freeWalk_Clip.length - 0.03f) / 3f;
+				StartCoroutine(WaitForSimpleClipToEnd (freeWalkRepeatTime));
 			} else if (currentState == NPC_CurrentState.Seguindo && !isCarregandoPai) {
 				simpleAudioSource.clip = seguindo_Clips [currClipIndex];
 				currClipIndex++;
 				if (currClipIndex >= seguindo_Clips.Length)
 					currClipIndex = 0;
 				simpleAudioSource.Play ();
-				StartCoroutine(WaitForSimpleClipToEnd (simpleAudioSource.clip.length));
+				float seguindoRepeatTime = (!invernoBehaviour) ? simpleAudioSource.clip.length : simpleAudioSource.clip.length / 3f;
+				StartCoroutine(WaitForSimpleClipToEnd (seguindoRepeatTime));
 			} else if (isCarregandoPai) {
 				simpleAudioSource.clip = carregando_Clips [currClipIndex];
 				simpleAudioSource.Play ();
@@ -145,7 +149,8 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible, IPlatformMovable {
 
 		if (!isOnArbusto) {
 			//Normalmente, Foge do player quando este se aproxima.
-			if (distToPlayer < 6f && !isCarregandoPai) {
+			float distToRun = (!invernoBehaviour) ? 6f : 10f;
+			if (distToPlayer < distToRun && !isCarregandoPai) {
 				patrulhando = false;
 				timer_StartPatrulha = 0;
 				currentSong = PlayerSongs.Empty;
@@ -231,6 +236,10 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible, IPlatformMovable {
 			return;
 		}
 
+		if(invernoBehaviour){
+			Invoke ("Irritar", 2f);
+		}
+
 		base.Seguir ();
 	}
 
@@ -241,7 +250,8 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible, IPlatformMovable {
 
 		if (currentState != NPC_CurrentState.Distraido){
 			currentState = NPC_CurrentState.Distraido;
-			timer_Distraido = 20f;
+			float distractedTime = (!invernoBehaviour) ? 20f : 2f;
+			timer_Distraido = distractedTime;
 		}
 
 		if(timer_Distraido > 0f){
@@ -260,6 +270,10 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible, IPlatformMovable {
 
 //		if (objetoCarregado != null)
 //			SoltarObjeto ();
+
+		if(invernoBehaviour){
+			CancelInvoke ("Irritar");
+		}
 
 		base.Irritar ();
 	}
@@ -298,7 +312,7 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible, IPlatformMovable {
 	}
 
 	public bool CanCarryPai (){
-		if (!isOnWind && podePegarObj && objetoCarregado == null && currentState == NPC_CurrentState.Seguindo) {
+		if (!isOnWind && podePegarObj && objetoCarregado == null && currentState == NPC_CurrentState.Seguindo && !invernoBehaviour) {
 			return true;
 		} else {
 			return false;
@@ -356,7 +370,7 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible, IPlatformMovable {
 		if (stopUpdate)
 			return;
 
-		if(col.CompareTag("Fruta")){
+		if(col.CompareTag("Fruta") && !invernoBehaviour){
 			if (objetoCarregado == null && podePegarObj) {
 				if(!collObjects.Contains(col.transform)){
 					collObjects.Add (col.transform);

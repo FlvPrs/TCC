@@ -14,7 +14,12 @@ public class Planta_Cura : PlantaBehaviour {
 
 	float aberta_Timer = 0f;
 
+	public bool closeWithTime = true;
+	public bool startAberta = false;
+
 	void Start (){
+		fechada = !startAberta;
+
 		frutaInitPos = frutaContainer.position;
 
 		plantaFechada.SetActive (fechada);
@@ -28,7 +33,7 @@ public class Planta_Cura : PlantaBehaviour {
 		plantaFechada.SetActive (fechada);
 		plantaAberta.SetActive (!fechada);
 
-		if (!fechada) {
+		if (!fechada && closeWithTime) {
 			if (aberta_Timer > 10f)
 				Encolher ();
 			else
