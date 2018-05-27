@@ -40,6 +40,7 @@ public class SaveInformations : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.H)) {
 			SceneManager.LoadScene (1);
 		}
+		print ("leluia");
 
 	}
 

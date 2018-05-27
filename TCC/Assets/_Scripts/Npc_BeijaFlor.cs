@@ -9,6 +9,7 @@ public class Npc_BeijaFlor : NPCBehaviour, IPlatformMovable {
 	private bool playerPerto;
 	private bool dentroVeneno, podePegarObj, seguindo;
 	float timer_PegarObjeto = 0;
+	public TerraFertilScript terraFertil;
 
 	private bool stopUpdate = false;
 
@@ -206,7 +207,9 @@ public class Npc_BeijaFlor : NPCBehaviour, IPlatformMovable {
 		}
 		if (colisor.CompareTag("TerraFertil")) {
 			////print ("colidiu");
-			SoltarObjeto (colisor.transform);
+			if (colisor.GetComponent<TerraFertilScript>().podeReceberSemente == true) {
+				SoltarObjeto (colisor.transform);
+			}
 		}
 //		if (colisor.name == "SementePlantaPlataforma") {
 //			if (objetoCarregado == null && podePegarObj) {

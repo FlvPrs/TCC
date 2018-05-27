@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TerraFertilScript : MonoBehaviour {
-	private bool podeReceberSemente;
+	public bool podeReceberSemente;
 	// Use this for initialization
 	void Start () {
 		podeReceberSemente = true;
