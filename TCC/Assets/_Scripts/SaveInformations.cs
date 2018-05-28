@@ -71,7 +71,7 @@ public class SaveInformations : MonoBehaviour {
 	}
 
 	public static void SalvaCena(int faseAtual){
-		if (faseAtual != 1) {
+		if (faseAtual != 0) {
 			SaveSlot (SlotAtual, faseAtual);
 		}
 	}
