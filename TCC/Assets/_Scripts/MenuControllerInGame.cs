@@ -21,14 +21,21 @@ public class MenuControllerInGame : MonoBehaviour {
 	public int faseAtualSave;
 	int entersToSavePlayer = 0;
 	public GameObject SetaIndicativa1, SetaIndicativa2, SetaIndicativa3, SetaIndicativa4, SetaIndicativa5;
-	private Text textoSave1, textoSave2, textoSave3;
+	public Text textoSave1, textoSave2, textoSave3;
 
 	private FatherSacrifice_Ctrl fatherSacrificeCtrl;
 
 	// Use this for initialization
 	void Start () {
+<<<<<<< HEAD
 		//GetSaveVariables (); //TODO Ask Erick
+||||||| merged common ancestors
+		GetSaveVariables ();
+=======
+		GetSaveVariables ();//pega as fases de cada slot
+>>>>>>> origin/ErickHigaBranch27
 		SaveInformations.SalvaCena (faseAtualSave);
+		print (faseAtualSave);
 		if (volumeAlterado != 2) {
 			volumeMusica = 8;
 			volumeEfeitos = 8;
@@ -71,7 +78,7 @@ public class MenuControllerInGame : MonoBehaviour {
 								inGame = true;
 								player.playerInputStartGame = true;
 
-								print ("acionei");
+								//print ("acionei");
 							} else if (saveSlot1 == 2) {
 								SceneManager.LoadScene (2);
 							}else if (saveSlot1 == 3) {
@@ -120,15 +127,16 @@ public class MenuControllerInGame : MonoBehaviour {
 					} else if (deleteSave) {
 						if (opcaoMenu2 == 1) {
 							SaveInformations.SaveSlot (1, 0);
-							saveSlot1 = PlayerPrefs.GetInt ("saveSlot1");
+							GetSaveVariables ();
 							TrocaMenus (2);
 						} else if (opcaoMenu2 == 2) {
 							SaveInformations.SaveSlot (2, 0);
-							saveSlot2 = PlayerPrefs.GetInt ("saveSlot2");
+							GetSaveVariables ();
 							TrocaMenus (2);
 						} else if (opcaoMenu2 == 3) {
 							SaveInformations.SaveSlot (3, 0);
-							saveSlot3 = PlayerPrefs.GetInt ("saveSlot3");
+							GetSaveVariables ();
+							//saveSlot3 = PlayerPrefs.GetInt ("saveSlot3");
 							TrocaMenus (2);
 						}
 					}
@@ -443,7 +451,11 @@ public class MenuControllerInGame : MonoBehaviour {
 		saveSlot2 = PlayerPrefs.GetInt ("saveSlot2");
 		saveSlot3 = PlayerPrefs.GetInt ("saveSlot3");
 
-		if (saveSlot1 == 1) {
+		print (saveSlot1);
+		print (saveSlot2);
+		print (saveSlot3);
+
+		if (saveSlot1 == 0) {
 			textoSave1.text = "0%";
 		}else if (saveSlot1 == 2) {
 			textoSave1.text = "25%";
@@ -453,7 +465,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			textoSave1.text = "75%";
 		}
 
-		if (saveSlot2 == 1) {
+		if (saveSlot2 == 0) {
 			textoSave2.text = "0%";
 		}else if (saveSlot2 == 2) {
 			textoSave2.text = "25%";
@@ -463,7 +475,7 @@ public class MenuControllerInGame : MonoBehaviour {
 			textoSave2.text = "75%";
 		}
 
-		if (saveSlot3 == 1) {
+		if (saveSlot3 == 0) {
 			textoSave2.text = "0%";
 		}else if (saveSlot3 == 2) {
 			textoSave2.text = "25%";
