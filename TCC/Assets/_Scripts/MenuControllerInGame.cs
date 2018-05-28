@@ -27,13 +27,8 @@ public class MenuControllerInGame : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-<<<<<<< HEAD
-		//GetSaveVariables (); //TODO Ask Erick
-||||||| merged common ancestors
-		GetSaveVariables ();
-=======
+		//GetSaveVariables ();
 		GetSaveVariables ();//pega as fases de cada slot
->>>>>>> origin/ErickHigaBranch27
 		SaveInformations.SalvaCena (faseAtualSave);
 		print (faseAtualSave);
 		if (volumeAlterado != 2) {
