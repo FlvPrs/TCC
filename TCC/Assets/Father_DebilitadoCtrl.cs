@@ -27,7 +27,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 	public float delayAllAsksBy = 0f;
 	public bool canBeCarriedByDefault = true;
 
-
+	public bool canAsk = true;
 
 	bool canBeCarried = true;
 
@@ -69,7 +69,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 			break;
 		case FatherConditions.Machucado: //Parado, dependendo do caso
 			canBeCarried = true;
-			if(!carregadoPorKiwis)
+			if(canAsk && !carregadoPorKiwis && !fatherActions.hugging)
 				AskForKiwi ();
 			break;
 		case FatherConditions.MuitoMachucado: //Parado quase morto
@@ -81,10 +81,13 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 				}
 				StopCarriedByKiwis ();
 			}
-			if(isInverno)
-				AskForFruit (3);
-			else
-				AskForFruit ();
+			if (canAsk && !fatherActions.hugging) {
+				if (isInverno)
+					AskForFruit (3);
+				else
+					AskForFruit ();
+			}
+
 			break;
 		default:
 			break;

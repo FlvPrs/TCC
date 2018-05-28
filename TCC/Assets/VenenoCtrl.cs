@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VenenoCtrl : MonoBehaviour {
+public class VenenoCtrl : MonoBehaviour, ISongListener {
 
 	Transform t;
 	Rigidbody rb;
@@ -84,6 +84,12 @@ public class VenenoCtrl : MonoBehaviour {
 //		
 //	}
 
+	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false, HeightState height = HeightState.Default){
+		if(!isFather && isSingingSomething){
+			GetComponent<UnityEngine.AI.NavMeshObstacle> ().enabled = false;
+		}
+	}
+
 	void OnTriggerStay(Collider col){
 		if(col.CompareTag("Wind") && collideWithWind){
 			AddExternalForce (col.transform.up);
@@ -92,6 +98,13 @@ public class VenenoCtrl : MonoBehaviour {
 		} else if (col.GetComponent<PlantaBehaviour>() != null){
 			col.GetComponent<PlantaBehaviour> ().MurcharPlanta ();
 		}
+	}
+
+	public void DisableNavMeshCarve (){
+		GetComponent<UnityEngine.AI.NavMeshObstacle> ().enabled = false;
+	}
+	public void ResetNavMeshCarve (){
+		GetComponent<UnityEngine.AI.NavMeshObstacle> ().enabled = carveNavMesh;
 	}
 
 	void AddExternalForce (Vector3 dir){

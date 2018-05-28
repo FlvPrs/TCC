@@ -51,6 +51,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	Transform playerT;
 	BirdStatureCtrl birdHeightCtrl;
 	BirdSingCtrl birdSingCtrl;
+	PlayerCollisionsCtrl pCollCtrl;
 	public Animator animCtrl;
 
 	//PlayerPrefs.SetInt "health",100;
@@ -147,6 +148,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		birdSingCtrl = GetComponent<BirdSingCtrl> ();
 		hudScript = GameObject.FindObjectOfType<HUDScript> ();
 		anim = GetComponentInChildren<AnimationForward> ();
+		pCollCtrl = GetComponent<PlayerCollisionsCtrl> ();
 
 		bottomFrontLeft = collTransform.Find ("bottomFrontLeft").GetComponent<Transform> ();
 		topFrontLeft = collTransform.Find ("topFrontLeft").GetComponent<Transform> ();
@@ -421,7 +423,11 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			//			}
 
 			//secondJumpStrengthMultiplier = fruitJumpPower;
-			velocity.y = maxJumpVelocity;
+			if (!pCollCtrl.venenoIncrease) {
+				velocity.y = maxJumpVelocity;
+			} else {
+				velocity.y = maxJumpVelocity * 0.4f;
+			}
 			jumpInertia = velocity;
 
 			if(continuousExternalForceAdded)
@@ -433,7 +439,11 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			animCtrl.SetTrigger ("StartFly");
 			isFlying = true;
 			rb.velocity = Vector3.zero;
-			velocity.y = maxJumpVelocity * secondJumpStrengthMultiplier;
+			if (!pCollCtrl.venenoIncrease) {
+				velocity.y = maxJumpVelocity * secondJumpStrengthMultiplier;
+			} else {
+				velocity.y = maxJumpVelocity * secondJumpStrengthMultiplier * 0.5f;
+			}
 			jumpInertia = velocity;
 			VelocidadeDiminuidaNoVoo = true;
 
@@ -478,6 +488,10 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	public void OnSingInputDown(){
 		walkStates.TOCANDO_NOTAS = true;
 		birdSingCtrl.SingNote();
+
+		if(pCollCtrl.venenoIncrease){
+			CallFather ();
+		}
 	}
 	public void OnSingInputHold(){
 		walkStates.SEGURANDO_NOTA = true;
@@ -818,6 +832,22 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		animCtrl.SetTrigger ("startSingFX");
 	}
 	#endregion
+
+	public bool callingFather = false;
+	void CallFather (){
+		callingFather = true;
+	}
+
+	public bool beinghugged = false; //Não modificar diretamente.
+	public void StartHug (){
+		beinghugged = true;
+	}
+	public bool CheckStopHug (){
+		if(walkStates.TOCANDO_NOTAS || !walkStates.IS_GROUNDED){
+			beinghugged = false;
+		}
+		return !beinghugged;
+	}
 
 
 	public struct WalkingStates

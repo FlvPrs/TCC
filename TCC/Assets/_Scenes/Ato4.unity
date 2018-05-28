@@ -113,7 +113,7 @@ NavMeshSettings:
     accuratePlacement: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: 25d9365aa308f994088e51240c0463e4, type: 2}
+  m_NavMeshData: {fileID: 0}
 --- !u!1 &2194380
 GameObject:
   m_ObjectHideFlags: 0
@@ -2737,7 +2737,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 40
+  field of view: 45
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -2761,8 +2761,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 90109057}
-  m_LocalRotation: {x: 0.15784475, y: 0.55259967, z: -0.10751655, w: 0.8112699}
-  m_LocalPosition: {x: 129.43236, y: 21.194695, z: 27.16}
+  m_LocalRotation: {x: 0.06433387, y: 0.9345752, z: -0.22296362, w: 0.2696621}
+  m_LocalPosition: {x: 127.43236, y: 28.364693, z: 55.17}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -39519,12 +39519,12 @@ Prefab:
     - target: {fileID: 114885591094483040, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7,
         type: 2}
       propertyPath: roteiro.Array.data[2].name
-      value: Seguir Player
+      value: WaitForPlayer
       objectReference: {fileID: 0}
     - target: {fileID: 114885591094483040, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7,
         type: 2}
       propertyPath: roteiro.Array.data[2].state
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114885591094483040, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7,
         type: 2}
@@ -39539,17 +39539,17 @@ Prefab:
     - target: {fileID: 114885591094483040, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7,
         type: 2}
       propertyPath: roteiro.Array.data[2].stateChanger
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114885591094483040, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7,
         type: 2}
       propertyPath: roteiro.Array.data[1].name
-      value: WaitForPlayer
+      value: "Guiar Player ap\xF3s 3 frutas"
       objectReference: {fileID: 0}
     - target: {fileID: 114885591094483040, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7,
         type: 2}
       propertyPath: roteiro.Array.data[1].state
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 114885591094483040, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7,
         type: 2}
@@ -39569,12 +39569,12 @@ Prefab:
     - target: {fileID: 114885591094483040, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7,
         type: 2}
       propertyPath: roteiro.Array.data[0].name
-      value: "Guiar Player ap\xF3s 3 frutas"
+      value: Seguir Player
       objectReference: {fileID: 0}
     - target: {fileID: 114885591094483040, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7,
         type: 2}
       propertyPath: roteiro.Array.data[0].state
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 114885591094483040, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7,
         type: 2}
@@ -39603,18 +39603,18 @@ Prefab:
     - target: {fileID: 114885591094483040, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7,
         type: 2}
       propertyPath: roteiro.Array.data[1].stateChanger
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114885591094483040, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7,
         type: 2}
       propertyPath: roteiro.Array.data[0].destination
       value: 
-      objectReference: {fileID: 1943225951}
+      objectReference: {fileID: 0}
     - target: {fileID: 114885591094483040, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7,
         type: 2}
       propertyPath: roteiro.Array.data[1].destination
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1943225951}
     - target: {fileID: 114885591094483040, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7,
         type: 2}
       propertyPath: roteiro.Array.data[2].show
@@ -39628,12 +39628,17 @@ Prefab:
     - target: {fileID: 114885591094483040, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7,
         type: 2}
       propertyPath: roteiro.Array.data[1].triggerDetail
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114885591094483040, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7,
         type: 2}
       propertyPath: roteiro.Array.data[1].songType
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114885591094483040, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7,
+        type: 2}
+      propertyPath: roteiro.Array.data[2].triggerDetail
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8a6d25ac867dee24bb0a126e5bbe3dc7, type: 2}
@@ -40137,7 +40142,7 @@ MonoBehaviour:
   m_ExcludedPropertiesInInspector:
   - m_Script
   m_LockStageInInspector: 
-  m_Priority: 0
+  m_Priority: 10
   m_LookAt: {fileID: 1085054006}
   m_Follow: {fileID: 1085054006}
   m_Lens:
@@ -42130,16 +42135,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 137988669708484642, guid: 40ff822e05d2b9e4fab3c33055bdfbb9,
-        type: 2}
-      propertyPath: m_BlendShapeWeights.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 137701139548909790, guid: 40ff822e05d2b9e4fab3c33055bdfbb9,
-        type: 2}
-      propertyPath: m_BlendShapeWeights.Array.size
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 4093113111245394, guid: 40ff822e05d2b9e4fab3c33055bdfbb9, type: 2}
       propertyPath: m_LocalPosition.x
       value: 141.43236
@@ -42187,18 +42182,7 @@ Prefab:
       propertyPath: spawnPoints.Array.data[2]
       value: 
       objectReference: {fileID: 949288136}
-    - target: {fileID: 95155892593518978, guid: 40ff822e05d2b9e4fab3c33055bdfbb9,
-        type: 2}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: d0d15af51ed7c9744b20e3fdfbb6d046, type: 2}
-    - target: {fileID: 114786989661368672, guid: 40ff822e05d2b9e4fab3c33055bdfbb9,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 114786989661368672, guid: 40ff822e05d2b9e4fab3c33055bdfbb9, type: 2}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 40ff822e05d2b9e4fab3c33055bdfbb9, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1030630225 stripped
@@ -54976,7 +54960,7 @@ MonoBehaviour:
   m_ExcludedPropertiesInInspector:
   - m_Script
   m_LockStageInInspector: 
-  m_Priority: 10
+  m_Priority: 0
   m_LookAt: {fileID: 1085054006}
   m_Follow: {fileID: 1085054006}
   m_Lens:
@@ -57167,7 +57151,8 @@ MonoBehaviour:
   carregadoPorKiwis: 0
   delayFirstAskBy: 1
   delayAllAsksBy: 0
-  canBeCarriedByDefault: 1
+  canBeCarriedByDefault: 0
+  canAsk: 0
 --- !u!114 &1426470200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57180,7 +57165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e81498638af9ce42962554817cd3931, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1085054006}
+  player: {fileID: 2122417715}
   animCtrl: {fileID: 0}
   l_wing: {fileID: 298181493}
   r_wing: {fileID: 1743673956}
@@ -57189,7 +57174,8 @@ MonoBehaviour:
   currentStamina: 0
   currentDisposition: 0
   staccatoSounds: []
-  canWalkWhile_Machucado: 0
+  canWalkWhile_Machucado: 1
+  hugging: 0
   targetReference: {fileID: 704797377}
   singSustain: {fileID: 1426470201}
   clarinetDefault: {fileID: 24500006, guid: 33da73c7db00cb1418368592c96aba19, type: 2}
@@ -57212,6 +57198,7 @@ MonoBehaviour:
   allowFlySlowFall: 0
   stopUpdate: 0
   isCarregadoPorKiwis: 0
+  automaticHug: 0
   stopHoldFly: 0
 --- !u!82 &1426470201
 AudioSource:
@@ -86087,7 +86074,7 @@ MonoBehaviour:
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_UseGeometry: 1
+  m_UseGeometry: 0
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1
   m_IgnoreNavMeshObstacle: 1
@@ -86096,7 +86083,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 1
   m_VoxelSize: 0.125
   m_BuildHeightMesh: 0
-  m_NavMeshData: {fileID: 23800000, guid: 600f45f617b2eeb4f92c714c633dc891, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 63033c6dc1c74af479fe3648e9086d2d, type: 2}
 --- !u!4 &1779476540
 Transform:
   m_ObjectHideFlags: 0
@@ -113013,6 +113000,10 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 08ad80a2a31723842b25cdc5aa51ea58, type: 2}
+    - target: {fileID: 9500000, guid: 26cf316de88a5944ba26b6dfbb25145e, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 26cf316de88a5944ba26b6dfbb25145e, type: 3}
   m_IsPrefabParent: 0
@@ -125102,6 +125093,11 @@ MonoBehaviour:
   tempo: 0
   activator: 0
   changeCamTimerInicial: 0
+--- !u!4 &2122417715 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4806733519576450, guid: 40ff822e05d2b9e4fab3c33055bdfbb9,
+    type: 2}
+  m_PrefabInternal: {fileID: 1029878604}
 --- !u!1 &2126450535
 GameObject:
   m_ObjectHideFlags: 0

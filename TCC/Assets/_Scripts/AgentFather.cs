@@ -7,6 +7,8 @@ using UnityEngine.Audio;
 public class AgentFather : MonoBehaviour {
 
 	public Transform player;
+	protected WalkingController playerCtrl;
+
 	protected NavMeshAgent nmAgent;
 	protected Transform agentTransform;
 	protected Rigidbody rb;
@@ -32,6 +34,8 @@ public class AgentFather : MonoBehaviour {
 
 	public bool canWalkWhile_Machucado = true;
 	bool canWalk;
+
+	public bool hugging = false; //Não mudar diretamente.
 
 	#region ========== Debug Variables ==========
 	public Transform targetReference;
@@ -61,6 +65,8 @@ public class AgentFather : MonoBehaviour {
 		timeMoving = 0f;
 
 		currentStamina = maxStamina;
+
+		playerCtrl = player.root.GetComponent<WalkingController> ();
 
 		#region ========== Temporary Code ==========
 		sing = GetComponent<AudioSource> ();
@@ -121,7 +127,7 @@ public class AgentFather : MonoBehaviour {
 		}
 
 		if (rb.isKinematic) {
-			animCtrl.SetBool ("isWalking", (nmAgent.enabled && !nmAgent.isStopped) ? isWalking : false);
+			animCtrl.SetBool ("isWalking", ((nmAgent.enabled && !nmAgent.isStopped) || hugging) ? isWalking : false);
 		} else {
 			animCtrl.SetBool ("isWalking", isWalking);
 		}

@@ -23,11 +23,26 @@ public class FatherActions : AgentFather, IPlatformMovable {
 	[HideInInspector]
 	public bool isCarregadoPorKiwis;
 
+	float defaultStoppingDist;
+	//float defaultNMSpeed;
+
+	float default_HugStartTimer = 2f;
+	float hugStart_Timer;
+
+	bool sonCalledMe = false;
+	bool canStartCasualHug = false;
+	public bool automaticHug = false;
+
 	protected override void Start (){
 		base.Start ();
 
 		currentState = HeightState.Default;
 		currentSong = PlayerSongs.Empty;
+
+		defaultStoppingDist = nmAgent.stoppingDistance;
+		//defaultNMSpeed = nmAgent.speed;
+
+		hugStart_Timer = default_HugStartTimer;
 	}
 
 	protected override void Update (){
@@ -57,6 +72,38 @@ public class FatherActions : AgentFather, IPlatformMovable {
 //			songInteractionCollider.currentSong = PlayerSongs.Alegria;
 
 		currentStamina = maxStamina - timeMoving;
+
+
+		if(playerCtrl.callingFather){
+			playerCtrl.callingFather = false;
+			sonCalledMe = true;
+			StartHugSon ();
+		}
+
+		if(canStartCasualHug){
+			if(playerCtrl.walkStates.TOCANDO_NOTAS){
+				canStartCasualHug = false;
+				Invoke ("StartHugSon", 0.1f);
+			}
+		}
+
+		if (goingToHugSon) {
+			if (!hugging) {
+				nmAgent.stoppingDistance = 0.1f;
+				MoveToPlayer ();
+				if (CheckArrivedOnDestination ()) {
+					BecomePlayersChild ();
+				}
+			} else { //Se ja está abraçando...
+				isWalking = playerCtrl.walkStates.IS_WALKING;
+				LookAtPlayer (true);
+				if(playerCtrl.CheckStopHug ()){
+					StopHug ();
+				}
+			}
+		} else {
+			nmAgent.stoppingDistance = defaultStoppingDist;
+		}
 	}
 
 	#region --------------------------------- TRIGGERS ---------------------------------
@@ -83,8 +130,10 @@ public class FatherActions : AgentFather, IPlatformMovable {
 	}
 
 	//--- Esta função deve rodar todo frame ---
-	public void LookAtPlayer (){
-		agentTransform.rotation = Quaternion.Slerp(agentTransform.rotation, Quaternion.LookRotation((player.position - agentTransform.position), Vector3.up), Time.deltaTime * angularSpeed);
+	public void LookAtPlayer (bool isHugging = false){
+		Vector3 playerPos = (!isHugging) ? player.position : (player.position + player.forward * 2f);
+		targetReference.position = playerPos;
+		agentTransform.rotation = Quaternion.Slerp(agentTransform.rotation, Quaternion.LookRotation((playerPos - agentTransform.position), Vector3.up), Time.deltaTime * angularSpeed);
 		agentTransform.eulerAngles = new Vector3(0, agentTransform.eulerAngles.y, 0);
 	}
 
@@ -130,23 +179,66 @@ public class FatherActions : AgentFather, IPlatformMovable {
 	//--- Esta função deve rodar todo frame ---
 	//SE <player> estiver FORA do raio <startDistance>, ANDE até o <player>
 	//SE <player> estiver DENTRO do raio <stopDistance>, PARE de andar
-	public void FollowPlayer (float startDistance = 8f, float stopDistance = 4f){
+	public void FollowPlayer (float startDistance = 8f, float stopDistance = 5f){
 		if (distToPlayer >= startDistance){
 			//Follow
 			isFollowingPlayer = true;
+			if(!sonCalledMe)
+				goingToHugSon = false;
 		} else if (distToPlayer <= stopDistance) {
 			//Wait
 			isFollowingPlayer = false;
 		}
 
-		if(isFollowingPlayer){
-			nmAgent.isStopped = false;
-			MoveToPlayer ();
-			timeMoving += Time.deltaTime;
-		} else {
-			nmAgent.isStopped = true;
+		if (!goingToHugSon) {
+			if (isFollowingPlayer) {
+				nmAgent.isStopped = false;
+				MoveToPlayer ();
+				timeMoving += Time.deltaTime;
+				canStartCasualHug = false;
+				if(automaticHug)
+					CancelInvoke ("StartHugSon");
+			} else {
+				nmAgent.isStopped = true;
+				canStartCasualHug = true;
+				if(automaticHug)
+					Invoke ("StartHugSon", hugStart_Timer);
+			}
 		}
 	}
+
+
+	bool goingToHugSon = false;
+	public void StartHugSon (){
+		CancelInvoke ("ResetHugStartTimer");
+		CancelInvoke ("StartHugSon");
+		canStartCasualHug = false;
+		hugStart_Timer = default_HugStartTimer;
+
+		goingToHugSon = true;
+		nmAgent.isStopped = false;
+	}
+	public void BecomePlayersChild (){
+		nmAgent.enabled = false;
+		isWalking = true;
+		agentTransform.SetParent (player);
+		agentTransform.localPosition = -Vector3.up * 0.5f;
+		playerCtrl.StartHug ();
+		hugging = true;
+		sonCalledMe = false;
+	}
+	public void StopHug (){
+		nmAgent.enabled = true;
+		agentTransform.SetParent (null);
+		hugging = false;
+		goingToHugSon = false;
+		hugStart_Timer = 6f;
+		Invoke ("ResetHugStartTimer", hugStart_Timer);
+	}
+	void ResetHugStartTimer (){
+		hugStart_Timer = default_HugStartTimer;
+	}
+
 
 	public void StartRandomWalk(Vector3 areaCenter, float areaRadius){
 		timeMoving += Time.deltaTime;
@@ -517,7 +609,7 @@ public class FatherActions : AgentFather, IPlatformMovable {
 //	bool nmWasActive;
 
 	public void OnMovingPlat (bool enableNavMesh, Transform plat){
-		if (isCarregadoPorKiwis) {
+		if (isCarregadoPorKiwis || hugging) {
 			return;
 		}
 

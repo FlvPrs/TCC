@@ -32,12 +32,15 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 	private float timeToDieByVeneno = 2f;
 	[SerializeField]
 	private float poisoningTimer = 0f;
-	private bool venenoDecay, venenoIncrease;
+	[HideInInspector]
+	public bool venenoDecay, venenoIncrease;
 	private bool iminentFakeDeath = false;
 	private bool diedByVeneno = false;
 	bool onFakeDeathSang = false;
 
 	VignettePulse venenoFX;
+
+	VenenoCtrl currentVeneno;
 
 	void Awake(){
 		playerCtrl = GetComponent<WalkingController> ();
@@ -75,7 +78,11 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 					RestartVenenoTimer ();
 				}
 			} else if (venenoIncrease) {
-				poisoningTimer += Time.deltaTime;
+				poisoningTimer += (!playerCtrl.beinghugged) ? Time.deltaTime : Time.deltaTime * 0.25f;
+				if (playerCtrl.walkStates.TOCANDO_NOTAS) {
+					currentVeneno.DisableNavMeshCarve ();
+					playerCtrl.StartHug ();
+				}
 			}
 
 			if (venenoFX != null) {
@@ -208,6 +215,10 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 		if(col.CompareTag("Wind") || col.CompareTag("Wind2")){
 			playerCtrl.ZeroExternalForce (true);
 		}
+
+		if (col.CompareTag ("Veneno") || col.CompareTag ("VenenoFakeDeath")) {
+			currentVeneno = col.GetComponentInParent<VenenoCtrl> ();
+		}
 	}
 
 	void OnTriggerStay(Collider col){
@@ -237,9 +248,11 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 		}
 			
 		if(col.CompareTag("Veneno")){
+			StopCoroutine (ClearPoison ());
 			venenoDecay = false;
 			venenoIncrease = true;
 		} else if (col.CompareTag("VenenoFakeDeath")) {
+			StopCoroutine (ClearPoison ());
 			venenoDecay = false;
 			venenoIncrease = true;
 			iminentFakeDeath = true;
@@ -267,15 +280,18 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 		}
 
 		if(col.CompareTag("Veneno") || col.CompareTag("VenenoFakeDeath")){
-			StartCoroutine (ClearPoison ());
+			StartCoroutine (ClearPoison (currentVeneno));
+			//currentVeneno = null;
 			iminentFakeDeath = false;
 		}
 	}
 
-	IEnumerator ClearPoison (){
+	IEnumerator ClearPoison (VenenoCtrl veneno = null){
 		venenoDecay = false;
 		venenoIncrease = false;
 		yield return new WaitForSeconds (1f);
+		if(veneno != null)
+			veneno.ResetNavMeshCarve ();
 		venenoDecay = true;
 	}
 }
