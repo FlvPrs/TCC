@@ -222,9 +222,11 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 
 		if (!carregadoPorKiwis) {
 			if (col.CompareTag ("Wind")) {
-				nmAgent.Move (col.transform.up * 0.02f);
+				Vector3 wind = (fatherActions.hugging) ? col.transform.up * 0.02f : col.transform.up * 0.1f;
+				nmAgent.Move (wind);
 			} else if (col.CompareTag ("Wind2")) {
-				nmAgent.Move (col.transform.up * 0.05f);
+				Vector3 wind = (fatherActions.hugging) ? col.transform.up * 0.05f : col.transform.up * 0.4f;
+				nmAgent.Move (wind);
 			}
 		}
 	}

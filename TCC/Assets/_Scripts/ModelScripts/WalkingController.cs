@@ -744,7 +744,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		}
 
 		SetVelocityTo (externalForce, false);
-		secondJumpStrengthMultiplier = fruitJumpPower + 0.15f;
+		//secondJumpStrengthMultiplier = fruitJumpPower + 0.15f;
 
 		Invoke ("ResetExternalForce", 0.2f);
 	}
@@ -756,7 +756,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		}
 		//velocity = force;
 		SetVelocityTo(force, false);
-		secondJumpStrengthMultiplier = fruitJumpPower + 0.15f;
+		//secondJumpStrengthMultiplier = fruitJumpPower + 0.15f;
 
 		if (!waitTillGroundedOrJump)
 			Invoke ("ResetExternalForce", duration);
@@ -841,6 +841,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	public bool beinghugged = false; //Não modificar diretamente.
 	public void StartHug (){
 		beinghugged = true;
+		pCollCtrl.poisoningTimer -= pCollCtrl.poisoningTimer * 0.9f;
 	}
 	public bool CheckStopHug (){
 		if(walkStates.TOCANDO_NOTAS || !walkStates.IS_GROUNDED){

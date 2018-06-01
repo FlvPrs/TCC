@@ -26,12 +26,13 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 	private Vector3 centerOfWind;
 	private bool canCenterWind;
 
+	bool isOnShelter;
+
 	public Transform[] spawnPoints;
 	private int currentSpawnPoint = 0;
 
 	private float timeToDieByVeneno = 2f;
-	[SerializeField]
-	private float poisoningTimer = 0f;
+	public float poisoningTimer = 0f;
 	[HideInInspector]
 	public bool venenoDecay, venenoIncrease;
 	private bool iminentFakeDeath = false;
@@ -222,20 +223,30 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 	}
 
 	void OnTriggerStay(Collider col){
-		if(col.CompareTag("Wind")){
-			//playerCtrl.ContinuousExternalForce (col.transform.up * windForce, true, false);
-			playerCtrl.AddContinuousExternalForce(col.transform.up * windForce);
-		} else if(col.CompareTag("Wind2")){
-			//playerCtrl.ContinuousExternalForce (col.transform.up * windForce, true, false);
-			playerCtrl.AddContinuousExternalForce(col.transform.up * windForce * 2f);
-		} else if(col.CompareTag("WindCurrent")){
-			centerOfWind = oldWindPoint.position + Vector3.Project(transform.position - oldWindPoint.position, oldWindPoint.forward);
+		if(col.CompareTag("Shelter")){
+			CancelInvoke ("NotOnShelterAnymore");
+			isOnShelter = true;
+			Invoke ("NotOnShelterAnymore", 0.2f);
+		}
 
-			if(canCenterWind)
-				transform.position = Vector3.MoveTowards (transform.position, centerOfWind, 0.1f);
+		if (!isOnShelter) {
+			if (col.CompareTag ("Wind")) {
+				//playerCtrl.ContinuousExternalForce (col.transform.up * windForce, true, false);
+				Vector3 wind = (playerCtrl.beinghugged) ? col.transform.up * (windForce * 0.5f) : col.transform.up * windForce;
+				playerCtrl.AddContinuousExternalForce (wind);
+			} else if (col.CompareTag ("Wind2")) {
+				//playerCtrl.ContinuousExternalForce (col.transform.up * windForce, true, false);
+				Vector3 wind = (playerCtrl.beinghugged) ? col.transform.up * (windForce * 0.95f) : col.transform.up * windForce * 2f;
+				playerCtrl.AddContinuousExternalForce (wind);
+			} else if (col.CompareTag ("WindCurrent")) {
+				centerOfWind = oldWindPoint.position + Vector3.Project (transform.position - oldWindPoint.position, oldWindPoint.forward);
 
-			playerCtrl.animCtrl.SetBool ("isOnWind", true);
-			playerCtrl.ContinuousExternalForce ((Vector3.ClampMagnitude(avrgCurrentMagnitude, 1f) * windcurrentForce) / currentCount, true, true);
+				if (canCenterWind)
+					transform.position = Vector3.MoveTowards (transform.position, centerOfWind, 0.1f);
+
+				playerCtrl.animCtrl.SetBool ("isOnWind", true);
+				playerCtrl.ContinuousExternalForce ((Vector3.ClampMagnitude (avrgCurrentMagnitude, 1f) * windcurrentForce) / currentCount, true, true);
+			}
 		}
 
 		if(col.CompareTag("StretchTrigger")){
@@ -257,6 +268,10 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			venenoIncrease = true;
 			iminentFakeDeath = true;
 		}
+	}
+
+	void NotOnShelterAnymore (){
+		isOnShelter = false;
 	}
 
 	void OnTriggerExit(Collider col){
