@@ -15,6 +15,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	public GameObject menu1, menu2, menu3, menu4, menu5, menuPause, menuMorte, menuFakeDeath, telaFundo, seta, certezaBox;
 	public GameObject VM1, VM2, VM3, VM4, VM5, VM6, VM7, VM8;
 	public GameObject VE1, VE2, VE3, VE4, VE5, VE6, VE7, VE8;
+	public GameObject ovo1, ovo2, ovo3, ovoQuebrado1, ovoQuebrado2, ovoQuebrado3;
 	public static SaveInformations save;
 	public int faseAtual;
 	private bool fakeDeathMenu;
@@ -22,6 +23,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	int entersToSavePlayer = 0;
 	public GameObject SetaIndicativa1, SetaIndicativa2, SetaIndicativa3, SetaIndicativa4, SetaIndicativa5, SetaIndicativaCertezaBox;
 	public Text textoSave1, textoSave2, textoSave3;
+	private float timeToMoveAxys;
 
 	private FatherSacrifice_Ctrl fatherSacrificeCtrl;
 
@@ -30,7 +32,7 @@ public class MenuControllerInGame : MonoBehaviour {
 		//GetSaveVariables ();
 		GetSaveVariables ();//pega as fases de cada slot
 		SaveInformations.SalvaCena (faseAtualSave);
-		print (faseAtualSave);
+		//print (faseAtualSave);
 		TemCertezaBox (false);
 		if (volumeAlterado != 2) {
 			volumeMusica = 8;
@@ -50,8 +52,14 @@ public class MenuControllerInGame : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		print (onSureBox);
-		
+		print (controleOpcaoEixo);
+//		if (controleOpcaoEixo == false) {
+//			timeToMoveAxys += Time.deltaTime * 1.0f;
+//		}
+//		if (timeToMoveAxys >= 0.3f) {
+//			controleOpcaoEixo = true;
+//			timeToMoveAxys = 0;
+//		}
 		if (Input.GetKeyDown (KeyCode.Return)||Input.GetKeyDown(KeyCode.JoystickButton0)) {
 			if (podeEnter) {
 				if (!onSureBox) {
@@ -217,7 +225,7 @@ public class MenuControllerInGame : MonoBehaviour {
 				}
 			}
 			AlteraIndicadorSelecao ();
-			StartCoroutine ("EnterAvailable");
+		
 		}
 		if (Input.GetKeyDown (KeyCode.UpArrow) || Input.GetAxisRaw ("L_Joystick_Y") > 0.2f) {
 			if (controleOpcaoEixo) {
@@ -256,7 +264,12 @@ public class MenuControllerInGame : MonoBehaviour {
 					AlteraIndicadorSelecao ();
 				}
 			}
-			StartCoroutine ("TrocaOpcaoEixo");
+			if (controleOpcaoEixo == true) {
+				StartCoroutine ("TrocaOpcaoEixo");
+				controleOpcaoEixo = false;
+			}
+
+		
 		}
 		if (Input.GetKeyDown (KeyCode.DownArrow) || Input.GetAxisRaw ("L_Joystick_Y") < -0.2f) {
 			if (controleOpcaoEixo) {
@@ -295,7 +308,12 @@ public class MenuControllerInGame : MonoBehaviour {
 					AlteraIndicadorSelecao ();
 				}
 			}
-			StartCoroutine ("TrocaOpcaoEixo");
+			if (controleOpcaoEixo == true) {
+				StartCoroutine ("TrocaOpcaoEixo");
+				controleOpcaoEixo = false;
+			}
+
+		
 		}
 		if (Input.GetKeyDown (KeyCode.LeftArrow) || Input.GetAxisRaw ("L_Joystick_X") < -0.2f) {
 			if (controleOpcaoEixo) {
@@ -325,7 +343,13 @@ public class MenuControllerInGame : MonoBehaviour {
 				}
 				AlteraIndicadorSelecao ();
 			}
-			StartCoroutine ("TrocaOpcaoEixo");
+			if (controleOpcaoEixo == true) {
+				StartCoroutine ("TrocaOpcaoEixo");
+				controleOpcaoEixo = false;
+			}
+
+		
+
 		}
 		if (Input.GetKeyDown (KeyCode.RightArrow) || Input.GetAxisRaw ("L_Joystick_X") > 0.2f) {
 			if (controleOpcaoEixo) {
@@ -355,7 +379,14 @@ public class MenuControllerInGame : MonoBehaviour {
 				}
 				AlteraIndicadorSelecao ();
 			}
-			StartCoroutine ("TrocaOpcaoEixo");
+			if (controleOpcaoEixo == true) {
+				StartCoroutine ("TrocaOpcaoEixo");
+
+				controleOpcaoEixo = false;
+
+			}
+
+
 		}
 		if (Input.GetKeyDown (KeyCode.Escape)||Input.GetKeyDown(KeyCode.JoystickButton1)) {
 			if (!onSureBox) {
@@ -431,9 +462,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	}
 
 	IEnumerator TrocaOpcaoEixo(){
-		////print ("negativo");
-		controleOpcaoEixo = false;
-		yield return new WaitForSecondsRealtime (0.2f);
+		yield return new WaitForSecondsRealtime (0.3f);
 		controleOpcaoEixo = true;
 	}
 
@@ -566,32 +595,56 @@ public class MenuControllerInGame : MonoBehaviour {
 
 		if (saveSlot1 == 0) {
 			textoSave1.text = "0%";
+			ovoQuebrado1.SetActive (false);
+			ovo1.SetActive (true);
 		}else if (saveSlot1 == 2) {
 			textoSave1.text = "25%";
+			ovoQuebrado1.SetActive (true);
+			ovo1.SetActive (false);
 		}else if (saveSlot1 == 3) {
 			textoSave1.text = "50%";
+			ovoQuebrado1.SetActive (true);
+			ovo1.SetActive (false);
 		}else if (saveSlot1 == 4) {
 			textoSave1.text = "75%";
+			ovoQuebrado1.SetActive (true);
+			ovo1.SetActive (false);
 		}
 
 		if (saveSlot2 == 0) {
 			textoSave2.text = "0%";
+			ovoQuebrado2.SetActive (false);
+			ovo2.SetActive (true);
 		}else if (saveSlot2 == 2) {
 			textoSave2.text = "25%";
+			ovoQuebrado2.SetActive (false);
+			ovo2.SetActive (true);
 		}else if (saveSlot2 == 3) {
 			textoSave2.text = "50%";
+			ovoQuebrado2.SetActive (false);
+			ovo2.SetActive (true);
 		}else if (saveSlot2 == 4) {
 			textoSave2.text = "75%";
+			ovoQuebrado2.SetActive (false);
+			ovo2.SetActive (true);
 		}
 
 		if (saveSlot3 == 0) {
 			textoSave2.text = "0%";
+			ovoQuebrado3.SetActive (false);
+			ovo3.SetActive (true);
 		}else if (saveSlot3 == 2) {
 			textoSave2.text = "25%";
+			ovoQuebrado3.SetActive (false);
+			ovo3.SetActive (true);
 		}else if (saveSlot3 == 3) {
 			textoSave2.text = "50%";
+			ovoQuebrado3.SetActive (false);
+			ovo3.SetActive (true);
 		}else if (saveSlot3 == 4) {
 			textoSave2.text = "75%";
+			ovoQuebrado3.SetActive (false);
+			ovo3.SetActive (true);
 		}
 
 		volumeMusica = PlayerPrefs.GetInt ("volumeMusicaS");
