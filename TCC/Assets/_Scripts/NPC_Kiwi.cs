@@ -98,7 +98,7 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible, IPlatformMovable {
 			} else if (isCarregandoPai) {
 				simpleAudioSource.clip = carregando_Clips [currClipIndex];
 				simpleAudioSource.Play ();
-				StartCoroutine(WaitForSimpleClipToEnd (carregando_Clips [currClipIndex].length + 0.05f));
+				StartCoroutine(WaitForSimpleClipToEnd (carregando_Clips [currClipIndex].length));
 				currClipIndex++;
 				if (currClipIndex >= carregando_Clips.Length)
 					currClipIndex = 0;
@@ -144,6 +144,9 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible, IPlatformMovable {
 			Seguir ();
 			return;
 		}
+
+		if (isCarregandoPai)
+			return;
 
 		base.DefaultState ();
 
@@ -334,15 +337,14 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible, IPlatformMovable {
 			}
 			yield return new WaitForSeconds (0.25f);
 		}
+		isCarregandoPai = true;
 		CarregarObjeto (pai);
 	}
 
 	void CarregarObjeto (Transform obj){
 		objetoCarregado = obj;
 
-		if(objetoCarregado.CompareTag("PaiDebilitado")){
-			isCarregandoPai = true;
-		} else if (objetoCarregado.CompareTag("Fruta")) {
+		if (objetoCarregado.CompareTag("Fruta")) {
 			objetoCarregado.GetComponent<FrutaDeCura_Controller> ().Freeze ();
 		}
 

@@ -20,6 +20,8 @@ public class FrutaDeCura_Controller : MonoBehaviour, ICarnivoraEdible {
 	public Vector3 forceDir;
 	public FrutasClips[] frutas_Clips;
 
+	public bool wakeScriptedKiwisOnGrounded;
+
 	bool ploft = false;
 	bool canFreeze = false;
 	int myIndex = 0;
@@ -52,6 +54,11 @@ public class FrutaDeCura_Controller : MonoBehaviour, ICarnivoraEdible {
 				rb.useGravity = false;
 				rb.isKinematic = true;
 				//canFreeze = false;
+				if(wakeScriptedKiwisOnGrounded){
+					NPC_Kiwi_Scripted kiwi = FindObjectOfType<NPC_Kiwi_Scripted> ();
+					if (kiwi != null)
+						kiwi.startWPBehaviour = true;
+				}
 			} else if (!hitSomething){
 				ploft = false;
 				rb.useGravity = true;

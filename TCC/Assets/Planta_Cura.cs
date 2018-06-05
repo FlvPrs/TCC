@@ -17,6 +17,8 @@ public class Planta_Cura : PlantaBehaviour {
 	public bool closeWithTime = true;
 	public bool startAberta = false;
 
+	public bool wakeScriptedKiwisOnGrounded;
+
 	void Start (){
 		fechada = !startAberta;
 
@@ -82,6 +84,7 @@ public class Planta_Cura : PlantaBehaviour {
 	IEnumerator DropFruta (){
 		GameObject fruta = Instantiate (frutaPrefab);
 		fruta.transform.position = frutaInitPos;
+		fruta.GetComponent<FrutaDeCura_Controller> ().wakeScriptedKiwisOnGrounded = wakeScriptedKiwisOnGrounded;
 		yield return new WaitForSeconds (1f);
 		fruta.GetComponent<FrutaDeCura_Controller> ().CairDaPlanta (numeroDeFrutas);
 	}
