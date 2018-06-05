@@ -8,20 +8,22 @@ using UnityEngine.UI;
 public class MenuControllerInGame : MonoBehaviour {
 
 	public WalkingController player;
-	public int opcaoMenu1, opcaoMenu2, opcaoMenu3, opcaoMenuPause, opcaoMenuMorte, volumeMusica, volumeEfeitos;
+	public int opcaoMenu1, opcaoMenu2, opcaoMenu3, opcaoMenuPause, opcaoMenuMorte, volumeMusica, volumeEfeitos, opcaoCerteza;
 	public int saveSlot1, saveSlot2, saveSlot3, volumeAlterado;
-	private bool onMenu1, onMenu2, onMenu3, onMenu4, onMenu5, onMenuDeath,onPause, controlandoVolume, musicaEfeito, inGame;
+	private bool onMenu1, onMenu2, onMenu3, onMenu4, onMenu5, onMenuDeath,onPause, controlandoVolume, musicaEfeito, inGame, onSureBox;
 	private bool podeEnter, jogando, controleOpcaoEixo, deleteSave;
-	public GameObject menu1, menu2, menu3, menu4, menu5, menuPause, menuMorte, menuFakeDeath, telaFundo, seta;
+	public GameObject menu1, menu2, menu3, menu4, menu5, menuPause, menuMorte, menuFakeDeath, telaFundo, seta, certezaBox;
 	public GameObject VM1, VM2, VM3, VM4, VM5, VM6, VM7, VM8;
 	public GameObject VE1, VE2, VE3, VE4, VE5, VE6, VE7, VE8;
+	public GameObject ovo1, ovo2, ovo3, ovoQuebrado1, ovoQuebrado2, ovoQuebrado3;
 	public static SaveInformations save;
 	public int faseAtual;
 	private bool fakeDeathMenu;
 	public int faseAtualSave;
 	int entersToSavePlayer = 0;
-	public GameObject SetaIndicativa1, SetaIndicativa2, SetaIndicativa3, SetaIndicativa4, SetaIndicativa5;
+	public GameObject SetaIndicativa1, SetaIndicativa2, SetaIndicativa3, SetaIndicativa4, SetaIndicativa5, SetaIndicativaCertezaBox;
 	public Text textoSave1, textoSave2, textoSave3;
+	private float timeToMoveAxys;
 
 	private FatherSacrifice_Ctrl fatherSacrificeCtrl;
 
@@ -30,7 +32,8 @@ public class MenuControllerInGame : MonoBehaviour {
 		//GetSaveVariables ();
 		GetSaveVariables ();//pega as fases de cada slot
 		SaveInformations.SalvaCena (faseAtualSave);
-		print (faseAtualSave);
+		//print (faseAtualSave);
+		TemCertezaBox (false);
 		if (volumeAlterado != 2) {
 			volumeMusica = 8;
 			volumeEfeitos = 8;
@@ -49,301 +52,396 @@ public class MenuControllerInGame : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//print (inGame);
-		
+		print (controleOpcaoEixo);
+//		if (controleOpcaoEixo == false) {
+//			timeToMoveAxys += Time.deltaTime * 1.0f;
+//		}
+//		if (timeToMoveAxys >= 0.3f) {
+//			controleOpcaoEixo = true;
+//			timeToMoveAxys = 0;
+//		}
 		if (Input.GetKeyDown (KeyCode.Return)||Input.GetKeyDown(KeyCode.JoystickButton0)) {
 			if (podeEnter) {
-				if (onMenu1) {
-					if (opcaoMenu1 == 1) {
-						TrocaMenus (2);
-					} else if (opcaoMenu1 == 2) {
-						//TrocaMenus (3);
-					} else if (opcaoMenu1 == 3) {
-						TrocaMenus (4);
-					} else if (opcaoMenu1 == 4) {
-						Application.Quit ();
-					}
-				} else if (onMenu2) {
-					if (!deleteSave) {
-						if (opcaoMenu2 == 1) {
-							SaveInformations.EscolhendoSlot (1);
-							if (saveSlot1 == 0 || saveSlot1 == 1) {
-								SaveInformations.SaveSlot (1, 1);
-								TrocaMenus (6);
-								inGame = true;
-								player.playerInputStartGame = true;
+				if (!onSureBox) {
+					if (onMenu1) {
+						if (opcaoMenu1 == 1) {
+							TrocaMenus (2);
+						} else if (opcaoMenu1 == 2) {
+							//TrocaMenus (3);
+						} else if (opcaoMenu1 == 3) {
+							TrocaMenus (4);
+						} else if (opcaoMenu1 == 4) {
+							TemCertezaBox (true);
+							//Application.Quit ();
+						}
+					} else if (onMenu2) {
+						if (!deleteSave) {
+							if (opcaoMenu2 == 1) {
+								SaveInformations.EscolhendoSlot (1);
+								if (saveSlot1 == 0 || saveSlot1 == 1) {
+									SaveInformations.SaveSlot (1, 1);
+									TrocaMenus (6);
+									inGame = true;
+									player.playerInputStartGame = true;
 
-								//print ("acionei");
-							} else if (saveSlot1 == 2) {
-								SceneManager.LoadScene (2);
-							}else if (saveSlot1 == 3) {
-								SceneManager.LoadScene (3);
-								////print ("ja tem save");
-							} else if (saveSlot1 == 4) {
-								SceneManager.LoadScene (4);
+									//print ("acionei");
+								} else if (saveSlot1 == 2) {
+									SceneManager.LoadScene (2);
+								} else if (saveSlot1 == 3) {
+									SceneManager.LoadScene (3);
+									////print ("ja tem save");
+								} else if (saveSlot1 == 4) {
+									SceneManager.LoadScene (4);
+								}
+							} else if (opcaoMenu2 == 2) {
+								SaveInformations.EscolhendoSlot (2);
+								if (saveSlot2 == 0 || saveSlot2 == 1) {
+									SaveInformations.SaveSlot (2, 1);
+									TrocaMenus (6);
+									inGame = true;
+									player.playerInputStartGame = true;
+									////print ("acionei");
+								} else if (saveSlot2 == 2) {
+									SceneManager.LoadScene (2);
+									////print ("ja tem save");
+								} else if (saveSlot2 == 3) {
+									SceneManager.LoadScene (3);
+									////print ("ja tem save");
+								} else if (saveSlot2 == 4) {
+									SceneManager.LoadScene (4);
+								}
+							} else if (opcaoMenu2 == 3) {
+								SaveInformations.EscolhendoSlot (3);
+								if (saveSlot3 == 0 || saveSlot3 == 1) {
+									SaveInformations.SaveSlot (3, 1);
+									TrocaMenus (6);
+									inGame = true;
+									player.playerInputStartGame = true;
+									////print ("acionei");
+								} else if (saveSlot3 == 3) {
+									SceneManager.LoadScene (3);
+									////print ("ja tem save");
+								} else if (saveSlot3 == 2) {
+									SceneManager.LoadScene (2);
+									////print ("ja tem save");
+								} else if (saveSlot3 == 4) {
+									SceneManager.LoadScene (4);
+								}
+							} else if (opcaoMenu2 == 4) {
+								TrocaMenus (1);
 							}
-						} else if (opcaoMenu2 == 2) {
-							SaveInformations.EscolhendoSlot (2);
-							if (saveSlot2 == 0 || saveSlot2 == 1) {
-								SaveInformations.SaveSlot (2, 1);
-								TrocaMenus (6);
-								inGame = true;
-								player.playerInputStartGame = true;
-								////print ("acionei");
-							}else if (saveSlot2 == 2) {
-								SceneManager.LoadScene (2);
-								////print ("ja tem save");
-							} else if (saveSlot2 == 3) {
-								SceneManager.LoadScene (3);
-								////print ("ja tem save");
-							} else if (saveSlot2 == 4) {
-								SceneManager.LoadScene (4);
+						} else if (deleteSave) {
+							if (opcaoMenu2 == 1) {
+								TemCertezaBox (true);
+//								SaveInformations.SaveSlot (1, 0);
+//								GetSaveVariables ();
+//								TrocaMenus (2);
+							} else if (opcaoMenu2 == 2) {
+								TemCertezaBox (true);
+//								SaveInformations.SaveSlot (2, 0);
+//								GetSaveVariables ();
+//								TrocaMenus (2);
+							} else if (opcaoMenu2 == 3) {
+								TemCertezaBox (true);
+//								SaveInformations.SaveSlot (3, 0);
+//								GetSaveVariables ();
+//								TrocaMenus (2);
 							}
-						} else if (opcaoMenu2 == 3) {
-							SaveInformations.EscolhendoSlot (3);
-							if (saveSlot3 == 0 || saveSlot3 == 1) {
-								SaveInformations.SaveSlot (3, 1);
-								TrocaMenus (6);
-								inGame = true;
-								player.playerInputStartGame = true;
-								////print ("acionei");
-							} else if (saveSlot3 == 3) {
-								SceneManager.LoadScene (3);
-								////print ("ja tem save");
-							}else if (saveSlot3 == 2) {
-								SceneManager.LoadScene (2);
-								////print ("ja tem save");
-							} else if (saveSlot3 == 4) {
-								SceneManager.LoadScene (4);
-							}
-						} else if (opcaoMenu2 == 4) {
-							TrocaMenus (1);
 						}
-					} else if (deleteSave) {
-						if (opcaoMenu2 == 1) {
-							SaveInformations.SaveSlot (1, 0);
-							GetSaveVariables ();
-							TrocaMenus (2);
-						} else if (opcaoMenu2 == 2) {
-							SaveInformations.SaveSlot (2, 0);
-							GetSaveVariables ();
-							TrocaMenus (2);
-						} else if (opcaoMenu2 == 3) {
-							SaveInformations.SaveSlot (3, 0);
-							GetSaveVariables ();
-							//saveSlot3 = PlayerPrefs.GetInt ("saveSlot3");
-							TrocaMenus (2);
+					} else if (onMenu3) {
+						if (opcaoMenu3 == 1) {
+							controlandoVolume = true;
 						}
-					}
-				} else if (onMenu3) {
-					if (opcaoMenu3 == 1) {
-						controlandoVolume = true;
-					}
-				} else if (onPause) {
-					if (opcaoMenuPause == 1) {
-						TrocaMenus (6);
-					} else if (opcaoMenuPause == 2) {
-						//TrocaMenus (3);
-					} else if (opcaoMenuPause == 3) {
-						TrocaMenus (7);
-					} else if (opcaoMenuPause == 4) {
-						TrocaMenus (4);
-					} else if (opcaoMenuPause == 5) {
-						SceneManager.LoadScene (1);
-					}
+					} else if (onPause) {
+						if (opcaoMenuPause == 1) {
+							TrocaMenus (6);
+						} else if (opcaoMenuPause == 2) {
+							//TrocaMenus (3);
+						} else if (opcaoMenuPause == 3) {
+							TrocaMenus (7);
+						} else if (opcaoMenuPause == 4) {
+							TrocaMenus (4);
+						} else if (opcaoMenuPause == 5) {
+							TemCertezaBox (true);
+//							SceneManager.LoadScene (1);
+						}
 //					else if (opcaoMenuPause == 6) {
 //						Application.Quit ();
 //					}
-				} 
-				else if (onMenuDeath) {
-					if (opcaoMenuMorte == 1) {
-						//if(!fakeDeathMenu) {
-						Time.timeScale = 1f;
-						TrocaMenus (6);
-						//}
-						//else if(fakeDeathMenu){
-						//	PaiCaminhandoParaMorte ();
-						//}
-					} else if (opcaoMenuMorte == 2) {
-						SceneManager.LoadScene (1);
-					} else if (opcaoMenuMorte == 3) {
-						Application.Quit ();
+					} else if (onMenuDeath) {
+						if (opcaoMenuMorte == 1) {
+							//if(!fakeDeathMenu) {
+							Time.timeScale = 1f;
+							TrocaMenus (6);
+							//}
+							//else if(fakeDeathMenu){
+							//	PaiCaminhandoParaMorte ();
+							//}
+						} else if (opcaoMenuMorte == 2) {
+							TemCertezaBox (true);
+							//SceneManager.LoadScene (1);
+						} else if (opcaoMenuMorte == 3) {
+							TemCertezaBox (true);
+							//Application.Quit ();
+						}
+					}
+				} else if (onSureBox) {
+					if (opcaoCerteza == 1) {
+						if (onMenu1) {
+							if (opcaoMenu1 == 4) {
+								Application.Quit ();
+							}
+						} else if (onMenu2) {
+							if (deleteSave) {
+								if (opcaoMenu2 == 1) {
+									SaveInformations.SaveSlot (1, 0);
+									GetSaveVariables ();
+									TrocaMenus (2);
+								} else if (opcaoMenu2 == 2) {
+									SaveInformations.SaveSlot (2, 0);
+									GetSaveVariables ();
+									TrocaMenus (2);
+								} else if (opcaoMenu2 == 3) {
+									SaveInformations.SaveSlot (3, 0);
+									GetSaveVariables ();
+									//saveSlot3 = PlayerPrefs.GetInt ("saveSlot3");
+									TrocaMenus (2);
+								}
+							}
+						} else if (onPause) {
+							if (opcaoMenuPause == 5) {
+								SceneManager.LoadScene (1);
+							}
+						} else if (onMenuDeath) {
+							if (opcaoMenuMorte == 2) {
+								SceneManager.LoadScene (1);
+							} else if (opcaoMenuMorte == 3) {
+								Application.Quit ();
+							}
+						}
+					} else if (opcaoCerteza == 2) {
+						TemCertezaBox (false);
 					}
 				}
 			}
 			AlteraIndicadorSelecao ();
-			StartCoroutine ("EnterAvailable");
+		
 		}
 		if (Input.GetKeyDown (KeyCode.UpArrow) || Input.GetAxisRaw ("L_Joystick_Y") > 0.2f) {
 			if (controleOpcaoEixo) {
-				
-				if (onMenu1) {
-					if (opcaoMenu1 > 1) {
-						opcaoMenu1--;
-					} else if (opcaoMenu1 == 1) {
-						opcaoMenu1 = 4;
-					}
-				} else if (onMenu3) {
-					if (!controlandoVolume) {
-						if (opcaoMenu3 > 1) {
-							opcaoMenu3--;
-						} else if (opcaoMenu3 == 1) {
-							opcaoMenu3 = 2;
+				if (!onSureBox) {
+					if (onMenu1) {
+						if (opcaoMenu1 > 1) {
+							opcaoMenu1--;
+						} else if (opcaoMenu1 == 1) {
+							opcaoMenu1 = 4;
 						}
-					} else if (controlandoVolume) {
-						musicaEfeito = !musicaEfeito;
+					} else if (onMenu3) {
+						if (!controlandoVolume) {
+							if (opcaoMenu3 > 1) {
+								opcaoMenu3--;
+							} else if (opcaoMenu3 == 1) {
+								opcaoMenu3 = 2;
+							}
+						} else if (controlandoVolume) {
+							musicaEfeito = !musicaEfeito;
+						}
+					} else if (onPause) {
+						if (opcaoMenuPause > 1) {
+							opcaoMenuPause--;
+						} else if (opcaoMenuPause == 1) {
+							opcaoMenuPause = 5;
+						}
+					} else if (onMenu2) {
+						deleteSave = !deleteSave;
+					} else if (onMenuDeath) {
+						if (opcaoMenuMorte > 1) {
+							opcaoMenuMorte--;
+						} else if (opcaoMenuMorte == 1) {
+							opcaoMenuMorte = 3;
+						}
 					}
-				} else if (onPause) {
-					if (opcaoMenuPause > 1) {
-						opcaoMenuPause--;
-					} else if (opcaoMenuPause == 1) {
-						opcaoMenuPause = 5;
-					}
-				} else if (onMenu2) {
-					deleteSave = !deleteSave;
-				} else if (onMenuDeath) {
-					if (opcaoMenuMorte > 1) {
-						opcaoMenuMorte--;
-					} else if (opcaoMenuMorte == 1) {
-						opcaoMenuMorte = 3;
-					}
+					AlteraIndicadorSelecao ();
 				}
-				AlteraIndicadorSelecao ();
 			}
-			StartCoroutine ("TrocaOpcaoEixo");
+			if (controleOpcaoEixo == true) {
+				StartCoroutine ("TrocaOpcaoEixo");
+				controleOpcaoEixo = false;
+			}
+
+		
 		}
 		if (Input.GetKeyDown (KeyCode.DownArrow) || Input.GetAxisRaw ("L_Joystick_Y") < -0.2f) {
 			if (controleOpcaoEixo) {
-				
-				if (onMenu1) {
-					if (opcaoMenu1 < 4) {
-						opcaoMenu1++;
-					} else if (opcaoMenu1 == 4) {
-						opcaoMenu1 = 1;
-					}
-				} else if (onMenu3) {
-					if (!controlandoVolume) {
-						if (opcaoMenu3 < 2) {
-							opcaoMenu3++;
-						}else if (opcaoMenu3 == 2) {
-							opcaoMenu3 = 1;
+				if (!onSureBox) {
+					if (onMenu1) {
+						if (opcaoMenu1 < 4) {
+							opcaoMenu1++;
+						} else if (opcaoMenu1 == 4) {
+							opcaoMenu1 = 1;
 						}
-					} else if (controlandoVolume) {
-						musicaEfeito = !musicaEfeito;
+					} else if (onMenu3) {
+						if (!controlandoVolume) {
+							if (opcaoMenu3 < 2) {
+								opcaoMenu3++;
+							} else if (opcaoMenu3 == 2) {
+								opcaoMenu3 = 1;
+							}
+						} else if (controlandoVolume) {
+							musicaEfeito = !musicaEfeito;
+						}
+					} else if (onPause) {
+						if (opcaoMenuPause < 5) {
+							opcaoMenuPause++;
+						} else if (opcaoMenuPause == 5) {
+							opcaoMenuPause = 1;
+						}
+					} else if (onMenu2) {
+						deleteSave = !deleteSave;
+					} else if (onMenuDeath) {
+						if (opcaoMenuMorte < 3) {
+							opcaoMenuMorte++;
+						} else if (opcaoMenuMorte == 3) {
+							opcaoMenuMorte = 1;
+						}
 					}
-				} else if (onPause) {
-					if (opcaoMenuPause < 5) {
-						opcaoMenuPause++;
-					}else if (opcaoMenuPause == 5) {
-						opcaoMenuPause = 1;
-					}
-				}else if (onMenu2) {
-					deleteSave = !deleteSave;
-				}else if (onMenuDeath) {
-					if (opcaoMenuMorte < 3) {
-						opcaoMenuMorte++;
-					}else if (opcaoMenuMorte == 3) {
-						opcaoMenuMorte = 1;
-					}
+					AlteraIndicadorSelecao ();
 				}
-				AlteraIndicadorSelecao ();
 			}
-			StartCoroutine ("TrocaOpcaoEixo");
+			if (controleOpcaoEixo == true) {
+				StartCoroutine ("TrocaOpcaoEixo");
+				controleOpcaoEixo = false;
+			}
+
+		
 		}
 		if (Input.GetKeyDown (KeyCode.LeftArrow) || Input.GetAxisRaw ("L_Joystick_X") < -0.2f) {
 			if (controleOpcaoEixo) {
-				
-				if (onMenu2) {
-					if (opcaoMenu2 > 1) {
-						opcaoMenu2--;
-					}
-				} else if (onMenu3) {
-					if (controlandoVolume) {
-						if (musicaEfeito && volumeMusica > 1) {
-							SaveInformations.VolumeAlteradoF ();
-							volumeMusica--;
-							imagensVolume ();
-						} else if (!musicaEfeito && volumeEfeitos > 1) {
-							SaveInformations.VolumeAlteradoF ();
-							volumeEfeitos--;
-							imagensVolume ();
+				if (!onSureBox) {
+					if (onMenu2) {
+						if (opcaoMenu2 > 1) {
+							opcaoMenu2--;
 						}
+					} else if (onMenu3) {
+						if (controlandoVolume) {
+							if (musicaEfeito && volumeMusica > 1) {
+								SaveInformations.VolumeAlteradoF ();
+								volumeMusica--;
+								imagensVolume ();
+							} else if (!musicaEfeito && volumeEfeitos > 1) {
+								SaveInformations.VolumeAlteradoF ();
+								volumeEfeitos--;
+								imagensVolume ();
+							}
+						}
+					}
+
+				} else if (onSureBox) {
+					if (opcaoCerteza > 1) {
+						opcaoCerteza--;
 					}
 				}
 				AlteraIndicadorSelecao ();
 			}
-			StartCoroutine ("TrocaOpcaoEixo");
+			if (controleOpcaoEixo == true) {
+				StartCoroutine ("TrocaOpcaoEixo");
+				controleOpcaoEixo = false;
+			}
+
+		
+
 		}
 		if (Input.GetKeyDown (KeyCode.RightArrow) || Input.GetAxisRaw ("L_Joystick_X") > 0.2f) {
 			if (controleOpcaoEixo) {
-				
-				if (onMenu2) {
-					if (opcaoMenu2 < 4) {
-						opcaoMenu2++;
-					}
-				} else if (onMenu3) {
-					if (controlandoVolume) {
-						if (musicaEfeito && volumeMusica < 8) {
-							SaveInformations.VolumeAlteradoF ();
-							volumeMusica++;
-							imagensVolume ();
-						} else if (!musicaEfeito && volumeEfeitos < 8) {
-							SaveInformations.VolumeAlteradoF ();
-							volumeEfeitos++;
-							imagensVolume ();
+				if (!onSureBox) {
+					if (onMenu2) {
+						if (opcaoMenu2 < 4) {
+							opcaoMenu2++;
 						}
+					} else if (onMenu3) {
+						if (controlandoVolume) {
+							if (musicaEfeito && volumeMusica < 8) {
+								SaveInformations.VolumeAlteradoF ();
+								volumeMusica++;
+								imagensVolume ();
+							} else if (!musicaEfeito && volumeEfeitos < 8) {
+								SaveInformations.VolumeAlteradoF ();
+								volumeEfeitos++;
+								imagensVolume ();
+							}
+						}
+					} 
+
+				}else if (onSureBox) {
+					if (opcaoCerteza < 2) {
+						opcaoCerteza++;
 					}
 				}
 				AlteraIndicadorSelecao ();
 			}
-			StartCoroutine ("TrocaOpcaoEixo");
+			if (controleOpcaoEixo == true) {
+				StartCoroutine ("TrocaOpcaoEixo");
+
+				controleOpcaoEixo = false;
+
+			}
+
+
 		}
 		if (Input.GetKeyDown (KeyCode.Escape)||Input.GetKeyDown(KeyCode.JoystickButton1)) {
-			if (inGame) {
-				if (onPause) {
-					TrocaMenus (6);
-					////print ("jogando");
-				}
-				else if (jogando) {
-					TrocaMenus (0);
-					////print ("pause");
-				}
-			}
-			if (onMenu2) {
-				TrocaMenus (1);
-
-			} else if (onMenu3) {
-				if (controlandoVolume) {
-					controlandoVolume = false;
-					SaveInformations.SaveVolume (volumeMusica, volumeEfeitos);
-				} else if (!inGame) {
-					TrocaMenus (1);
-				} else if (inGame) {
-					TrocaMenus (0);
-				}
-			} else if (onMenu4) {
+			if (!onSureBox) {
 				if (inGame) {
-					TrocaMenus (0);
-				} else if (!inGame) {
-					TrocaMenus (1);
+					if (onPause) {
+						TrocaMenus (6);
+						////print ("jogando");
+					} else if (jogando) {
+						TrocaMenus (0);
+						////print ("pause");
+					}
 				}
-			} else if (onMenu5) {
-				TrocaMenus (0);
-			} else if (onMenuDeath) {
-				TrocaMenus (6);
+				if (onMenu2) {
+					TrocaMenus (1);
+
+				} else if (onMenu3) {
+					if (controlandoVolume) {
+						controlandoVolume = false;
+						SaveInformations.SaveVolume (volumeMusica, volumeEfeitos);
+					} else if (!inGame) {
+						TrocaMenus (1);
+					} else if (inGame) {
+						TrocaMenus (0);
+					}
+				} else if (onMenu4) {
+					if (inGame) {
+						TrocaMenus (0);
+					} else if (!inGame) {
+						TrocaMenus (1);
+					}
+				} else if (onMenu5) {
+					TrocaMenus (0);
+				} else if (onMenuDeath) {
+					TrocaMenus (6);
+				}
+			} else if (onSureBox) {
+				TemCertezaBox (false);
 			}
 			AlteraIndicadorSelecao ();
 		}
 		if (Input.GetKeyDown (KeyCode.JoystickButton7)) {
-			if (inGame) {
-				if (onPause) {
-					TrocaMenus (6);
-					////print ("jogando");
+			if (!onSureBox) {
+				if (inGame) {
+					if (onPause) {
+						TrocaMenus (6);
+						////print ("jogando");
+					} else if (jogando) {
+						TrocaMenus (0);
+						////print ("pause");
+					}
 				}
-				else if (jogando) {
-					TrocaMenus (0);
-					////print ("pause");
-				}
+			} else if (onSureBox) {
+				
+					TemCertezaBox (false);
+				
 			}
 		}
 		if(Input.GetKeyDown(KeyCode.O)){
@@ -364,9 +462,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	}
 
 	IEnumerator TrocaOpcaoEixo(){
-		////print ("negativo");
-		controleOpcaoEixo = false;
-		yield return new WaitForSecondsRealtime (0.2f);
+		yield return new WaitForSecondsRealtime (0.3f);
 		controleOpcaoEixo = true;
 	}
 
@@ -419,6 +515,15 @@ public class MenuControllerInGame : MonoBehaviour {
 				SetaIndicativa5.transform.localPosition = new Vector3 (13.0f, -236.0f, 0f);
 			}
 		}
+		if (onSureBox) {
+			if (opcaoCerteza == 1) {
+				SetaIndicativaCertezaBox.transform.localPosition = new Vector3 (-10.0f, -18.6f, 0);
+				print (opcaoCerteza);
+			} else if (opcaoCerteza == 2) {
+				SetaIndicativaCertezaBox.transform.localPosition = new Vector3 (10.0f, -18.6f, 0);
+				print (opcaoCerteza);
+			}
+		}
 	}
 	void PaiCaminhandoParaMorte (){
 		print ("Morreu");
@@ -434,6 +539,44 @@ public class MenuControllerInGame : MonoBehaviour {
 //		if(entersToSavePlayer <= 0){
 //			MortePai ();
 //		}
+	}
+
+//	bool CertezaSimNao(bool ){
+//
+//	}
+
+	void TemCertezaBox(bool certezaAtiva){
+		if (certezaAtiva) {
+			certezaBox.SetActive (true);
+			opcaoCerteza = 1;
+			onSureBox = true;
+
+		} else if (!certezaAtiva) {
+			certezaBox.SetActive (false);
+			onSureBox = false;
+//			if (qualMenu == 10) {
+//				return;
+//			}else if (qualMenu == 0) {
+//				onPause = true;
+//			} else if (qualMenu == 1) {
+//				onMenu1 = true;
+//			}else if (qualMenu == 2) {
+//				onMenu2 = true;
+//			}else if (qualMenu == 3) {
+//				onMenu3 = true;
+//			}else if (qualMenu == 4) {
+//				onMenu4 = true;
+//			}else if (qualMenu == 5) {
+//				onMenu5 = true;
+//			}else if (qualMenu == 6) {
+//				onMenuDeath = true;
+//			}else if (qualMenu == 7) {
+//				jogando = true;
+//			}else if (qualMenu == 8) {
+//				fakeDeathMenu = true;
+//			}
+
+		}
 	}
 
 //	void MortePai(){
@@ -452,32 +595,56 @@ public class MenuControllerInGame : MonoBehaviour {
 
 		if (saveSlot1 == 0) {
 			textoSave1.text = "0%";
+			ovoQuebrado1.SetActive (false);
+			ovo1.SetActive (true);
 		}else if (saveSlot1 == 2) {
 			textoSave1.text = "25%";
+			ovoQuebrado1.SetActive (true);
+			ovo1.SetActive (false);
 		}else if (saveSlot1 == 3) {
 			textoSave1.text = "50%";
+			ovoQuebrado1.SetActive (true);
+			ovo1.SetActive (false);
 		}else if (saveSlot1 == 4) {
 			textoSave1.text = "75%";
+			ovoQuebrado1.SetActive (true);
+			ovo1.SetActive (false);
 		}
 
 		if (saveSlot2 == 0) {
 			textoSave2.text = "0%";
+			ovoQuebrado2.SetActive (false);
+			ovo2.SetActive (true);
 		}else if (saveSlot2 == 2) {
 			textoSave2.text = "25%";
+			ovoQuebrado2.SetActive (false);
+			ovo2.SetActive (true);
 		}else if (saveSlot2 == 3) {
 			textoSave2.text = "50%";
+			ovoQuebrado2.SetActive (false);
+			ovo2.SetActive (true);
 		}else if (saveSlot2 == 4) {
 			textoSave2.text = "75%";
+			ovoQuebrado2.SetActive (false);
+			ovo2.SetActive (true);
 		}
 
 		if (saveSlot3 == 0) {
 			textoSave2.text = "0%";
+			ovoQuebrado3.SetActive (false);
+			ovo3.SetActive (true);
 		}else if (saveSlot3 == 2) {
 			textoSave2.text = "25%";
+			ovoQuebrado3.SetActive (false);
+			ovo3.SetActive (true);
 		}else if (saveSlot3 == 3) {
 			textoSave2.text = "50%";
+			ovoQuebrado3.SetActive (false);
+			ovo3.SetActive (true);
 		}else if (saveSlot3 == 4) {
 			textoSave2.text = "75%";
+			ovoQuebrado3.SetActive (false);
+			ovo3.SetActive (true);
 		}
 
 		volumeMusica = PlayerPrefs.GetInt ("volumeMusicaS");
