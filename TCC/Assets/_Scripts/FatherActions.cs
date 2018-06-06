@@ -32,6 +32,7 @@ public class FatherActions : AgentFather, IPlatformMovable {
 	bool sonCalledMe = false;
 	bool canStartCasualHug = false;
 	public bool automaticHug = false;
+	public bool neverHug = false;
 
 	protected override void Start (){
 		base.Start ();
@@ -74,7 +75,7 @@ public class FatherActions : AgentFather, IPlatformMovable {
 		currentStamina = maxStamina - timeMoving;
 
 
-		if(playerCtrl.callingFather){
+		if(playerCtrl.callingFather && !neverHug){
 			playerCtrl.callingFather = false;
 			sonCalledMe = true;
 			StartHugSon ();
@@ -121,6 +122,13 @@ public class FatherActions : AgentFather, IPlatformMovable {
 		//sustainColl.SetActive (false);
 		//staccatoColl.SetActive (false);
 		currentSong = PlayerSongs.Empty;
+		Invoke ("ClearAgain", 0.1f);
+	}
+
+	void ClearAgain (){
+		isWalking = isRandomWalking = isGuiding = isFollowingPlayer = false;
+		stopHoldFly = stopRepeatingNote = stopSustainNote = false;
+		nmAgent.isStopped = true;
 	}
 
 
@@ -210,6 +218,9 @@ public class FatherActions : AgentFather, IPlatformMovable {
 
 	bool goingToHugSon = false;
 	public void StartHugSon (){
+		if (neverHug)
+			return;
+		
 		CancelInvoke ("ResetHugStartTimer");
 		CancelInvoke ("StartHugSon");
 		canStartCasualHug = false;
@@ -219,6 +230,9 @@ public class FatherActions : AgentFather, IPlatformMovable {
 		nmAgent.isStopped = false;
 	}
 	public void BecomePlayersChild (){
+		if (neverHug)
+			return;
+		
 		nmAgent.enabled = false;
 		isWalking = true;
 		agentTransform.SetParent (player);

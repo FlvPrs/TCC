@@ -74,6 +74,16 @@ public class Npc_BeijaFlor : NPCBehaviour, IPlatformMovable {
 		Seguir
 	}
 
+	protected override void DefaultState ()
+	{
+		if(currentState == NPC_CurrentState.Seguindo){
+			Seguir ();
+			return;
+		}
+
+		base.DefaultState ();
+	}
+
 	private EstadosBeijaFro estado;
 	void mudancaEstado(int estadoAtual){
 

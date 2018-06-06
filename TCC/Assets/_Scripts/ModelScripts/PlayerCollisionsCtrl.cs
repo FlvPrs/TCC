@@ -29,7 +29,8 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 	bool isOnShelter;
 
 	public Transform[] spawnPoints;
-	private int currentSpawnPoint = 0;
+	[HideInInspector]
+	public int currentSpawnPoint = 0;
 
 	private float timeToDieByVeneno = 2f;
 	public float poisoningTimer = 0f;

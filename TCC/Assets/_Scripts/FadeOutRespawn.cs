@@ -77,7 +77,7 @@ public class FadeOutRespawn : MonoBehaviour {
 			yield return null;
 		}
 
-		FindObjectOfType<MenuControllerInGame> ().TrocaMenus (5);
+		//FindObjectOfType<MenuControllerInGame> ().TrocaMenus (5);
 
 		player.GetComponent<PlayerCollisionsCtrl> ().RestartVenenoTimer ();
 

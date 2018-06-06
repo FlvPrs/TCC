@@ -14,6 +14,8 @@ public class PlayerRespawnCtrl : MonoBehaviour {
 	private Vector3 fatherOldPos;
 
 	public bool fatherRetunsPlayer = true;
+	public bool fatherReturnsAlone = false;
+	public Transform[] FatherSpawnPoints;
 
 	private bool isReturning;
 	private bool goUp;
@@ -93,5 +95,9 @@ public class PlayerRespawnCtrl : MonoBehaviour {
 	public void ReturnToSpawnAlone(Vector3 pos){
 		player.GetComponent<WalkingController> ().SetVelocityTo (Vector3.zero, false);
 		player.position = pos + Vector3.up * 2f;
+		if(fatherReturnsAlone){
+			StartCoroutine (actualPai.GetComponent<FatherFSM> ().RespawnAlone (FatherSpawnPoints[player.GetComponent<PlayerCollisionsCtrl>().currentSpawnPoint].position));
+		}
+		actualPai.GetComponent<FatherActions> ().StopHug ();
 	}
 }

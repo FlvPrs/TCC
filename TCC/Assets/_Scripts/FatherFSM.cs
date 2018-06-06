@@ -115,7 +115,7 @@ public class FatherFSM : MonoBehaviour {
 			break;
 		case FatherStates.FollowingPlayer:
 			if(followClose)
-				fatherActions.FollowPlayer (4f, 3.8f);
+				fatherActions.FollowPlayer (5f, 3.8f);
 			else
 				fatherActions.FollowPlayer ();
 			break;
@@ -219,5 +219,15 @@ public class FatherFSM : MonoBehaviour {
 	void EndRespawnBehaviour (){
 		RoteiroPai.RestartRoteiroAt ();
 		playerIsRespawning = false;
+	}
+
+	public IEnumerator RespawnAlone (Vector3 spawnPos){
+		fatherActions.stopUpdate = true;
+		GetComponent<UnityEngine.AI.NavMeshAgent> ().enabled = false;
+		transform.position = spawnPos;
+		yield return new WaitForSeconds (.5f);
+		GetComponent<UnityEngine.AI.NavMeshAgent> ().enabled = true;
+		fatherActions.stopUpdate = false;
+		//RoteiroPai.RestartRoteiroAt (RoteiroPai.instance.currentState + 1);
 	}
 }

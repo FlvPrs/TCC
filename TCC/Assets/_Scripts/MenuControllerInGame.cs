@@ -52,7 +52,7 @@ public class MenuControllerInGame : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		print (controleOpcaoEixo);
+		//print (controleOpcaoEixo);
 //		if (controleOpcaoEixo == false) {
 //			timeToMoveAxys += Time.deltaTime * 1.0f;
 //		}
@@ -589,9 +589,9 @@ public class MenuControllerInGame : MonoBehaviour {
 		saveSlot2 = PlayerPrefs.GetInt ("saveSlot2");
 		saveSlot3 = PlayerPrefs.GetInt ("saveSlot3");
 
-		print (saveSlot1);
-		print (saveSlot2);
-		print (saveSlot3);
+		//print (saveSlot1);
+		//print (saveSlot2);
+		//print (saveSlot3);
 
 		if (saveSlot1 == 0) {
 			textoSave1.text = "0%";
