@@ -36,10 +36,10 @@ public class IntroCamController : MonoBehaviour {
 	void Start () {
 		// fmod
 
-		audioIntro = "event:/Musica/Intro";
+		audioIntro = "event:/Musica/Tema 1/Intro";
 		musicaIntro = FMODUnity.RuntimeManager.CreateInstance (audioIntro);
 
-		audioTrilha = "event:/Musica/Muzika";
+		audioTrilha = "event:/Musica/Tema 1/Muzika";
 		musicaTema = FMODUnity.RuntimeManager.CreateInstance (audioTrilha);
 
 		playerRegainedCtrl = false;
