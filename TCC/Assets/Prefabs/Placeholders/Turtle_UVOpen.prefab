@@ -10685,7 +10685,8 @@ AudioSource:
   m_GameObject: {fileID: 1249405029395130}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 243334166888725500, guid: 6463dd9431b4c7f45b52a8fa77f861e3,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: eed5ff1e8a4cac3448f9d51e07a4232a, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -11048,6 +11049,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53c06731df7ebd847854182610f18a1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  podeReceberSemente: 0
 --- !u!114 &114417042900165350
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -11241,6 +11243,9 @@ MonoBehaviour:
   plantaAberta: {fileID: 1289292352751434}
   abrindo_Clip: {fileID: 8300000, guid: c68fa4a5518a3f947a24d9a443aae70b, type: 3}
   fechando_Clip: {fileID: 8300000, guid: 1391e35431404984ba3c14587ea7af8d, type: 3}
+  closeWithTime: 1
+  startAberta: 0
+  wakeScriptedKiwisOnGrounded: 0
 --- !u!114 &114913084451924378
 MonoBehaviour:
   m_ObjectHideFlags: 1
