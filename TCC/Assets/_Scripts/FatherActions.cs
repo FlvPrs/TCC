@@ -201,6 +201,8 @@ public class FatherActions : AgentFather, IPlatformMovable {
 		} else if (distToPlayer <= stopDistance) {
 			//Wait
 			isFollowingPlayer = false;
+			if(sonCalledMe)
+				goingToHugSon = true;
 		}
 
 		if (!goingToHugSon) {

@@ -98,6 +98,7 @@ public class PlayerRespawnCtrl : MonoBehaviour {
 		if(fatherReturnsAlone){
 			StartCoroutine (actualPai.GetComponent<FatherFSM> ().RespawnAlone (FatherSpawnPoints[player.GetComponent<PlayerCollisionsCtrl>().currentSpawnPoint].position));
 		}
-		actualPai.GetComponent<FatherActions> ().StopHug ();
+		if(actualPai.GetComponent<FatherActions> ().hugging)
+			actualPai.GetComponent<FatherActions> ().StopHug ();
 	}
 }

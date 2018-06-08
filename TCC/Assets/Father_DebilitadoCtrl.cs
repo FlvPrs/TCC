@@ -35,6 +35,8 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 
 	private BalaoFeedback_Ctrl balaoFeedback;
 
+	public AudioClip comendoFruta_Clip;
+
 	void Awake (){
 		askHealingCooldown = delayFirstAskBy;
 		askKiwiCooldown = delayFirstAskBy;
@@ -179,6 +181,8 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 			currentDisposition = FatherConditions.Disposto;
 			Destroy (fruta);
 		}
+		GetComponent<AudioSource> ().clip = comendoFruta_Clip;
+		GetComponent<AudioSource> ().Play ();
 
 		StopCarriedByKiwis ();
 

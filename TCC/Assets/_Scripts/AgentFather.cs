@@ -186,6 +186,10 @@ public class AgentFather : MonoBehaviour {
 	protected float gravity;
 	protected float oldPosY;
 
+	public bool Get_IsFollowing (){
+		return isFollowingPlayer;
+	}
+
 	protected void MoveAgentWithRB (Vector3 target){
 		if (!canWalk) {
 			isWalking = false;

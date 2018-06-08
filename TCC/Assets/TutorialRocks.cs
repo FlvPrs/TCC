@@ -11,23 +11,28 @@ public class TutorialRocks : MonoBehaviour, ISongListener {
 	private float timerPressT;
 	private bool startTimer;
 
+	float listenCooldown = 0f;
+
 	// Use this for initialization
 	void Start () {
 		DesativaTutorial ();
 	}
 
-//	// Update is called once per frame
-//	void Update () {
-//		
-//			timerPressT += Time.deltaTime * 1.0f;
-//
-//	}
+	// Update is called once per frame
+	void Update () {
+		if (listenCooldown > 0f)
+			listenCooldown -= Time.deltaTime;
+		else
+			listenCooldown = 0f;
+	}
 
 	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false, HeightState height = HeightState.Default){
-		if(isSingingSomething){
+		if(isSingingSomething && listenCooldown == 0f){
 			if (isFather)
 				return;
-			
+
+			listenCooldown = 1f;
+
 			tutorialAtivo = !tutorialAtivo;
 			if (tutorialAtivo) {
 				AtivaTutorial ();
@@ -44,7 +49,7 @@ public class TutorialRocks : MonoBehaviour, ISongListener {
 	}
 
 	public void DesativaTutorial(){
-		//tutorialAtivo = false;
+		tutorialAtivo = false;
 		BlackBoxTutorial.SetActive (false);
 		textoTutorial.text = "";
 	}
@@ -67,6 +72,7 @@ public class TutorialRocks : MonoBehaviour, ISongListener {
 	void OnTriggerExit(Collider colisor){
 		if (colisor.name == "PlayerCollider") {
 			DesativaTutorial ();
+			listenCooldown = 0f;
 		}
 	}
 }

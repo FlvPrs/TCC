@@ -41,8 +41,15 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 	bool onFakeDeathSang = false;
 
 	VignettePulse venenoFX;
+	public BlinkScreen blink;
+
+	GameObject tip_VenenoAskForHelp;
 
 	VenenoCtrl currentVeneno;
+
+	FatherActions father;
+
+	public GameObject hugFX;
 
 	void Awake(){
 		playerCtrl = GetComponent<WalkingController> ();
@@ -52,6 +59,11 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 		originalGlideStrength = playerCtrl.glideStrength;
 
 		venenoFX = FindObjectOfType<VignettePulse> ();
+		blink = FindObjectOfType<BlinkScreen> ();
+
+		father = FindObjectOfType<FatherActions> ();
+
+		tip_VenenoAskForHelp = GameObject.Find ("MenuFakeDeath");
 	}
 
 //	void Update(){
@@ -72,6 +84,7 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 //		}
 //	}
 
+	float blinkAt = 0f;
 	void Update (){
 		if(poisoningTimer >= 0f && !diedByVeneno){
 			if (venenoDecay) {
@@ -79,11 +92,24 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 				if (poisoningTimer <= 0f) {
 					RestartVenenoTimer ();
 				}
+				if (poisoningTimer > 0f && poisoningTimer < 0.5f)
+					blinkAt = 0.25f;
+				else if (poisoningTimer >= 0.5f && poisoningTimer < 1f)
+					blinkAt = 0.5f;
+				else if (poisoningTimer >= 1f)
+					blinkAt = 0.75f;
+				
 			} else if (venenoIncrease) {
 				poisoningTimer += (!playerCtrl.beinghugged) ? Time.deltaTime : Time.deltaTime * 0.25f;
 				if (playerCtrl.walkStates.TOCANDO_NOTAS) {
 					currentVeneno.DisableNavMeshCarve ();
-					playerCtrl.StartHug ();
+//					if (Vector3.Distance (father.transform.position, transform.position) <= 10f) {
+//						playerCtrl.StartHug ();
+//					}
+				}
+				if(poisoningTimer > timeToDieByVeneno * blinkAt){
+					blink.Blink ();
+					blinkAt += 0.25f;
 				}
 			}
 
@@ -95,6 +121,8 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			}
 
 			if(poisoningTimer > timeToDieByVeneno){
+				blinkAt = 0f;
+
 				diedByVeneno = true;
 				if(iminentFakeDeath){
 					FindObjectOfType<MenuControllerInGame> ().TrocaMenus (8);
@@ -109,6 +137,8 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 				}
 			}
 		} else {
+			blinkAt = 0f;
+
 			poisoningTimer = 0f;
 			if (!diedByVeneno)
 				venenoFX.start = false;
@@ -220,6 +250,7 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 
 		if (col.CompareTag ("Veneno") || col.CompareTag ("VenenoFakeDeath")) {
 			currentVeneno = col.GetComponentInParent<VenenoCtrl> ();
+			tip_VenenoAskForHelp.SetActive (true);
 		}
 	}
 
@@ -299,6 +330,7 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 			StartCoroutine (ClearPoison (currentVeneno));
 			//currentVeneno = null;
 			iminentFakeDeath = false;
+			tip_VenenoAskForHelp.SetActive (false);
 		}
 	}
 
@@ -309,5 +341,7 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 		if(veneno != null)
 			veneno.ResetNavMeshCarve ();
 		venenoDecay = true;
+
+		tip_VenenoAskForHelp.SetActive (false);
 	}
 }

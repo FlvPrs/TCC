@@ -118,7 +118,7 @@ public class FatherFSM : MonoBehaviour {
 			break;
 		case FatherStates.FollowingPlayer:
 			if(followClose)
-				fatherActions.FollowPlayer (5f, 3.8f);
+				fatherActions.FollowPlayer (6f, 5f);
 			else
 				fatherActions.FollowPlayer ();
 			break;

@@ -140,6 +140,9 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	bool isPressingDirInput;
 	float walkJoystickMagnitude;
 
+	public GameObject hugFX;
+	public GameObject hugVenenoFX;
+
 	void Awake(){
 		rb = GetComponent<Rigidbody> ();
 		myT = GetComponent<Transform> ();
@@ -370,6 +373,17 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			bonusJumpParticle.SetActive (true);
 		} else{
 			bonusJumpParticle.SetActive (false);
+		}
+
+		if(pCollCtrl.venenoIncrease && beinghugged){
+			hugVenenoFX.SetActive (true);
+		} else {
+			hugVenenoFX.SetActive (false);
+		}
+		if(beinghugged){
+			hugFX.SetActive (true);
+		} else {
+			hugFX.SetActive (false);
 		}
 	}
 
