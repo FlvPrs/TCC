@@ -33,7 +33,7 @@ public class AgentFather : MonoBehaviour {
 	protected int[] noteIndexes;
 
 	public bool canWalkWhile_Machucado = true;
-	bool canWalk;
+	protected bool canWalk;
 
 	public bool hugging = false; //Não mudar diretamente.
 

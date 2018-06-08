@@ -47,8 +47,13 @@ public class FatherActions : AgentFather, IPlatformMovable {
 	}
 
 	protected override void Update (){
-		if (stopUpdate)
+		if (stopUpdate) {
+//			if (isFalling) {
+//				base.Update ();
+//				nmAgent.speed = 6f;
+//			}
 			return;
+		}
 
 		base.Update ();
 
@@ -241,8 +246,11 @@ public class FatherActions : AgentFather, IPlatformMovable {
 		hugging = true;
 		sonCalledMe = false;
 	}
-	public void StopHug (){
-		nmAgent.enabled = true;
+	public void StopHug (bool enableNavMesh = true){
+		if (enableNavMesh) {
+			nmAgent.enabled = true;
+		}
+		playerCtrl.beinghugged = false;
 		agentTransform.SetParent (null);
 		hugging = false;
 		goingToHugSon = false;
@@ -646,6 +654,51 @@ public class FatherActions : AgentFather, IPlatformMovable {
 		//rb.isKinematic = enableNavMesh;
 		stopUpdate = !enableNavMesh;
 	}
+
+	public void IsFalling (bool enableNavMesh, bool fallWithPlat = false, Transform plat = null){
+		nmAgent.enabled = enableNavMesh;
+		//rb.isKinematic = enableNavMesh;
+		//rb.useGravity = !enableNavMesh;
+		stopUpdate = !enableNavMesh;
+		ClearActions ();
+
+		if(!enableNavMesh && fallWithPlat){
+			agentTransform.parent = plat;
+		} else {
+			agentTransform.parent = null;
+		}
+	}
+
+	public void RemoteForceAnimBool (string anim, bool moving){
+		animCtrl.SetBool (anim, moving);
+	}
+
+//	public bool isFalling = false;
+//	public void IsFalling (bool enableNavMesh, bool moveWithRB, Vector3 dest){
+//		isFalling = !enableNavMesh;
+//
+//		nmAgent.enabled = enableNavMesh;
+//		rb.isKinematic = enableNavMesh;
+//		rb.useGravity = !enableNavMesh;
+//		rb.AddForce (Vector3.down);
+//		stopUpdate = !enableNavMesh;
+//
+//		if(!enableNavMesh && moveWithRB){
+//			StartCoroutine (MoveWhileFalling (dest));
+//		}
+//	}
+//
+//	IEnumerator MoveWhileFalling (Vector3 dest){
+//		while (isFalling) {
+//			if (!CheckArrivedOnDestination (true)) {
+//				agentTransform.rotation = Quaternion.Slerp (agentTransform.rotation, Quaternion.LookRotation ((dest - agentTransform.position), Vector3.up), Time.deltaTime * angularSpeed);
+//				agentTransform.eulerAngles = new Vector3 (0, agentTransform.eulerAngles.y, 0);
+//				rb.MovePosition (agentTransform.position + agentTransform.forward * Time.deltaTime * 6f);
+//				print ("indo");
+//				yield return new WaitForSeconds (Time.deltaTime);
+//			}
+//		}
+//	}
 }
 
 

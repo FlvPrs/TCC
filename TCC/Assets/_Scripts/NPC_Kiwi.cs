@@ -210,7 +210,7 @@ public class NPC_Kiwi : NPCBehaviour, ICarnivoraEdible, IPlatformMovable {
 			timer_StartPatrulha += Time.deltaTime;
 		} 
 		else { //Se ele estiver dentro de um Arbusto...
-			nmAgent.stoppingDistance = 0.5f;
+			nmAgent.stoppingDistance = 1f;
 			timer_StartPatrulha = 0f;
 		}
 	}

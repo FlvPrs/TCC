@@ -55,7 +55,6 @@ public class FlyWithWind : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
 		if (!startFlyAway) {
 			shake.eulerAngles = originalRot.eulerAngles + new Vector3 (
 				Mathf.Sin (Time.realtimeSinceStartup * frequency.x) * magnitude.x, 
@@ -88,4 +87,29 @@ public class FlyWithWind : MonoBehaviour {
 	void DisableThis (){
 		gameObject.SetActive (false);
 	}
+
+//	public void ChangeDir (Vector3 newDir){
+//		switch (newDir) {
+//		case Vector3.up:
+//			windDir = t.up;
+//			break;
+//		case -Vector3.up:
+//			windDir = -t.up;
+//			break;
+//		case Vector3.forward:
+//			windDir = t.forward;
+//			break;
+//		case -Vector3.forward:
+//			windDir = -t.forward;
+//			break;
+//		case Vector3.right:
+//			windDir = t.right;
+//			break;
+//		case -Vector3.right:
+//			windDir = -t.right;
+//			break;
+//		default:
+//			break;
+//		}
+//	}
 }

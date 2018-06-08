@@ -17,6 +17,8 @@ public class AgentLinkMover : MonoBehaviour
     public AnimationCurve m_Curve = new AnimationCurve();
 
 	public float parabolaHeight = 2.0f;
+	[Range(0.01f, 1f)]
+	public float parabolaDuration = 0.1f;
 
     IEnumerator Start()
     {
@@ -28,7 +30,7 @@ public class AgentLinkMover : MonoBehaviour
 				if (m_Method == OffMeshLinkMoveMethod.NormalSpeed)
 					yield return StartCoroutine (NormalSpeed (agent));
 				else if (m_Method == OffMeshLinkMoveMethod.Parabola)
-					yield return StartCoroutine (Parabola (agent, parabolaHeight, 0.1f));
+					yield return StartCoroutine (Parabola (agent, parabolaHeight, parabolaDuration));
 				else if (m_Method == OffMeshLinkMoveMethod.Curve)
 					yield return StartCoroutine (Curve (agent, 0.5f));
 				agent.CompleteOffMeshLink ();

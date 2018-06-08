@@ -48,6 +48,9 @@ public class FatherFSM : MonoBehaviour {
 			return;
 		}
 
+		if (fatherActions.stopUpdate)
+			return;
+
 		changeState = false;
 
 		switch (currentStateChanger) {

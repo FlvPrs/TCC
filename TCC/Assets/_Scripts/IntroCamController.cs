@@ -136,4 +136,9 @@ public class IntroCamController : MonoBehaviour {
 //		if(!playerCtrl.playerInputStartGame && Input.anyKeyDown)
 //			playerCtrl.playerInputStartGame = true;
 	}
+
+	void OnDisable (){
+		musicaTema.stop (FMOD.Studio.STOP_MODE.IMMEDIATE);
+		musicaIntro.stop (FMOD.Studio.STOP_MODE.IMMEDIATE);
+	}
 }
