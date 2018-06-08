@@ -49,8 +49,6 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 
 	FatherActions father;
 
-	public GameObject hugFX;
-
 	void Awake(){
 		playerCtrl = GetComponent<WalkingController> ();
 
