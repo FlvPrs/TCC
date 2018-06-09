@@ -143,6 +143,8 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	public GameObject hugFX;
 	public GameObject hugVenenoFX;
 
+	bool isOnInverno = false;
+
 	void Awake(){
 		rb = GetComponent<Rigidbody> ();
 		myT = GetComponent<Transform> ();
@@ -182,6 +184,10 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		playerInputStartGame = false;
 
 		bonusJumpParticle.SetActive (false);
+
+		if (UnityEngine.SceneManagement.SceneManager.GetActiveScene ().name == "Ato4"){
+			isOnInverno = true;
+		}
 
 		CalculateRaySpacing ();
 	}
@@ -380,7 +386,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		} else {
 			hugVenenoFX.SetActive (false);
 		}
-		if(beinghugged){
+		if(beinghugged && isOnInverno){
 			hugFX.SetActive (true);
 		} else {
 			hugFX.SetActive (false);
