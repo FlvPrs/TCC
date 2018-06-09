@@ -232,6 +232,7 @@ public class PlantaBehaviour : MonoBehaviour, ISongListener {
 			MDL_Broto.SetActive (false);
 			MDL_Crescida.SetActive (false);
 			MDL_Murcha.SetActive (true);
+			//Invoke("DisableAfterVeneno", 2f);
 		} else {
 			return;
 		}

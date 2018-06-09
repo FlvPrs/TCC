@@ -23,6 +23,7 @@ public class KillFatherOnTrigger : MonoBehaviour {
 			father.stopUpdate = true;
 			col.GetComponent<UnityEngine.AI.NavMeshAgent> ().enabled = false;
 			father.animCtrl.SetBool ("isDying", true);
+			FindObjectOfType<PlayerRespawnCtrl> ().fatherReturnsAlone = false;
 		}
 	}
 }

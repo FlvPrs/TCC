@@ -132,7 +132,7 @@ public class AgentFather : MonoBehaviour {
 			animCtrl.SetBool ("isWalking", isWalking);
 		}
 
-		openWings (!isWalking || isFlying || isJumping || nmAgent.isOnOffMeshLink);
+		openWings (!isWalking || isFlying || isJumping || nmAgent.isOnOffMeshLink || hugging);
 
 		if (currentDisposition == FatherConditions.MuitoMachucado || (currentDisposition == FatherConditions.Machucado && !canWalkWhile_Machucado)) {
 			canWalk = false;

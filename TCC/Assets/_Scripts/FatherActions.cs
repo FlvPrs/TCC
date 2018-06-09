@@ -111,6 +111,8 @@ public class FatherActions : AgentFather, IPlatformMovable {
 				nmAgent.stoppingDistance = defaultStoppingDist;
 			}
 		}
+
+		animCtrl.SetBool ("hugging", hugging);
 	}
 
 	#region --------------------------------- TRIGGERS ---------------------------------
