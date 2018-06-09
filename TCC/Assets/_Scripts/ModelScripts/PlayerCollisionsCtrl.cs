@@ -248,7 +248,8 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 
 		if (col.CompareTag ("Veneno") || col.CompareTag ("VenenoFakeDeath")) {
 			currentVeneno = col.GetComponentInParent<VenenoCtrl> ();
-			tip_VenenoAskForHelp.SetActive (true);
+			if(!playerCtrl.beinghugged)
+				tip_VenenoAskForHelp.SetActive (true);
 		}
 	}
 
@@ -262,11 +263,11 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 		if (!isOnShelter) {
 			if (col.CompareTag ("Wind")) {
 				//playerCtrl.ContinuousExternalForce (col.transform.up * windForce, true, false);
-				Vector3 wind = (playerCtrl.beinghugged) ? col.transform.up * (windForce * 0.5f) : col.transform.up * windForce;
+				Vector3 wind = (playerCtrl.beinghugged) ? col.transform.up * (windForce * 0.05f) : col.transform.up * windForce;
 				playerCtrl.AddContinuousExternalForce (wind);
 			} else if (col.CompareTag ("Wind2")) {
 				//playerCtrl.ContinuousExternalForce (col.transform.up * windForce, true, false);
-				Vector3 wind = (playerCtrl.beinghugged) ? col.transform.up * (windForce * 0.95f) : col.transform.up * windForce * 2f;
+				Vector3 wind = (playerCtrl.beinghugged) ? col.transform.up * (windForce * 0.1f) : col.transform.up * windForce * 2f;
 				playerCtrl.AddContinuousExternalForce (wind);
 			} else if (col.CompareTag ("WindCurrent")) {
 				centerOfWind = oldWindPoint.position + Vector3.Project (transform.position - oldWindPoint.position, oldWindPoint.forward);

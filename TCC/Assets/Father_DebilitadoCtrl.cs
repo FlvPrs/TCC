@@ -37,6 +37,8 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 
 	public AudioClip comendoFruta_Clip;
 
+	bool isOnShelter;
+
 	void Awake (){
 		askHealingCooldown = delayFirstAskBy;
 		askKiwiCooldown = delayFirstAskBy;
@@ -57,7 +59,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(fatherActions.canStartCasualHug && nmAgent.enabled && currentDisposition != FatherConditions.MuitoMachucado){
+		if(fatherActions.canStartCasualHug && !fatherActions.neverHug && nmAgent.enabled && currentDisposition != FatherConditions.MuitoMachucado){
 			balaoFeedback.ShowBalao (balaoTypes.amor, 0.1f);
 		}
 
@@ -212,6 +214,10 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 //		}
 //	}
 
+	void NotOnShelterAnymore (){
+		isOnShelter = false;
+	}
+
 	void OnTriggerStay (Collider col){
 		if(col.GetComponent<NPC_Kiwi>() != null){
 			if (kiwis.Count < 2) {
@@ -228,7 +234,13 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 			}
 		}
 
-		if (!carregadoPorKiwis) {
+		if(col.CompareTag("Shelter")){
+			CancelInvoke ("NotOnShelterAnymore");
+			isOnShelter = true;
+			Invoke ("NotOnShelterAnymore", 0.2f);
+		}
+
+		if (!carregadoPorKiwis && !isOnShelter) {
 			if (col.CompareTag ("Wind")) {
 				Vector3 wind = (fatherActions.hugging) ? col.transform.up * 0.02f : col.transform.up * 0.1f;
 				nmAgent.Move (wind);

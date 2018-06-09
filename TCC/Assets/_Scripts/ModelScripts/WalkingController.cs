@@ -530,6 +530,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 
 	#endregion
 
+	public bool Debug_WindX5WhenStoppedAndHugged = false;
 	void CalculateVelocity () {
 		float animSpeed = 1f;
 		if (!externalForceAdded) {
@@ -547,6 +548,8 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 					directionalInput = (directionalInput + externalForce * 2f).normalized * 2f;
 				} else { //Só curtindo o vento...
 					directionalInput = externalForce;
+					if(Debug_WindX5WhenStoppedAndHugged && beinghugged)
+						directionalInput = externalForce * 5f;
 				}
 				animSpeed = (Vector3.Dot (externalForce, directionalInput) <= 0f) ? 0.4f : (externalForce.magnitude > 3f) ? 1.8f : 1.4f;
 			}
