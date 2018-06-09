@@ -56,6 +56,8 @@ MonoBehaviour:
   cansado: {fileID: 21300000, guid: 3f8075c2c39324746959690f767e22b3, type: 3}
   errou: {fileID: 21300000, guid: 3093e61268e56a94a8d591a56328599b, type: 3}
   ouvindo: {fileID: 21300000, guid: 8a215bd9899de1145bf297527ef3ff00, type: 3}
+  kiwi: {fileID: 0}
+  amorHug: {fileID: 21300000, guid: 4ff8de4b67a54134ab133e62c9d59f13, type: 3}
   cura1:
   - {fileID: 21300000, guid: 3b5e0da1c718697458ce54ca38ad4ee1, type: 3}
   - {fileID: 21300000, guid: a4a5d86fd2ea80f499aebba0b7cfe52e, type: 3}
@@ -89,6 +91,7 @@ SpriteRenderer:
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -104,6 +107,7 @@ SpriteRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5

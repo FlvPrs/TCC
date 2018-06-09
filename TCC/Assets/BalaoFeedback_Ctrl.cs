@@ -4,12 +4,12 @@ using UnityEngine;
 
 public enum balaoTypes
 {
-	cansado, errou, ouvindo, kiwi
+	cansado, errou, ouvindo, kiwi, amor
 }
 
 public class BalaoFeedback_Ctrl : MonoBehaviour {
 
-	public Sprite cansado, errou, ouvindo, kiwi;
+	public Sprite cansado, errou, ouvindo, kiwi, amorHug;
 	public Sprite[] cura1, cura2, cura3;
 
 	private SpriteRenderer spritePosition;
@@ -19,7 +19,7 @@ public class BalaoFeedback_Ctrl : MonoBehaviour {
 		spritePosition = GetComponent<SpriteRenderer> ();
 	}
 
-	public void ShowBalao (balaoTypes type){
+	public void ShowBalao (balaoTypes type, float waitBeforeClear = 1f){
 		CancelInvoke ("HideBalaoFeedback");
 
 		switch (type) {
@@ -32,15 +32,15 @@ public class BalaoFeedback_Ctrl : MonoBehaviour {
 		case balaoTypes.ouvindo:
 			spritePosition.sprite = ouvindo;
 			break;
-//		case balaoTypes.kiwi:
-//			spritePosition.sprite = kiwi;
-//			break;
+		case balaoTypes.amor:
+			spritePosition.sprite = amorHug;
+			break;
 
 		default:
 			break;
 		}
 
-		Invoke ("HideBalaoFeedback", 1f);
+		Invoke ("HideBalaoFeedback", waitBeforeClear);
 	}
 
 	public void ShowBalaoCura (int totalDeFrutas, int quantasTem){

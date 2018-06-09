@@ -30,7 +30,7 @@ public class FatherActions : AgentFather, IPlatformMovable {
 	float hugStart_Timer;
 
 	bool sonCalledMe = false;
-	bool canStartCasualHug = false;
+	public bool canStartCasualHug = false;
 	public bool automaticHug = false;
 	public bool neverHug = false;
 
@@ -79,36 +79,37 @@ public class FatherActions : AgentFather, IPlatformMovable {
 
 		currentStamina = maxStamina - timeMoving;
 
-
-		if(playerCtrl.callingFather && !neverHug){
-			playerCtrl.callingFather = false;
-			sonCalledMe = true;
-			StartHugSon ();
-		}
-
-		if(canStartCasualHug){
-			if(playerCtrl.walkStates.TOCANDO_NOTAS){
-				canStartCasualHug = false;
-				Invoke ("StartHugSon", 0.1f);
+		if (currentDisposition != FatherConditions.MuitoMachucado) {
+			if (playerCtrl.callingFather && !neverHug) {
+				playerCtrl.callingFather = false;
+				sonCalledMe = true;
+				StartHugSon ();
 			}
-		}
 
-		if (goingToHugSon) {
-			if (!hugging) {
-				nmAgent.stoppingDistance = 0.1f;
-				MoveToPlayer ();
-				if (CheckArrivedOnDestination ()) {
-					BecomePlayersChild ();
-				}
-			} else { //Se ja está abraçando...
-				isWalking = playerCtrl.walkStates.IS_WALKING;
-				LookAtPlayer (true);
-				if(playerCtrl.CheckStopHug ()){
-					StopHug ();
+			if (canStartCasualHug) {
+				if (playerCtrl.walkStates.TOCANDO_NOTAS) {
+					canStartCasualHug = false;
+					Invoke ("StartHugSon", 0.1f);
 				}
 			}
-		} else {
-			nmAgent.stoppingDistance = defaultStoppingDist;
+
+			if (goingToHugSon) {
+				if (!hugging) {
+					nmAgent.stoppingDistance = 0.1f;
+					MoveToPlayer ();
+					if (CheckArrivedOnDestination ()) {
+						BecomePlayersChild ();
+					}
+				} else { //Se ja está abraçando...
+					isWalking = playerCtrl.walkStates.IS_WALKING;
+					LookAtPlayer (true);
+					if (playerCtrl.CheckStopHug ()) {
+						StopHug ();
+					}
+				}
+			} else {
+				nmAgent.stoppingDistance = defaultStoppingDist;
+			}
 		}
 	}
 

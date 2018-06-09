@@ -6599,11 +6599,12 @@ AudioSource:
   m_GameObject: {fileID: 1648975496675382}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 243532370519746820, guid: 6463dd9431b4c7f45b52a8fa77f861e3,
+    type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.8
-  m_Pitch: 0.7
+  m_Volume: 1
+  m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -6771,6 +6772,7 @@ MonoBehaviour:
   fechando_Clip: {fileID: 8300000, guid: 1391e35431404984ba3c14587ea7af8d, type: 3}
   closeWithTime: 0
   startAberta: 0
+  wakeScriptedKiwisOnGrounded: 0
 --- !u!135 &135414297449466750
 SphereCollider:
   m_ObjectHideFlags: 1

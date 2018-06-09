@@ -57,6 +57,10 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if(fatherActions.canStartCasualHug && nmAgent.enabled && currentDisposition != FatherConditions.MuitoMachucado){
+			balaoFeedback.ShowBalao (balaoTypes.amor, 0.1f);
+		}
+
 		fatherActions.currentDisposition = currentDisposition;
 		fatherActions.isCarregadoPorKiwis = carregadoPorKiwis;
 
