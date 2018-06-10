@@ -40,6 +40,14 @@ public class InstrumentoBehaviour : MonoBehaviour {
 
 	bool trocouMusica = false;
 
+	public int maxMistakes = 3;
+	int currentNumberOfMistakes = 0;
+
+	bool errouNota;
+	bool oldFoundNote;
+
+	public bool CHEAT_FinishInstrumento = false;
+
 	void Start () {
 		speed = 360f / duration;
 
@@ -62,6 +70,8 @@ public class InstrumentoBehaviour : MonoBehaviour {
 				break;
 			}
 		}
+
+		//hitNota = oldHitNote = hitNote;
 	}
 		
 	void Update () {
@@ -80,7 +90,7 @@ public class InstrumentoBehaviour : MonoBehaviour {
 		RaycastHit hit_Filho = new RaycastHit();
 		RaycastHit hit_Pai = new RaycastHit();
 		int startAt = (startPauta_Filho) ? 0 : 3;
-		//bool foundNote = false;
+		bool foundNote = false;
 		int endAt = (startPauta_Pai) ? raycastOrigins.Length : (startAt + 3);
 		for (int i = startAt; i < endAt; i++) {
 			RaycastHit hitTest;
@@ -91,12 +101,14 @@ public class InstrumentoBehaviour : MonoBehaviour {
 					altura = i;
 					oldAltura_Filho = i;
 					hit_Filho = hitTest;
-					//foundNote = true;
+					if(playerCantouEmCima)
+						foundNote = true;
 				} else {
 					oldAltura_Pai = i - 3;
 					altura_Pai = i - 3;
 					hit_Pai = hitTest;
-					//foundNote = true;
+					if(playerCantouEmBaixo)
+						foundNote = true;
 				}
 //				if (i > 3) {
 //					if (!startPauta_Filho && !foundNote) { //Oq significa que é o player tocando no lugar do pai...
@@ -116,7 +128,21 @@ public class InstrumentoBehaviour : MonoBehaviour {
 				//break;
 			}
 		}
-		if (canStart) {
+
+		if(forward && !foundNote && oldFoundNote){
+			if(errouNota){
+				currentNumberOfMistakes++;
+				errouNota = false;
+				if(currentNumberOfMistakes >= maxMistakes){
+					//TODO
+					forward = false;
+				}
+			}
+		}
+		oldFoundNote = foundNote;
+
+
+		if (canStart || CHEAT_FinishInstrumento) {
 			if (isFinished_Filho && startPauta_Filho) {
 				startPauta_Filho = false;
 				playerCantouEmCima = false;
@@ -138,7 +164,11 @@ public class InstrumentoBehaviour : MonoBehaviour {
 				//pauta_Pai.Rotate (Vector3.up * speed * Time.deltaTime);
 			}
 
-			if (isFinished_Filho && isFinished_Pai) {
+			if ((isFinished_Filho && isFinished_Pai) || CHEAT_FinishInstrumento) {
+				if(CHEAT_FinishInstrumento){
+					finishLights [0].SetActive (true);
+					finishLights [1].SetActive (true);
+				}
 				if(!trocouMusica){
 					trocouMusica = true;
 					if (musicaFinalOpcional_Clip != null)
@@ -157,6 +187,8 @@ public class InstrumentoBehaviour : MonoBehaviour {
 			}
 		}
 		else {
+			currentNumberOfMistakes = 0;
+
 			if(startPauta_Filho && !isFinished_Filho){ //Não importa se com ou sem o pai, pois com certeza é a pauta na qual o player está tocando.
 				for (int i = 0; i < triggersNota_Filho.Length; i++) {
 					if(i != altura){
@@ -173,6 +205,7 @@ public class InstrumentoBehaviour : MonoBehaviour {
 							canStart = true;
 						} else {
 							triggersNota_Filho [i].interactedWith = false;
+							//currentNumberOfMistakes++;
 						}
 					}
 				}
@@ -192,6 +225,7 @@ public class InstrumentoBehaviour : MonoBehaviour {
 							canStart = true;
 						} else {
 							triggersNota_Pai [i].interactedWith = false;
+							//currentNumberOfMistakes++;
 						}
 					}
 				}
@@ -218,6 +252,8 @@ public class InstrumentoBehaviour : MonoBehaviour {
 				finishLights [1].SetActive (true);
 			}
 		} else {
+			currentNumberOfMistakes = 0;
+
 			GetComponent<AudioSource> ().Stop ();
 
 			if (altura != 3) {
@@ -259,7 +295,9 @@ public class InstrumentoBehaviour : MonoBehaviour {
 				} else {
 					triggersNota_Filho [i].gameObject.SetActive (true);
 					if(triggersNota_Filho[i].interactedWith && !triggersNota_Filho [i].interagiuCorretamente){
-						forward = false;
+						//forward = false;
+						//currentNumberOfMistakes++;
+						errouNota = true;
 					} else if (i != 3 && triggersNota_Filho[i].interactedWith && triggersNota_Filho [i].interagiuCorretamente) {
 						hit_Filho.transform.Find("Mandala_Glow").GetComponent<MeshRenderer> ().material.SetColor("_TintColor", new Color (0f, 0.71f, 1f, 0.24f));
 					}
@@ -277,7 +315,9 @@ public class InstrumentoBehaviour : MonoBehaviour {
 			}
 
 			if (!triggersNota_Filho [oldAltura_Filho].isActiveAndEnabled && !triggersNota_Filho [oldAltura_Filho].interactedWith) {
-				forward = false;
+				//forward = false;
+				//currentNumberOfMistakes++;
+				errouNota = true;
 			}
 		}
 		if (startPauta_Pai && playerCantouEmBaixo && !isFinished_Pai){
@@ -287,7 +327,9 @@ public class InstrumentoBehaviour : MonoBehaviour {
 				} else {
 					triggersNota_Pai [i].gameObject.SetActive (true);
 					if(triggersNota_Pai[i].interactedWith && !triggersNota_Pai [i].interagiuCorretamente){
-						forward = false;
+						//forward = false;
+						//currentNumberOfMistakes++;
+						errouNota = true;
 					} else if (i != 3 && triggersNota_Pai[i].interactedWith && triggersNota_Pai [i].interagiuCorretamente) {
 						hit_Pai.transform.Find("Mandala_Glow").GetComponent<MeshRenderer> ().material.SetColor("_TintColor", new Color (0f, 0.71f, 1f, 0.24f));
 					}
@@ -295,7 +337,9 @@ public class InstrumentoBehaviour : MonoBehaviour {
 			}
 
 			if (!triggersNota_Pai [oldAltura_Pai].isActiveAndEnabled && !triggersNota_Pai [oldAltura_Pai].interactedWith) {
-				forward = false;
+				//forward = false;
+				//currentNumberOfMistakes++;
+				errouNota = true;
 			}
 		}
 	}
