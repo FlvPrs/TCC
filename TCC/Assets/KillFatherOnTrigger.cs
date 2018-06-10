@@ -21,8 +21,10 @@ public class KillFatherOnTrigger : MonoBehaviour {
 			FatherActions father = col.GetComponent<FatherActions> ();
 			father.StopHug ();
 			father.stopUpdate = true;
+			father.openWings (false);
 			col.GetComponent<UnityEngine.AI.NavMeshAgent> ().enabled = false;
 			father.animCtrl.SetBool ("isDying", true);
+			father.animCtrl.applyRootMotion = true;
 			FindObjectOfType<PlayerRespawnCtrl> ().fatherReturnsAlone = false;
 		}
 	}

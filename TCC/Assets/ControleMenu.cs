@@ -4,9 +4,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class ControleMenu : MonoBehaviour {
-	private float timerToSkip;
+	private float timerToSkip = -1f;
 	private int numeroImagem;
 	public GameObject bbLogo, cimologo, joystick, flowerLoading, aviso1, aviso2;
+
+	bool extendCimoTime = true;
+
 	// Use this for initialization
 	void Start () {
 		numeroImagem = 1;
@@ -15,7 +18,7 @@ public class ControleMenu : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		timerToSkip += Time.deltaTime * 1;
-		if (timerToSkip >= 3f) {
+		if (timerToSkip >= 2f) {
 				numeroImagem++;
 				timerToSkip = 0f;
 		}
@@ -27,15 +30,28 @@ public class ControleMenu : MonoBehaviour {
 			aviso1.SetActive (false);
 			aviso2.SetActive (false);
 			flowerLoading.SetActive (false);
-			// Use this for initialization
 		}else if (numeroImagem == 2) {
+			bbLogo.SetActive (false);
+			cimologo.SetActive (true);
+			joystick.SetActive (false);
+			aviso1.SetActive (false);
+			aviso2.SetActive (false);
+			flowerLoading.SetActive (false);
+		}
+		else if (numeroImagem == 3) {
+			if(extendCimoTime){
+				extendCimoTime = false;
+				numeroImagem = 2;
+				timerToSkip = 1f;
+				return;
+			}
 			bbLogo.SetActive (false);
 			cimologo.SetActive (false);
 			joystick.SetActive (true);
 			aviso1.SetActive (true);
 			aviso2.SetActive (false);
 			flowerLoading.SetActive (false);
-		}else if (numeroImagem == 3) {
+		}else if (numeroImagem == 4) {
 			bbLogo.SetActive (false);
 			cimologo.SetActive (false);
 			joystick.SetActive (false);
@@ -43,7 +59,7 @@ public class ControleMenu : MonoBehaviour {
 			aviso2.SetActive (true);
 			flowerLoading.SetActive (true);
 		}
-		if (numeroImagem == 4) {
+		if (numeroImagem == 5) {
 			SceneManager.LoadScene (1);
 		}
 

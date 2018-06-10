@@ -142,7 +142,7 @@ public class AgentFather : MonoBehaviour {
 		}
 	}
 
-	protected void openWings (bool open){
+	public void openWings (bool open){
 		l_wing.SetActive (open);
 		r_wing.SetActive (open);
 	}

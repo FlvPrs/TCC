@@ -33,4 +33,10 @@ public class NPC_Tartaruga : NPCBehaviour {
 
 		//print (isPlaying);
 	}
+
+	public void StopFollow (){
+		if (currentState == NPC_CurrentState.Seguindo) {
+			base.PararDeSeguir ();
+		}
+	}
 }

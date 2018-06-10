@@ -1412,6 +1412,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1410224470332902
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4673502877880544}
+  - component: {fileID: 65370916661797412}
+  - component: {fileID: 114769603685599228}
+  m_Layer: 2
+  m_Name: StopFollowTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1422818577782756
 GameObject:
   m_ObjectHideFlags: 1
@@ -4196,7 +4213,8 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.06000042, y: 0.089999914, z: 0.4699974}
   m_LocalScale: {x: 1, y: 1, z: -1}
-  m_Children: []
+  m_Children:
+  - {fileID: 4673502877880544}
   m_Father: {fileID: 4620460588701150}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4506,6 +4524,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4010624994902430}
   m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4673502877880544
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1410224470332902}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 8.03, z: 0.61}
+  m_LocalScale: {x: 5.729821, y: 1.8930266, z: 5.729824}
+  m_Children: []
+  m_Father: {fileID: 4557920214200052}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4674950547804658
 Transform:
@@ -10493,6 +10524,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 6.22, y: 1.01, z: 5.86}
   m_Center: {x: 0, y: 0.42, z: 0}
+--- !u!65 &65370916661797412
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1410224470332902}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 7.649823, z: 1}
+  m_Center: {x: 0, y: 3.324912, z: -0}
 --- !u!65 &65807334778204248
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -11160,6 +11203,7 @@ MonoBehaviour:
   errou: {fileID: 21300000, guid: 3093e61268e56a94a8d591a56328599b, type: 3}
   ouvindo: {fileID: 21300000, guid: 8a215bd9899de1145bf297527ef3ff00, type: 3}
   kiwi: {fileID: 0}
+  amorHug: {fileID: 0}
   cura1:
   - {fileID: 21300000, guid: 3b5e0da1c718697458ce54ca38ad4ee1, type: 3}
   - {fileID: 21300000, guid: a4a5d86fd2ea80f499aebba0b7cfe52e, type: 3}
@@ -11197,6 +11241,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   plantaPlataforma: {fileID: 114417042900165350}
+--- !u!114 &114769603685599228
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1410224470332902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9b3c5df3944426458f60cd483a2c327, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turtle: {fileID: 114438874404148786}
 --- !u!114 &114859516133834670
 MonoBehaviour:
   m_ObjectHideFlags: 1
