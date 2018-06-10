@@ -140,7 +140,7 @@ ModelImporter:
     4300006: r_Pata
     4300008: r_Asa
     4300010: l_Asa
-    7400000: Take 001
+    7400000: PaiFinal_PlanarQueda
     9500000: //RootNode
     13700000: Body
     13700002: Eyes
@@ -148,7 +148,22 @@ ModelImporter:
     13700006: l_Pata
     13700008: r_Asa
     13700010: r_Pata
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Textura
+    second: {fileID: 2100000, guid: 21ed9853869c1ba41b75478f413520f8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert7
+    second: {fileID: 2100000, guid: de728e62b3501ee48bb3e6ab17fdbad5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__Textura
+    second: {fileID: 2100000, guid: 829dc9cb4a1e54e478a93481b4e78eb0, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -174,7 +189,35 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: PaiFinal_PlanarQueda
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 40
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []

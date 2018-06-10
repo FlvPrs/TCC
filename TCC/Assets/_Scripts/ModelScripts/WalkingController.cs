@@ -569,7 +569,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 			if(!isFallingToDeath)
 				anim.ChangeForward(directionalInput.normalized);
 			//			else
-			//				anim.ChangeForward ((myT.forward + rb.velocity).normalized);
+			//				anim.ChangeForward ((myT.forward + rb.velocity).normalized); //ISSO DEIXA AQUELE MOVIMENTO FLUIDO, MAS MEIO BUGADO
 
 			if (continuousExternalForceAdded) {
 				Vector3 clampedAnimSpeed = new Vector3 (directionalInput.x, 0, directionalInput.z);
