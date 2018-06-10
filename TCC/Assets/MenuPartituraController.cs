@@ -9,6 +9,8 @@ public class MenuPartituraController : MonoBehaviour {
 	bool menuAberto = false;
 	bool canPressLTrigger = true;
 
+	WalkingController playerCtrl;
+
 	#region OldBehaviour
 //	bool apertouDirecional = false;
 //	int currIndex = 0;
@@ -80,6 +82,8 @@ public class MenuPartituraController : MonoBehaviour {
 		partiturasGroup = transform.GetChild (0);
 		partiturasGroup.gameObject.SetActive (menuAberto);
 
+		playerCtrl = FindObjectOfType<WalkingController> ();
+
 //		partituras = new GameObject[partiturasGroup.childCount];
 //
 //		for (int i = 0; i < partituras.Length; i++) {
@@ -89,6 +93,12 @@ public class MenuPartituraController : MonoBehaviour {
 	}
 
 	void Update () {
+		if(!playerCtrl.playerCanMove){
+			menuAberto = false;
+			partiturasGroup.gameObject.SetActive (menuAberto);
+			return;
+		}
+
 		bool oldState = menuAberto;
 
 		if ((Input.GetAxis ("L_Trigger") != 0 && canPressLTrigger) || Input.GetKeyDown (KeyCode.Tab)) {

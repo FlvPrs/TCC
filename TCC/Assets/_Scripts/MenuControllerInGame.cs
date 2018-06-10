@@ -589,9 +589,9 @@ public class MenuControllerInGame : MonoBehaviour {
 		saveSlot2 = PlayerPrefs.GetInt ("saveSlot2");
 		saveSlot3 = PlayerPrefs.GetInt ("saveSlot3");
 
-		//print (saveSlot1);
-		//print (saveSlot2);
-		//print (saveSlot3);
+		print (saveSlot1);
+		print (saveSlot2);
+		print (saveSlot3);
 
 		if (saveSlot1 == 0) {
 			textoSave1.text = "0%";
@@ -617,34 +617,34 @@ public class MenuControllerInGame : MonoBehaviour {
 			ovo2.SetActive (true);
 		}else if (saveSlot2 == 2) {
 			textoSave2.text = "25%";
-			ovoQuebrado2.SetActive (false);
-			ovo2.SetActive (true);
+			ovoQuebrado2.SetActive (true);
+			ovo2.SetActive (false);
 		}else if (saveSlot2 == 3) {
 			textoSave2.text = "50%";
-			ovoQuebrado2.SetActive (false);
-			ovo2.SetActive (true);
+			ovoQuebrado2.SetActive (true);
+			ovo2.SetActive (false);
 		}else if (saveSlot2 == 4) {
 			textoSave2.text = "75%";
-			ovoQuebrado2.SetActive (false);
-			ovo2.SetActive (true);
+			ovoQuebrado2.SetActive (true);
+			ovo2.SetActive (false);
 		}
 
 		if (saveSlot3 == 0) {
-			textoSave2.text = "0%";
+			textoSave3.text = "0%";
 			ovoQuebrado3.SetActive (false);
 			ovo3.SetActive (true);
 		}else if (saveSlot3 == 2) {
-			textoSave2.text = "25%";
-			ovoQuebrado3.SetActive (false);
-			ovo3.SetActive (true);
+			textoSave3.text = "25%";
+			ovoQuebrado3.SetActive (true);
+			ovo3.SetActive (false);
 		}else if (saveSlot3 == 3) {
-			textoSave2.text = "50%";
-			ovoQuebrado3.SetActive (false);
-			ovo3.SetActive (true);
+			textoSave3.text = "50%";
+			ovoQuebrado3.SetActive (true);
+			ovo3.SetActive (false);
 		}else if (saveSlot3 == 4) {
-			textoSave2.text = "75%";
-			ovoQuebrado3.SetActive (false);
-			ovo3.SetActive (true);
+			textoSave3.text = "75%";
+			ovoQuebrado3.SetActive (true);
+			ovo3.SetActive (false);
 		}
 
 		volumeMusica = PlayerPrefs.GetInt ("volumeMusicaS");

@@ -13,6 +13,8 @@ public class TutorialRocks : MonoBehaviour, ISongListener {
 
 	float listenCooldown = 0f;
 
+	bool playerInRange = false;
+
 	// Use this for initialization
 	void Start () {
 		DesativaTutorial ();
@@ -27,6 +29,9 @@ public class TutorialRocks : MonoBehaviour, ISongListener {
 	}
 
 	public void DetectSong (PlayerSongs song, bool isSingingSomething, bool isFather = false, HeightState height = HeightState.Default){
+		if (!playerInRange)
+			return;
+		
 		if(isSingingSomething && listenCooldown == 0f){
 			if (isFather)
 				return;
@@ -54,25 +59,20 @@ public class TutorialRocks : MonoBehaviour, ISongListener {
 		textoTutorial.text = "";
 	}
 
-//	void OnTriggerStay(Collider colisor){
-//		if (colisor.name == "PlayerCollider") {
-//			if (Input.GetKey (KeyCode.T)) {
-//				if (timerPressT >= 1.0) {
-//					timerPressT = 0;
-//					tutorialAtivo = !tutorialAtivo;
-//					if (tutorialAtivo) {
-//						AtivaTutorial ();
-//					} else {
-//						DesativaTutorial ();
-//					}
-//				}
-//			}
-//		}
-//	}
-	void OnTriggerExit(Collider colisor){
-		if (colisor.name == "PlayerCollider") {
-			DesativaTutorial ();
-			listenCooldown = 0f;
+	void OnTriggerStay(Collider colisor){
+		if (colisor.CompareTag("Player")) {
+			playerInRange = true;
 		}
+	}
+	void OnTriggerExit(Collider colisor){
+		if (colisor.CompareTag("Player")) {
+			playerInRange = false;
+			HideTxt ();
+		}
+	}
+
+	void HideTxt (){
+		DesativaTutorial ();
+		listenCooldown = 0f;
 	}
 }

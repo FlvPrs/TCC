@@ -126,7 +126,7 @@ public class IntroCamController : MonoBehaviour {
 			if (camTrack.m_PathPosition <= 0.1f) {
 				GetComponent<CinemachineVirtualCamera> ().m_Priority = 0;
 				playerRegainedCtrl = true;
-				playerCtrl.playerCanMove = true;
+				//playerCtrl.playerCanMove = true;
 				//enabled = false;
 			}
 			else
