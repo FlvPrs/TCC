@@ -91,7 +91,7 @@ public class InstrumentoBehaviour : MonoBehaviour {
 		int altura_Pai = 3;
 		RaycastHit hit_Filho = new RaycastHit();
 		RaycastHit hit_Pai = new RaycastHit();
-		int startAt = (startPauta_Filho) ? 0 : 3;
+		int startAt = (startPauta_Filho) ? 0 : 4;
 		bool foundNote = false;
 		int endAt = (startPauta_Pai) ? raycastOrigins.Length : (startAt + 3);
 		for (int i = startAt; i < endAt; i++) {
@@ -106,6 +106,7 @@ public class InstrumentoBehaviour : MonoBehaviour {
 					if(playerCantouEmCima)
 						foundNote = true;
 				} else {
+					print (i);
 					oldAltura_Pai = i - 3;
 					altura_Pai = i - 3;
 					hit_Pai = hitTest;

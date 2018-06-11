@@ -17,6 +17,9 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 	private Rigidbody r;
 	private Vector3 upPlataform, originalPosition, finalDestination, currentDestination, newPosition;
 	protected GameObject MDL_Fechada;
+
+	public AudioClip[] sobeDesce_Clips;
+	bool chamouCrescer, chamouEncolher;
 	// Use this for initialization
 	protected override void Awake(){
 		base.Awake ();
@@ -135,9 +138,15 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 
 	protected override void Crescer(){
 		if (alturaFlor <= 4) {
+			if(!chamouCrescer){
+				chamouCrescer = true;
+				GetComponent<AudioSource> ().clip = sobeDesce_Clips[0];
+				GetComponent<AudioSource> ().Play ();
+			}
 			//originalPosition = t.position;
 			////print ("crescendo111");
 			if (acaoTerminada) {
+				chamouCrescer = false;
 				//originalPosition = t.position;
 				if (alturaFlor == 1) {
 					newPosition = t.position;
@@ -163,16 +172,21 @@ public class NPC_PlantaPlataforma : PlantaBehaviour {
 
 			} else {
 				TrocaAltura (alturaFlor);
-
 			}
 		}
 	}
 
 	protected override void Encolher(){
 		if (alturaFlor >= 1) {
+			if(!chamouEncolher){
+				chamouEncolher = true;
+				GetComponent<AudioSource> ().clip = sobeDesce_Clips[1];
+				GetComponent<AudioSource> ().Play ();
+			}
 			//originalPosition = t.position;
 			////print ("crescendo222");
 			if (acaoTerminada) {
+				chamouEncolher = false;
 				//originalPosition = t.position;
 				if (alturaFlor == 1) {
 					newPosition = t.position;
