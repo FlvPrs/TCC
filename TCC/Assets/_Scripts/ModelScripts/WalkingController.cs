@@ -144,6 +144,7 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	public GameObject hugVenenoFX;
 
 	bool isOnInverno = false;
+	float moveMultiplier = 1f; //No inverno, esta var fica com valor 0.5f;
 
 	void Awake(){
 		rb = GetComponent<Rigidbody> ();
@@ -185,8 +186,9 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 
 		bonusJumpParticle.SetActive (false);
 
-		if (UnityEngine.SceneManagement.SceneManager.GetActiveScene ().name == "Ato4"){
+		if (UnityEngine.SceneManagement.SceneManager.GetActiveScene ().name == "Ato4-NewLvlDesign"){
 			isOnInverno = true;
+			moveMultiplier = 0.5f;
 		}
 
 		CalculateRaySpacing ();
@@ -232,14 +234,14 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 		#region Reduzindo Velocidade No Pulo
 		if(VelocidadeDiminuidaNoVoo){
 			if(secondJumpStrengthMultiplier > 0.2f){
-				moveSpeed = 15.0f;
+				moveSpeed = 15.0f * moveMultiplier;
 				SpeedMovementSlowTimer += 1*Time.deltaTime;
 			}else{
-				moveSpeed = 10.0f;
+				moveSpeed = 10.0f * moveMultiplier;
 			}
 			if(SpeedMovementSlowTimer >= 0.2f){
 				SpeedMovementSlowTimer=0;
-				moveSpeed = 10.0f;
+				moveSpeed = 10.0f * moveMultiplier;
 				VelocidadeDiminuidaNoVoo = false;
 			}
 		}

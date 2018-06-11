@@ -53,7 +53,7 @@ public class Father_DebilitadoCtrl : MonoBehaviour {
 		nmAgent = GetComponent<UnityEngine.AI.NavMeshAgent> ();
 		dadColl = GetComponent<BoxCollider> ();
 
-		if (UnityEngine.SceneManagement.SceneManager.GetActiveScene ().name == "Ato4")
+		if (UnityEngine.SceneManagement.SceneManager.GetActiveScene ().name == "Ato4-NewLvlDesign")
 			isInverno = true;
 	}
 	
