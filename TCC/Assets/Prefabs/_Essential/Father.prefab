@@ -965,6 +965,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4413637073488908}
   - component: {fileID: 95683056922113914}
+  - component: {fileID: 82085662351738222}
   m_Layer: 0
   m_Name: MDL_BirdoPai
   m_TagString: Untagged
@@ -2099,6 +2100,87 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.75, y: 4.5, z: 1.75}
   m_Center: {x: 0, y: 2.25, z: 0}
+--- !u!82 &82085662351738222
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1887235818601024}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 243946985071177786, guid: 6463dd9431b4c7f45b52a8fa77f861e3,
+    type: 2}
+  m_audioClip: {fileID: 8300000, guid: 9fd8a7b8ac9e65b4889881da1c4a5038, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.5
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 50
+  DopplerLevel: 0
+  MinDistance: 17.714878
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0.9
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!82 &82410892114432066
 AudioSource:
   m_ObjectHideFlags: 1
@@ -2467,6 +2549,7 @@ MonoBehaviour:
   allowFlySlowFall: 0
   stopUpdate: 0
   isCarregadoPorKiwis: 0
+  canStartCasualHug: 0
   automaticHug: 0
   neverHug: 0
   stopHoldFly: 0

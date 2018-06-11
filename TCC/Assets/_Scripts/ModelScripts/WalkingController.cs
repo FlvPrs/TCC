@@ -865,6 +865,9 @@ public class WalkingController : MonoBehaviour, ICarnivoraEdible {
 	public void StartHug (){
 		beinghugged = true;
 		pCollCtrl.poisoningTimer -= pCollCtrl.poisoningTimer * 0.9f;
+		for (int i = 0; i < pCollCtrl.hugAudioSources.Length; i++) {
+			pCollCtrl.hugAudioSources [i].Play ();
+		}
 	}
 	public bool CheckStopHug (){
 		if(walkStates.TOCANDO_NOTAS || !walkStates.IS_GROUNDED){

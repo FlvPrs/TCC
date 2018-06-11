@@ -49,6 +49,12 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 
 	FatherActions father;
 
+	public GameObject MDL_BirdoFilho;
+	[HideInInspector]
+	public AudioSource[] hugAudioSources;
+	public AudioClip[] venenoHurtClips;
+
+
 	void Awake(){
 		playerCtrl = GetComponent<WalkingController> ();
 
@@ -62,6 +68,13 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 		father = FindObjectOfType<FatherActions> ();
 
 		tip_VenenoAskForHelp = GameObject.Find ("MenuFakeDeath");
+
+		hugAudioSources = new AudioSource[2];
+
+		for (int i = 0; i < hugAudioSources.Length; i++) {
+			hugAudioSources [i] = MDL_BirdoFilho.GetComponents<AudioSource> () [i];
+			hugAudioSources [i].volume = 0f;
+		}
 	}
 
 //	void Update(){
@@ -84,6 +97,17 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 
 	float blinkAt = 0f;
 	void Update (){
+		if (playerCtrl.beinghugged) {
+			for (int i = 0; i < hugAudioSources.Length; i++) {
+				hugAudioSources [i].volume += (hugAudioSources [0].volume < 1) ? Time.deltaTime*0.002f : 0f;
+			}
+		} else {
+			for (int i = 0; i < hugAudioSources.Length; i++) {
+				hugAudioSources [i].Stop ();
+				hugAudioSources [i].volume = 0f;
+			}
+		}
+
 		if(poisoningTimer >= 0f && !diedByVeneno){
 			if (venenoDecay) {
 				poisoningTimer -= Time.deltaTime;
@@ -99,6 +123,7 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 				
 			} else if (venenoIncrease) {
 				poisoningTimer += (!playerCtrl.beinghugged) ? Time.deltaTime : Time.deltaTime * 0.25f;
+
 				if (playerCtrl.walkStates.TOCANDO_NOTAS) {
 					currentVeneno.DisableNavMeshCarve ();
 //					if (Vector3.Distance (father.transform.position, transform.position) <= 10f) {
@@ -108,6 +133,10 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 				if(poisoningTimer > timeToDieByVeneno * blinkAt){
 					blink.Blink ();
 					blinkAt += 0.25f;
+					if (!(poisoningTimer > 0.5f && poisoningTimer < 1f)) {
+						GetComponent<AudioSource> ().clip = venenoHurtClips [Random.Range (0, venenoHurtClips.Length)];
+						GetComponent<AudioSource> ().Play ();
+					}
 				}
 			}
 

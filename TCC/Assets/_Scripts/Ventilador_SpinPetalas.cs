@@ -10,6 +10,9 @@ public class Ventilador_SpinPetalas : MonoBehaviour {
 	private Transform t;
 	private Planta_Ventilador ventiladorCtrl;
 
+	public bool endWhenReachedTarget;
+	public Vector3 targetRotation;
+
 	void Awake(){
 		t = GetComponent<Transform> ();
 		ventiladorCtrl = t.root.GetComponent<Planta_Ventilador> ();
@@ -27,6 +30,22 @@ public class Ventilador_SpinPetalas : MonoBehaviour {
 		}
 		if(aroundZ){
 			t.Rotate (Vector3.forward, speed * Time.deltaTime);
+		}
+
+		if(endWhenReachedTarget){
+			
+			if(aroundX){
+				if (t.localEulerAngles.x > targetRotation.x)
+					enabled = false;
+			}
+			if(aroundY){
+				if (t.localEulerAngles.y > targetRotation.y)
+					enabled = false;
+			}
+			if(aroundZ){
+				if (t.localEulerAngles.z > targetRotation.z)
+					enabled = false;
+			}
 		}
 	}
 }

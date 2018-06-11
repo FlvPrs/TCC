@@ -1327,8 +1327,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1871755860267196}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -11.3, y: 4.189491, z: -401.2}
+  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 37.56666, y: 9.621799, z: -15.497978}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4046245852246982}
@@ -3435,7 +3435,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.5, y: 0.8, z: 0.2}
+  m_Size: {x: 1.75, y: 0.8, z: 0.2}
   m_Center: {x: 0.0014096946, y: 2.45158, z: 15.536812}
 --- !u!65 &65184658104343526
 BoxCollider:
@@ -3471,7 +3471,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 0.8, z: 0.2}
+  m_Size: {x: 1.75, y: 0.8, z: 0.2}
   m_Center: {x: 0.0014096946, y: 10.45158, z: 15.536812}
 --- !u!65 &65314430536578872
 BoxCollider:
@@ -3507,7 +3507,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 0.8, z: 0.2}
+  m_Size: {x: 1.75, y: 0.8, z: 0.2}
   m_Center: {x: 0.0014096946, y: 12.45158, z: 15.536812}
 --- !u!65 &65449235422500132
 BoxCollider:
@@ -3519,7 +3519,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 0.8, z: 0.2}
+  m_Size: {x: 1.75, y: 0.8, z: 0.2}
   m_Center: {x: 0.0014096946, y: 11.45158, z: 15.536812}
 --- !u!65 &65873386766359366
 BoxCollider:
@@ -3531,7 +3531,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.5, y: 0.8, z: 0.2}
+  m_Size: {x: 1.75, y: 0.8, z: 0.2}
   m_Center: {x: 0.0014096946, y: 1.45158, z: 15.536812}
 --- !u!65 &65908551254921732
 BoxCollider:
@@ -3579,7 +3579,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.5, y: 0.8, z: 0.2}
+  m_Size: {x: 1.75, y: 0.8, z: 0.2}
   m_Center: {x: 0.0014096946, y: 3.45158, z: 15.536812}
 --- !u!82 &82425963933745444
 AudioSource:
@@ -3750,6 +3750,7 @@ MonoBehaviour:
   musica_Clip: {fileID: 8300000, guid: a539b385bb6faf546b0270b75fe09866, type: 3}
   musicaFinalOpcional_Clip: {fileID: 0}
   objToAppear: {fileID: 0}
+  openDoor: {fileID: 0}
   canStart: 0
   maxMistakes: 3
   CHEAT_FinishInstrumento: 0

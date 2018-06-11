@@ -17,6 +17,8 @@ public class InstrumentoBehaviour : MonoBehaviour {
 	public AudioClip musicaFinalOpcional_Clip;
 
 	public GameObject objToAppear;
+	public Ventilador_SpinPetalas openDoor;
+	bool ativouPorta = false;
 
 	public bool canStart;
 
@@ -180,6 +182,10 @@ public class InstrumentoBehaviour : MonoBehaviour {
 				pauta_Pai.Rotate (Vector3.up * speed * Time.deltaTime);
 				if (objToAppear != null)
 					objToAppear.SetActive (true);
+				if (!ativouPorta && openDoor != null) {
+					openDoor.enabled = true;
+					ativouPorta = true;
+				}
 				return;
 			} else if(!playerCantouEmBaixo && !playerCantouEmCima) {
 				canStart = false;

@@ -12,9 +12,9 @@ public class HideObjectOnTrigger : MonoBehaviour {
 	public string collTag;
 
 
-	void Start(){
-		obj.SetActive (!showInsteadOfHide);
-	}
+//	void Start(){
+//		obj.SetActive (!showInsteadOfHide);
+//	}
 
 	void OnTriggerEnter(Collider col){
 		if(col.CompareTag(collTag)){
