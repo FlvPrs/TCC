@@ -73,7 +73,7 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 
 		for (int i = 0; i < hugAudioSources.Length; i++) {
 			hugAudioSources [i] = MDL_BirdoFilho.GetComponents<AudioSource> () [i];
-			hugAudioSources [i].volume = 0f;
+			hugAudioSources [i].volume = 0.02f;
 		}
 	}
 
@@ -104,7 +104,7 @@ public class PlayerCollisionsCtrl : MonoBehaviour {
 		} else {
 			for (int i = 0; i < hugAudioSources.Length; i++) {
 				hugAudioSources [i].Stop ();
-				hugAudioSources [i].volume = 0f;
+				hugAudioSources [i].volume = 0.02f;
 			}
 		}
 
