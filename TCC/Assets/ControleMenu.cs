@@ -41,7 +41,7 @@ public class ControleMenu : MonoBehaviour {
 			joystick.SetActive (false);
 			aviso1.SetActive (false);
 			aviso2.SetActive (true);
-			flowerLoading.SetActive (true);
+			flowerLoading.SetActive (false);
 		}
 		if (numeroImagem == 4) {
 			SceneManager.LoadScene (1);
